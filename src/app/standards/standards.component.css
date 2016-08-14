@@ -1,0 +1,20 @@
+.rule{
+	font-size: 14px;
+}
+ol { counter-reset: item }
+li { display: block; }
+li:before { 
+	content: counters(item, ".") " "; 
+	counter-increment: item ;
+	float:left; padding-right:10px; 
+}
+.mnemonic{
+	border:solid 2px red;
+	background: white;
+	color:black;
+	padding:10px;
+}
+h4{
+	font-weight: bold;
+	padding-top: 15px;
+}

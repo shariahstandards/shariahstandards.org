@@ -1,0 +1,22 @@
+<h2>Qur'an Search</h2>
+<div class="form-group">
+<input class="form-control" type="text" (keyup)="search()" placeholder="type surah:verse or search term in english or arabic" [(ngModel)]="searchText" >
+</div>
+<div *ngIf="!searchResults.hasResults && searchResults.hasSearched">
+	<p>No results</p>
+</div>
+<div *ngIf="searchResults.hasResults">
+	<div *ngIf="searchResults.singleVerse">
+		<div class="col-md-1">
+			<button type="button" class="btn btn-default" (click)="previousVerse()">&lt; prev</button>
+		</div>
+		<div class="col-md-10">
+			<blockquote class="arabic-large">
+				{{searchResults.singleVerse.text}}
+			</blockquote> 
+		</div>
+		<div class="col-md-1">
+			<button type="button" class="btn btn-default" (click)="nextVerse()">next &gt;</button>
+		</div>
+	</div>
+</div>

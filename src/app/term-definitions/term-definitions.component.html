@@ -1,0 +1,32 @@
+
+<h2>Terminology</h2>
+
+<h4>
+	Type a term to see our standard definition and related terms
+</h4>
+<div class="row">
+	<div class="col-md-6">
+		<div class="input-group">
+		<input class="form-control" type="text" [(ngModel)]="term" (ngModelChange)="termChanged()"
+			placeholder="lookup a term definition"/>
+		</div>
+	</div>
+</div>	
+<h4>Definition</h4>
+<div>
+	<span *ngFor="let part of definition.contents">
+		<span *ngIf="part && part.isADefinedTerm">
+			<span (click)="goToTerm(part.text)" class="defined-term">{{part.text}}</span>
+		</span>
+		<span *ngIf="part && !part.isADefinedTerm">
+			{{part.text}}
+		</span>
+	</span>
+</div>
+<h4>Key terms</h4>
+<ul>
+	<li term="Allah"></li>
+	<li term="Islam"></li>
+	<li term="Muslim"></li>
+	<li term="Shahada"></li>
+</ul>
