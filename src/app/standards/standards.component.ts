@@ -11,8 +11,19 @@ import {QuranReferenceComponent} from '../quran-reference/quran-reference.compon
 export class StandardsComponent implements OnInit {
 
   constructor() { }
-
+  collapsedSections:string[]=[]
   ngOnInit() {
   }
-
+  toggleCollapse(sectionName:string){
+  	var index=this.collapsedSections.indexOf(sectionName);
+  	if(index>=0){
+  		this.collapsedSections.splice(index,1);
+  	}else{
+  		this.collapsedSections.push(sectionName);
+  	}
+  }
+  expand(sectionName:string){
+  	var index=this.collapsedSections.indexOf(sectionName);
+ 	return index<0;
+  }
 }

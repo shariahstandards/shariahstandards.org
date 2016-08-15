@@ -1,7 +1,7 @@
 import {Component, AfterViewInit, ViewChild, ViewContainerRef} from '@angular/core'
 import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo} from '../prayer-times-calculator.service';
-
+import { ROUTER_DIRECTIVES } from '@angular/router';
 import {AlertComponent, DATEPICKER_DIRECTIVES, MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 import 'moment';
@@ -13,7 +13,7 @@ declare var moment: any;
 	templateUrl: './prayer-times.component.html',
   styleUrls: ['./prayer-times.component.css'],
   selector: 'prayer-times',
-  directives: [DATEPICKER_DIRECTIVES, MODAL_DIRECTVES],
+  directives: [DATEPICKER_DIRECTIVES, MODAL_DIRECTVES, ROUTER_DIRECTIVES],
   providers: [PrayerTimesCalculatorService],
   viewProviders:[BS_VIEW_PROVIDERS],
 }) export class PrayerTimesComponent implements AfterViewInit {

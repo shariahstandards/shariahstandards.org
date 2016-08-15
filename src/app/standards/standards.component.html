@@ -1,9 +1,9 @@
-<h2>The Rules</h2>
+<h2>Shariah Standards Rules</h2>
 
 <ol>
-  <li>
-    <ol>
-      <h3>Site Management</h3>
+  <li id="website-management" (click)="toggleCollapse('website-management')" class="clickable">
+    <h3>Website Management</h3>
+    <ol *ngIf="expand('website-management')">
       <li class="rule">
         Any <span term="Muslim">&nbsp;</span> is free to join as a member by joining our email discussion list: please visit <a href="https://groups.yahoo.com/neo/groups/shariahstandards/info" target="_blank">https://groups.yahoo.com/neo/groups/shariahstandards/info</a>
       </li>
@@ -16,7 +16,45 @@
       <li class="rule">
         The webmaster must present the content of any proposed changes to the discussion forum at least 1 week  before making the changes to the site to give all members a chance to have their say on the changes. 
       </li>
+      <li>
+        All website content version history including proposed new content will be available publically
+        <a href="https://github.com/shariahstandards/shariahstandards.org">
+          https://github.com/shariahstandards/shariahstandards.org
+        </a>
+      </li>
+    </ol>
+  </li>
+  <li id="prayer-times-rules" (click)="toggleCollapse('prayer-times-rules')" class="clickable">
+    <h3>Prayer Times and Direction</h3>
+    <ol *ngIf="expand('prayer-times-rules')">
+      <li>
+        Standard prayer times are based on open source calculation algorithms for astronomical measures. In particular the following rules are applied:
+        <ol>
+          <li>
+            There are adjustments for extreme latitudes to ensure that there are reasonable minimum and maximum times between the prayers. 
+            <ol>
+              <li>
+              The time from the fajr prayer until the isha prayer does not exceed 20 hours.
+              </li>
+              <li>
+              The time from sunrise to maghrib prayer time is at least 4 hours and is no more than 18 hours. 
+              </li>
+            </ol>
+          </li>
+          <li>
+            Fajr and Isha prayer times without adjustments are based on the sun being 18 degrees below the horizon corresponding to astronomical dawn and astronomical night respectively.
+          </li>
+          <li>
+            Times are rounded up to the nearest minute. 
+          </li>
+          <li>
+            Asr times are based on two thirds of the way between zuhr and maghrib prayer times
+          </li>
+          <li>
+            A new moon is considered visible if it is more than 1 day old
+          </li>
+        </ol>
+      </li>
     </ol>
   </li>
 </ol>
-

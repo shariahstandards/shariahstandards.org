@@ -1,3 +1,6 @@
+.clickable{
+	cursor: pointer;
+}
 .rule{
 	font-size: 14px;
 }

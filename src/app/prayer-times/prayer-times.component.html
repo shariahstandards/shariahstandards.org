@@ -1,6 +1,7 @@
    <h2>Worldwide Muslim Prayer Times and Direction</h2>
-  
-	
+   <p>
+	<a [routerLink]="['/standards/prayer-times-rules']">Details of the Standard</a>
+  	
     <div id="googleMap"></div>
     <div>&nbsp;</div>
 	<div class="row">
@@ -13,7 +14,7 @@
 	  		<div class="col-md-6">
 	  			<div class="input-group">
 	  				<span class="input-group-btn">
-	    					<button class="btn btn-default" (click)="resetLocation()">Here</button>
+	    				<button class="btn btn-default" (click)="resetLocation()">Here</button>
 	    			</span>
 	    			<input class="form-control" type="text" [(ngModel)]="searchLocation" 
 	    				placeholder="lookup a location"/>
@@ -27,35 +28,7 @@
 	  			</div>
 	  		</div>
 		</div>
-						<div bsModal class="modal fade" #calcModal="bs-modal" tabindex="-1" role="dialog" 
-								aria-labelledby="myModalLabel">
-							  <div class="modal-dialog" role="document">
-							    <div class="modal-content">
-							      <div class="modal-header">
-							        <button type="button" class="close" (click)="calcModal.hide()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							        <h4 class="modal-title" id="myModalLabel">Calculation Notes</h4>
-							      </div>
-							      <div class="modal-body">
-							         <p>This calculation uses adjustments for extreme latitudes to ensure that the time from fajr until isha does not exceed 20 hours and that the time from sunrise to maghrib does not exceed 18 hours</p>
-							      
-								      <p>Similar adjustments are made to ensure that there are always at least 4 hours from sunrise to maghrib.</p>
-
-								      <p>In this way there is a gradual change of prayer times as you go towards extreme latitudes which then allows a reasonable gap between the late night and early morning prayers to be kept.</p>
-
-								      <p>Asr times are based on 2/3rds of the way between zuhr and maghrib</p>
-								      
-								     <p>A new moon is considered visible if it is more than 1 day old</p>
-
-								      <p>Source code for this application can be found at
-							        <a href="https://github.com/shariahstandards/shariahstandards.org">
-							          here
-							        </a>
-							      </p>
-							      </div>
-							     
-							    </div>
-							  </div>
-							</div>
+					
 	<div>&nbsp;</div>
 	<div [hidden]="calendar.length>0">
 		<div class="row">
@@ -67,14 +40,7 @@
 			<div class="col-md-8">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-					<div class="pull-right">
-						<button type="button" class="btn btn-default" (click)="calcModal.show()">
-				  			calculation notes
-						</button>
-
-
-
-					</div>
+					
 						<h3>Prayer times  in {{timeZone}} <span *ngIf="timeZone == null || timeZone == ''">Greenwich Mean Time</span> for {{getFullDate()}}</h3>
 					</div>
 					<div class="panel-body">
@@ -221,7 +187,6 @@
 				<tr *ngIf="day.times.startOfLunarMonth">
 					<td colspan="7">
 						There is a new moon visible before isha on {{day.formatedDate}}
-						(<a href="javascript:void(0)" (click)="calcModal.show()">see calculation notes</a>)
 					</td>
 				</tr>
 				</template>
