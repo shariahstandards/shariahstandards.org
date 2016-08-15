@@ -6,7 +6,6 @@ import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 import {CORE_DIRECTIVES} from '@angular/common';
 
 @Component({
- // moduleId: module.id,
   selector: 'shariah-standards-app',
   templateUrl: './shariah-standards.component.html',
   styleUrls: ['./shariah-standards.component.css'],
