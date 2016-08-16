@@ -2,17 +2,19 @@ import { Component, OnInit } from '@angular/core';
 
 export interface asset{
 	description:string,
-	amount:number
+	amount:number,
+  formattedAmount:string
 } 
 export interface debt{
 	description:string,
-	amount:number
+	amount:number,
+  formattedAmount:string
 } 
-export interface country{
+export interface currency{
 	name:string,
 	personalWealthAllowance:number,
-  currencySymbol:string
-	currencyName:string
+  prefix:string
+	suffix:string
 }
 @Component({
   selector: 'app-zakat-calculator',
@@ -26,22 +28,28 @@ export class ZakatCalculatorComponent implements OnInit {
   assets:asset[]=[];
   addDebtModel:any={description:""};
   debts:debt[]=[];
-  countries:country[]=[{
-  	name:"UK",
-  	currencyName:"GBP",
-    currencySymbol:"£",
+  currencies:currency[]=[{
+  	name:"UK Pounds",
+  	prefix:"£",
+    suffix:"GBP",
   	personalWealthAllowance:10000
   }
   ,{
-    name:"USA",
-    currencyName:"USD",
-    currencySymbol:"$",
-    personalWealthAllowance:15000
+    name:"US Dollars",
+    suffix:"USD",
+    prefix:"$",
+    personalWealthAllowance:14000
+  },
+  {
+    name:"Euros",
+    suffix:"EUR",
+    prefix:"€",
+    personalWealthAllowance:12000
   }];
   dependents:number=0;
-  country:country;
+  currency:currency;
   ngOnInit() {
-  	this.country=this.countries[0];
+  	this.currency=this.currencies[0];
 
   }
   addAsset(){
@@ -50,11 +58,15 @@ export class ZakatCalculatorComponent implements OnInit {
       && this.addAssetModel.amount){
   		this.assets.push({
   			description:this.addAssetModel.description,
-  			amount:this.addAssetModel.amount
+  			amount:this.addAssetModel.amount,
+        formattedAmount:this.formatCurrency(this.addAssetModel.amount)
   		});
   		this.addAssetModel={description:""};
   		this.setZakatableWealth();
   	}
+  }
+  formatCurrency(x:number){
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   addDebt(){
   	if(this.addDebtModel.description
@@ -62,6 +74,7 @@ export class ZakatCalculatorComponent implements OnInit {
      && this.addDebtModel.amount){
   		this.debts.push({
   			description:this.addDebtModel.description,
+        formattedAmount:this.formatCurrency(this.addDebtModel.amount),
   			amount:this.addDebtModel.amount
   		});
   		this.addDebtModel={description:""};
@@ -79,7 +92,13 @@ export class ZakatCalculatorComponent implements OnInit {
   	this.setZakatableWealth();
   }
   zakatWealthAllowance(){
-  	return (1+this.dependents)*this.country.personalWealthAllowance;
+  	return (1+this.dependents)*this.currency.personalWealthAllowance;
+  }
+  formattedZakatWealthAllowance(){
+    return this.formatCurrency( this.zakatWealthAllowance());
+  }
+  formattedZakatDue(){
+     return this.formatCurrency(this.zakatableWealthTotal/40.0); 
   }
   zakatableWealthTotal:number=0;
   setZakatableWealth(){

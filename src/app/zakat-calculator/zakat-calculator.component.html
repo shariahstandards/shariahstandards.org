@@ -1,13 +1,13 @@
-<h3>Zakat Calculator Ramadan 2017</h3>
+<h3>Zakat Calculator Ramadan</h3>
 
 
 <div class="row dependents">
 	<h4>Zakat Free Wealth Allowance</h4>
 	<div class="col-md-5">
 		<div class="form-group">
-			<label>Country of Residence</label>
-			<select [(ngModel)]="country" class="form-control">
-				<option *ngFor="let c of countries" [ngValue]="c">{{c.name}}</option>
+			<label>Currency</label>
+			<select [(ngModel)]="currency" class="form-control">
+				<option *ngFor="let c of currencies" [ngValue]="c">{{c.name}}</option>
 			</select>
 		</div>
 	</div>
@@ -18,7 +18,7 @@
 		</div>
 	</div>
 	<div class="col-md-2">
-		{{country.currencySymbol}} {{zakatWealthAllowance()}}  {{country.currencyName}}	
+		{{currency.prefix}}{{formattedZakatWealthAllowance()}}  {{currency.suffix}}	
 	</div>
 
 </div>
@@ -39,7 +39,7 @@
 					{{asset.description}}
 				</td>
 				<td>
-					{{country.currencySymbol}} {{asset.amount}} {{country.currencyName}}
+					{{currency.prefix}}{{asset.formattedAmount}} {{currency.suffix}}
 				</td>
 				<td>
 					<button type="button" class="btn btn-default" (click)="removeAsset(asset)">X</button>
@@ -63,10 +63,10 @@
 		<div class="col-md-5">
 			<div class="form-group">
 				<div class="input-group">
-					<div class="input-group-addon">{{country.currencySymbol}}</div>
+					<div class="input-group-addon">{{currency.prefix}}</div>
 					<input required="true" type="number" [(ngModel)]="addAssetModel.amount" 
 					min="0" max="99999999999" step="1000" class="form-control" placeholder="value" />
-					<div class="input-group-addon">{{country.currencyName}}</div>
+					<div class="input-group-addon">{{currency.suffix}}</div>
 				</div>
 			</div>
 		</div>
@@ -91,7 +91,7 @@
 					{{debt.description}}
 				</td>
 				<td>
-					{{country.currencySymbol}} {{debt.amount}} {{country.currencyName}}
+					{{currency.prefix}}{{debt.formattedAmount}} {{currency.suffix}}
 				</td>
 				<td>
 					<button type="button" class="btn btn-default" (click)="removeDebt(debt)">X</button>
@@ -114,10 +114,10 @@
 		<div class="col-md-5">
 			<div class="form-group">
 				<div class="input-group">
-					<div class="input-group-addon">{{country.currencySymbol}}</div>
+					<div class="input-group-addon">{{currency.prefix}}</div>
 					<input required="true" type="number" [(ngModel)]="addDebtModel.amount" 
 					min="0" max="99999999999" step="1000" class="form-control" placeholder="value" />
-					<div class="input-group-addon">{{country.currencyName}}</div>
+					<div class="input-group-addon">{{currency.suffix}}</div>
 				</div>
 			</div>
 		</div>
@@ -125,8 +125,6 @@
 			<button type="button" class="btn btn-primary" (click)="addDebt()">Add Debt</button>
 		</div>
 </div>
-<div class="row">
-	<div class="alert alert-info">
-		<h4>Zakat is {{country.currencySymbol}} {{zakatableWealthTotal/40.0}} {{country.currencyName}}</h4>
-	</div>
+<div class="row zakat-due">
+	<h4>Zakat due on 15th Ramadan is {{currency.prefix}}{{formattedZakatDue()}} {{currency.suffix}}</h4>
 </div>

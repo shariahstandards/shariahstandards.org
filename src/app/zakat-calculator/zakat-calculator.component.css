@@ -22,3 +22,11 @@ border:2px;
 	margin:10px;
 	padding:10px;
 }
+.zakat-due{
+	border:2px;
+	border-color: #000000;
+	border-style: solid;
+	border-radius: 5px;
+	margin:10px;
+	padding:10px;	
+}
