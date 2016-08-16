@@ -38,6 +38,7 @@ declare var moment: any;
 	constructor(private prayerTimesCalculatorService: PrayerTimesCalculatorService,
 		private viewContainerRef: ViewContainerRef,
 		private ngZone: NgZone) {
+		if(!moment){return;}
 		this.date = moment().format("YYYY-MM-DD");
 		this.latitude = 53.482863;
 		this.longitude = -2.3459968;
@@ -48,20 +49,23 @@ declare var moment: any;
 	}
 	ngAfterViewInit() {
 		var self=this;
-		var mapProp = {
-            center: new google.maps.LatLng(this.latitude, this.longitude),
-            zoom: 5,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        // console.log("initialising map...");
-        this.map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-		this.map.addListener('click', function(e){
-			// console.log("clicked "+ JSON.stringify(e) );
-			self.mapClicked(e);
-		});
-		this.resetLocation();
+		if(google){
+			var mapProp = {
+	            center: new google.maps.LatLng(this.latitude, this.longitude),
+	            zoom: 5,
+	            mapTypeId: google.maps.MapTypeId.ROADMAP
+	        };
+	        // console.log("initialising map...");
+	        this.map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+			this.map.addListener('click', function(e){
+				// console.log("clicked "+ JSON.stringify(e) );
+				self.mapClicked(e);
+			});
+			this.resetLocation();
+		}
 	}
 	getFullDate() {
+		if(!moment){return "";}
 		return moment(this.date).format("dddd Do MMMM");
 	}
 	removeCalendar(){
@@ -134,7 +138,7 @@ declare var moment: any;
 	placeQiblaOnMap() {
 		var self = this;
 		// console.log("placing qibla on map"+this.map);
-
+		if(!this.map){return;}
 		var qiblaLineCoords = [
 			{ lat: this.latitude, lng: this.longitude },
 			{ lat: 21.422441833015604, lng: 39.82616901397705 }

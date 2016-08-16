@@ -57,4 +57,51 @@
       </li>
     </ol>
   </li>
+  <li id="zakat-rules" (click)="toggleCollapse('zakat-rules')" class="clickable">
+    <h3>Zakat Payment</h3>
+    <ol *ngIf="expand('zakat-rules')">
+      <li>
+         Zakat is a centrally collected charitable donation for wealth redistribution which all Muslims are religously obliged to pay if they are wealthy enough. The following rules should be used to calculate the amount of zakat owed:
+        <ol>
+          <li>
+            A Muslim is judged to be wealthy enough if they have sufficient assets to pay for their needs and the needs of their dependents for the following year. 
+          </li>
+         
+          <li>
+            The standard goods and services which may be purchased and everyone needs are:
+            <ol>
+              <li>Water and Sewage</li>
+              <li>Food</li>
+              <li>Clothing</li>
+              <li>Shelter</li>
+              <li>Fuel</li>
+              <li>Communication</li>
+              <li>Transportation</li>
+            </ol>
+          </li>
+          <li>
+            The costs of needs are defined by the median cost of the needed goods and services per person within the geographical area a person has the right to live, travel and work. This provides a periodically adjusted standard minimum wealth amount per person for each such area.  
+          </li>
+          <li>
+            In addition to this some people may have special individual needs due to a disability or disease these can be added to calculate an individual's minimum wealth amount.  
+          </li>
+          <li>
+            Each individual calculates a net wealth estimate. This should be an estimate of how much money would be available for distribution in inheritance if they died after all possessions were sold and all debts are settled and after deducting the individual's minimum wealth amount. 
+          </li>
+          <li>
+            The amount of Zakat that should be paid is 1/40<sup>th</sup> of their net wealth estimate.
+          </li>
+          <li>
+            Zakat should be calculated for noon GMT on the 15<sup>th</sup> of Ramadan each lunar year and paid immediately. 
+          </li>
+          <li>
+             A dependent has the right to have their needs met by the person they depend upon. 
+          </li>
+          <li>
+            If an individual has dependents. In this case, their minimum wealth amount is added to the minimum wealth amount of the person whom they are dependent upon and any assets they have are added to the assets of the person they depend upon in the calculation of net wealth estimates.
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </li>
 </ol>

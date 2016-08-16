@@ -1,9 +1,10 @@
  <h1  class="pull-left"><img title="logo" src="/content/images/logo.svg" width="100px">ShariahStandards.org</h1><span class="tagline">Developing a global open standard interpretation of Islamic law in English</span>
  <div class="clearfix"></div>
   <nav>
-    <a [routerLink]="['']">Prayer Times and Direction</a>
-    <a [routerLink]="['/standards']">Standards</a>
-    <a [routerLink]="['/terms']">Terminology</a>
-    <a [routerLink]="['/about-us']">About Us</a>
+    <a routerLinkActive="active-route"  [routerLinkActiveOptions]="{exact: true}" [routerLink]="['']">Prayer Times and Direction</a>
+    <a routerLinkActive="active-route" [routerLink]="['/zakat']">Zakat</a>
+    <a routerLinkActive="active-route" [routerLink]="['/standards']">Standards</a>
+    <a routerLinkActive="active-route" [routerLink]="['/terms']">Terminology</a>
+    <a routerLinkActive="active-route" [routerLink]="['/about-us']">About Us</a>
   </nav>
   <router-outlet></router-outlet>

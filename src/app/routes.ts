@@ -6,9 +6,11 @@ import {TermDefinitionsComponent} from './term-definitions/term-definitions.comp
 import {termDefinitionsRoutes} from './term-definitions/term-definitions.routes'
 import {standardsRoutes} from './standards/standards.component.routes'
 import {quranSearchRoutes} from './quran-search/quran-search.component.routes'
+import {zakatRoutes} from './zakat-calculator/zakat-calculator.component.routes'
 export const routes: RouterConfig = [
   ...termDefinitionsRoutes,
   ...standardsRoutes,
+  ...zakatRoutes,
 //  ...quranSearchRoutes,
   { path: '', component: PrayerTimesComponent },
   { path: 'about-us', component: AboutUsComponent }
