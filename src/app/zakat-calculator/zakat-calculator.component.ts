@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {CurrencyService} from '../currency.service'
+import {CurrencyService} from '../currency.service';
+import { ROUTER_DIRECTIVES } from '@angular/router';
 export interface asset{
 	description:string,
 	amount:number
@@ -18,7 +19,8 @@ export interface currency{
   selector: 'app-zakat-calculator',
   templateUrl: 'zakat-calculator.component.html',
   styleUrls: ['zakat-calculator.component.css'],
-  providers:[CurrencyService]
+  providers:[CurrencyService],
+  directives: [ROUTER_DIRECTIVES]
 })
 export class ZakatCalculatorComponent implements OnInit {
 

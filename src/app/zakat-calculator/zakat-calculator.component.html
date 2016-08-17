@@ -1,4 +1,5 @@
 <h3>Zakat Calculator - for year from Ramadan 15<sup>th</sup> 1437 AH / June 20<sup>th</sup> 2016 CE</h3>
+	<a [routerLink]="['/standards/zakat-rules']">Details of the Standard</a>
 
 <div class="row dependents">
 	<h4>Zakat Free Wealth Allowance</h4>
@@ -14,7 +15,7 @@
 	<div class="col-md-5">
 		<div class="form-group">
 			<label>Number of your dependents</label>
-			<input required="true" type="number" [(ngModel)]="dependents" min="0" max="100" step="1" class="form-control"/>
+			<input pattern="[0-9]+" required="true" type="number" [(ngModel)]="dependents" min="0" max="100" step="1" class="form-control"/>
 		</div>
 	</div>
 	<div class="col-md-2">
