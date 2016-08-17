@@ -30,3 +30,16 @@ border:2px;
 	margin:10px;
 	padding:10px;	
 }
+h4.grand-total{
+	width: 100%;
+	text-align:center;
+}
+td.money{
+	text-align: right;
+}
+table.tally td{
+	width:33%;
+}
+table.tally td.actions{
+	text-align: center;
+}
