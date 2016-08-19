@@ -15,7 +15,16 @@ export interface timeZoneInfo {
 }
 export interface prayerTime
 { name: string, time: string }
-
+export interface hijriMonth{
+	englishName:string,
+	arabicName:string,
+	number:number
+}
+export interface hijriDate{
+	year:number,
+	month:hijriMonth,
+	day:number
+}
 export interface prayerTimesForDay {
 	startOfLunarMonth:boolean,
 	moonVisibility:number,
@@ -28,7 +37,8 @@ export interface prayerTimesForDay {
 	fajrIsAdjusted: boolean,
 	fajrIsAdjustedEarlier: boolean,
 	maghribIsAdjustedLater: boolean,
-	times: [prayerTime]
+	times: [prayerTime],
+	hijriDate:hijriDate
 }
 
 
@@ -80,6 +90,99 @@ export class PrayerTimesCalculatorService {
 		return (this.fullDaylightLengthInHours(times) > 6
 			&& this.fullDaylightLengthInHours(times) < 18);
 	}
+	getHijriDate(latitude: number, longitude: number, date: Date, utcOffset: number): hijriDate {
+		var referenceDate = moment.utc("2016-06-20T12:00:00");
+		var currentDate = moment(date);
+		var testDate=moment(date).toDate();
+		var dayCountBack=0;
+		var adjustedTimes = this.getAdjustedTimes(latitude,longitude,testDate,utcOffset);
+		while(!adjustedTimes.startOfLunarMonth || dayCountBack==0){
+			dayCountBack--;
+			testDate=moment(testDate).add(-1,"days").toDate();
+			adjustedTimes = this.getAdjustedTimes(latitude,longitude,testDate,utcOffset);
+		}
+		dayCountBack++;//start of lunar month indicates next day is start of lunar month
+		var hijriDateDay=1-dayCountBack;
+		var daysTo15thOfHijriDateDay = 15-hijriDateDay;
+		var fifteenthOfHijriMonthDate = currentDate.add(daysTo15thOfHijriDateDay,"days");
+		var daysToReferenceDate = fifteenthOfHijriMonthDate.diff(referenceDate,"days");
+		var lunarMonthsSinceReferenceDate = Math.round(daysToReferenceDate /29.5306);
+		var referenceDateLunarMonthIndex=8;
+		var lunarMonthIndex = (referenceDateLunarMonthIndex+lunarMonthsSinceReferenceDate)%12;
+		var hijriMonth = this.hijriMonths[lunarMonthIndex];
+		var referenceDateHijriYear=1437;
+		var lunarYearsSinceReferenceDay = Math.floor(
+			(referenceDateLunarMonthIndex+lunarMonthsSinceReferenceDate)/12.0);
+		var hijriYear = referenceDateHijriYear + lunarYearsSinceReferenceDay;
+		return {
+			day:hijriDateDay,
+			month:hijriMonth,
+			year:hijriYear
+		}
+
+	}
+	hijriMonths:hijriMonth[]=[
+	{
+		arabicName:'مُحَرَّم',
+		englishName:'Muḥarram',
+		number:1
+	},
+	{
+		arabicName:'صَفَر',
+		englishName:'Ṣafar',
+		number:2
+	},
+	{
+		arabicName:'رَبيع الأوّل',
+		englishName:'Rabī‘ al-awwal',
+		number:3
+	},
+	{
+		arabicName:'رَبيع الثاني',
+		englishName:'Rabī‘ ath-thānī',
+		number:4
+	},
+	{
+		arabicName:'جُمادى الأولى',
+		englishName:'Jumādá al-ūlá',
+		number:5
+	},
+	{
+		arabicName:'جُمادى الآخرة',
+		englishName:'Jumādá al-ākhirah',
+		number:6
+	},
+	{	
+		arabicName:'رَجَب',
+		englishName:'Rajab',
+		number:7	
+	},
+	{
+		arabicName:'شَعْبان',
+		englishName:'Sha‘bān',
+		number:8
+	},
+	{
+		arabicName:'رَمَضان',
+		englishName:'Ramaḍān',
+		number:9
+	},
+	{
+		arabicName:'شَوّال',
+		englishName:'Shawwāl',
+		number:10
+	},
+	{
+		arabicName:'ذو القعدة',
+		englishName:'Dhū al-Qa‘dah',
+		number:11
+	},
+	{
+		arabicName:'ذو الحجة',
+		englishName:'Dhū al-Ḥijjah',
+		number:12
+	}
+	]
 	getAdjustedTimes(latitude: number, longitude: number, date: Date, utcOffset: number): any {
 		var unadjustedLatitude = latitude;
 		var increment = 0.01;
@@ -154,11 +257,8 @@ export class PrayerTimesCalculatorService {
 		var moonAtMaghrib = SunCalc.getMoonIllumination(times.sunset);
 		//var moonPositionAtMaghrib = SunCalc.getMoonPosition(times.sunset);
 		var moonPositionAtIsha= SunCalc.getMoonPosition(times.isha);
+		
 		//1 day old moon at isha is deemed 100% visible
-		// var altitude = 0.0;
-		// if(!isNaN(moonPositionAtIsha.altitude)){
-		// 	altitude=moonPositionAtIsha.altitude;
-		// }
 		var moonVisibilityAtIsha = Math.min(1.0,moonAtIsha.phase*29.5306);
 		var moonVisibilityAtIshaYesterday = Math.min(1.0,moonAtPreviousIsha1DaysAgo.phase*29.5306);
 		var isStartOfLunarMonthYesterday=(moonAtPreviousIsha3DaysAgo.phase>moonAtPreviousIsha1DaysAgo.phase 
@@ -209,7 +309,7 @@ export class PrayerTimesCalculatorService {
 		return this.getTimeZone(date, latitude, longitude);
 	}
 	getPrayerTimes(date: Date, latitude: number, longitude: number,
-		timeZone:timeZoneInfo): prayerTimesForDay {
+		timeZone:timeZoneInfo, yesterdayHijri?:hijriDate, yesterDayWasNewMoon?:boolean): prayerTimesForDay {
 
 		var self = this;
 	
@@ -221,6 +321,26 @@ export class PrayerTimesCalculatorService {
 
 				SunCalc.addTime(-18, 'fajr', 'isha');
 				var times = self.getAdjustedTimes(latitude, longitude, dateMoment.toDate(), utcOffset);
+				var hijriDate:hijriDate =null;
+				if(yesterdayHijri==null){
+					hijriDate=this.getHijriDate(latitude, longitude, dateMoment.toDate(), utcOffset);
+				}
+				else{
+					if(!yesterDayWasNewMoon)
+					{
+						hijriDate={
+							day:yesterdayHijri.day+1,
+							month:yesterdayHijri.month,
+							year:yesterdayHijri.year
+						}
+					}else{
+						hijriDate={
+								day:1,
+								month: this.hijriMonths[yesterdayHijri.month.number%12],
+								year:yesterdayHijri.year+Math.floor((yesterdayHijri.month.number/12))
+							}
+					}
+				}
 				return {
 					moonVisibility:times.moonVisibility,
 					startOfLunarMonth: times.startOfLunarMonth,
@@ -231,7 +351,8 @@ export class PrayerTimesCalculatorService {
 					maghribIsAdjustedLater: times.maghribIsAdjustedLater,
 					fajrIsAdjusted: times.fajrIsAdjusted,
 					fajrIsAdjustedEarlier: times.fajrIsAdjustedEarlier,
-					times:times
+					times:times,
+					hijriDate:hijriDate
 				};
 
 	}

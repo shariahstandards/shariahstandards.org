@@ -41,7 +41,13 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 					
-						<h3>Prayer times  in {{timeZone}} <span *ngIf="timeZone == null || timeZone == ''">Greenwich Mean Time</span> for {{getFullDate()}}</h3>
+						<h2> {{getFullDate()}} 
+						<span *ngIf="hijriDate"> - {{hijriDate.day}} {{hijriDate.month.englishName}} {{hijriDate.year}}
+						</span>
+							
+						</h2>
+						<h3>{{timeZone}}<span *ngIf="timeZone == null || timeZone == ''">Greenwich Mean Time</span></h3>
+
 					</div>
 					<div class="panel-body">
 						
@@ -79,9 +85,9 @@
 						    	</div>
 						    </div>
 						</div>
-						<div *ngIf="startOfLunarMonth">
+						<!-- <div *ngIf="startOfLunarMonth">
 							<p>There is a new moon visible before isha</p>
-						</div>
+						</div> -->
 						<div *ngIf="fajrIsAdjusted">
 					    	Fajr and isha use adjusted times (zuhr -/+ 10 hours)
 					    </div>
@@ -139,6 +145,7 @@
 		  	 <thead>
 		  		<tr>
 		  			<th>Date</th>
+		  			<th>Hijri</th>
 		  			<th>
 		  				fajr
 		  			</th>
@@ -163,8 +170,14 @@
 				<template ngFor [ngForOf]="calendar" let-day>
 				<tr>
 					<td>{{day.formatedDate}}
-						<span *ngIf="day.startOfLunarMonth">*</span>
-					</td> 			
+
+				<!-- 		<span *ngIf="day.startOfLunarMonth">*</span> -->
+					</td> 
+					<td>
+						{{day.hijriDate.day}}
+						{{day.hijriDate.month.englishName}}
+						{{day.hijriDate.month.arabicName}}
+					</td>			
 					<td>
 						{{day.times.fajr}}
 					</td>
@@ -184,11 +197,11 @@
 						{{day.times.isha}}
 					</td>
 				</tr>
-				<tr *ngIf="day.times.startOfLunarMonth">
+				<!-- <tr *ngIf="day.times.startOfLunarMonth">
 					<td colspan="7">
 						There is a new moon visible before isha on {{day.formatedDate}}
 					</td>
-				</tr>
+				</tr> -->
 				</template>
 			</tbody>
 	  	</table>

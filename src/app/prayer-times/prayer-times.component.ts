@@ -1,6 +1,6 @@
 import {Component, AfterViewInit, ViewChild, ViewContainerRef} from '@angular/core'
 import {NgZone} from '@angular/core'
-import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo} from '../prayer-times-calculator.service';
+import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 import {AlertComponent, DATEPICKER_DIRECTIVES, MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
@@ -66,7 +66,7 @@ declare var moment: any;
 	}
 	getFullDate() {
 		if(!moment){return "";}
-		return moment(this.date).format("dddd Do MMMM");
+		return moment(this.date).format("dddd Do MMMM YYYY");
 	}
 	removeCalendar(){
 		this.numberOfDaysInCalendar = null;
@@ -177,9 +177,14 @@ declare var moment: any;
 			.subscribe(timeZone => {
 				self.calendar = [];
 				var dateMoment = moment(self.date).startOf('d');
+				var yesterdayHijriDate=null;
+				var yesterdayWasNewMoon=false;
 				for (var i = 0; i < days; i++) {
 					var date = moment(dateMoment).add(i, 'd');
-					self.calendar.push(self.getPrayerTimesForDate(date, timeZone));
+					var prayerTimesForDate= self.getPrayerTimesForDate(date, timeZone, yesterdayHijriDate,yesterdayWasNewMoon);
+					self.calendar.push(prayerTimesForDate);
+					yesterdayHijriDate = prayerTimesForDate.hijriDate;
+					yesterdayWasNewMoon = prayerTimesForDate.startOfLunarMonth;
 				}
 				var firstDay = self.calendar[0];
 				self.showNewMonthLegend = self.calendar.some(function(day){
@@ -187,11 +192,13 @@ declare var moment: any;
 				})
 			});
 	}
+	hijriDate:hijriDate;
 	getPrayerTimes() {
 		var self = this;
 		return self.prayerTimesCalculatorService.getDefaultTimeZone(self.date, self.latitude, self.longitude)
 			.subscribe(timeZone => {
-				var prayerTimesDay = self.getPrayerTimesForDate(self.date, timeZone);
+				console.log("getting prayer times");
+				var prayerTimesDay = self.getPrayerTimesForDate(self.date, timeZone, null,false);
 				self.prayerTimes = prayerTimesDay.times;
 				self.startOfLunarMonth = prayerTimesDay.startOfLunarMonth;
 				self.timeZone = prayerTimesDay.timeZoneName;
@@ -199,12 +206,14 @@ declare var moment: any;
 				self.maghribIsAdjusted = prayerTimesDay.maghribIsAdjusted;
 				self.fajrIsAdjustedEarlier = prayerTimesDay.fajrIsAdjustedEarlier;
 				self.maghribIsAdjustedLater = prayerTimesDay.maghribIsAdjustedLater;
+				self.hijriDate=prayerTimesDay.hijriDate;
+				console.log(self.hijriDate);
 			});
 	}
-	getPrayerTimesForDate(date:Date,timeZone:timeZoneInfo) {
+	getPrayerTimesForDate(date:Date,timeZone:timeZoneInfo,yesterdayHijri?:hijriDate,yesterdayWasNewMoon?:boolean) {
 		var self = this;
 		return self.prayerTimesCalculatorService.getPrayerTimes(date,
-			self.latitude, self.longitude, timeZone);
+			self.latitude, self.longitude, timeZone, yesterdayHijri,yesterdayWasNewMoon);
 	}
 	dateChanged(){
 		this.getPrayerTimes();
