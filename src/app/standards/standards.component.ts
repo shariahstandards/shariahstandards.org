@@ -15,27 +15,40 @@ export class StandardsComponent implements OnInit {
     private route:ActivatedRoute,
     private router:Router
  ) { }
-  collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules"]
+  activeSection:string;
+//  collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules","marriage-rules"]
   ngOnInit() {
      this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
-        this.toggleCollapse(params['section']);
+       if(params['section']){
+        this.activeSection=params['section'];
+        //this.toggleCollapse(params['section']);
+      }
      });
   }
 
   toggleCollapse(sectionName:string){
-  	var index=this.collapsedSections.indexOf(sectionName);
-  	if(index>=0){
-  		this.collapsedSections.splice(index,1);
-  	}else{
-  		this.collapsedSections.push(sectionName);
-  	}
+    if(this.activeSection!=sectionName){
+      // this.activeSection = sectionName;
+      this.router.navigate(["/standards/"+sectionName]);
+    }else{
+      // this.activeSection=null;
+      this.router.navigate(["/standards"]);
+    }
+  	// var index=this.collapsedSections.indexOf(sectionName);
+  	// if(index>=0){
+  	// 	this.collapsedSections.splice(index,1);
+  	// }else{
+  	// 	this.collapsedSections.push(sectionName);
+   //    this.router.navigate(["/standards/"+sectionName]);
+  	// }
   }
   private getRouteParamsSubscribe:any;
   ngOnDestroy() {
     this.getRouteParamsSubscribe.unsubscribe();
   }
   expand(sectionName:string){
-  	var index=this.collapsedSections.indexOf(sectionName);
- 	return index<0;
+      return this.activeSection==sectionName;
+  //	var index=this.collapsedSections.indexOf(sectionName);
+ 	//return index<0;
   }
 }
