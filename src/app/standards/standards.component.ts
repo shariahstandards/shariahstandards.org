@@ -16,7 +16,7 @@ export class StandardsComponent implements OnInit {
     private router:Router
  ) { }
   activeSection:string;
-  collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules","inheritance-rules"]
+  collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules","inheritance-rules","decision-making-rules"]
 //  collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules",]
   ngOnInit() {
      this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
