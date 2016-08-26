@@ -1,0 +1,146 @@
+<h2> Inheritance Calculator </h2>
+
+<div class="row">
+	<div class="col-md-6">
+	<h3>Primary heirs</h3>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label>Father</label>
+				<input type="checkbox" [(ngModel)]="model.hasFather" class="form-control"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label>Mother</label>
+				<input type="checkbox" [(ngModel)]="model.hasMother" class="form-control"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label>Sons</label>
+				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSons" class="form-control"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label>Daughters</label>
+				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfDaughters" class="form-control"/>
+			</div>
+		</div>
+	</div>
+</div>
+	<div class="col-md-6">
+	<h3>Other heirs</h3>
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label>Married</label>
+				<input type="checkbox" [(ngModel)]="model.isMarried" class="form-control"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label>Male</label>
+				<input type="checkbox" [(ngModel)]="model.isMale" class="form-control"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label>Brothers</label>
+				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfBrothers" class="form-control"/>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="form-group">
+				<label>Sisters</label>
+				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSisters" class="form-control"/>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<h3>Shares</h3>
+		<ul>
+			<template ngFor [ngForOf]="getShares().shares" let-share>
+				<li>
+					<dl>
+						<dt>
+							{{share.relationshipToDeceased}}
+						</dt>
+						<dd>
+							{{(share.share*100).toFixed(3)}} %
+						</dd>
+					</dl>
+				</li>
+			</template>
+			<li>
+				<dl>
+					<dt>
+						Total allocated
+					</dt>
+					<dd>
+						{{(getShares().allocatedShare*100).toFixed(3)}} %
+					</dd>
+				</dl>
+			</li>
+		</ul> 
+	</div>
+</div>
+<div *ngIf="overAllocationSituations.length>0">
+Example situations
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th> Mother </th>
+			<th> Father </th>
+			<th> Sons</th>
+			<th> Daughters</th>
+			<th> Married </th>
+			<th> Male </th>
+			<th> Brothers </th>
+			<th> Sisters</th>
+			<th> % Allocated </th>
+		</tr>
+	</thead>
+	<tbody>
+		<template ngFor [ngForOf]="overAllocationSituations" let-situation>
+			<tr>
+				<td>
+					<span *ngIf="situation.hasMother">Y</span>
+					<span *ngIf="!situation.hasMother">N</span>
+				</td>
+				<td>
+					<span *ngIf="situation.hasFather">Y</span>
+					<span *ngIf="!situation.hasFather">N</span>
+				</td>
+				<td>
+					{{situation.numberOfSons}}
+				</td>
+				<td>
+					{{situation.numberOfDaughters}}
+				</td>
+				<td>
+					<span *ngIf="situation.isMarried">Y</span>
+					<span *ngIf="!situation.isMarried">N</span>
+				</td>
+				<td>
+					<span *ngIf="situation.isMale">Y</span>
+					<span *ngIf="!situation.isMale">N</span>
+				</td>
+				<td>
+					{{situation.numberOfBrothers}}
+				</td>
+				<td>
+					{{situation.numberOfSisters}}
+				</td>
+				<td>
+					{{situation.allocatedShare.toPrecision(5)*100}} %
+				</td>
+			</tr>			
+		</template>
+	</tbody>
+</table>	
+</div>
+			
