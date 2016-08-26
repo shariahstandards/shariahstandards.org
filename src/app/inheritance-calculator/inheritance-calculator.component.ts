@@ -41,6 +41,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 	pieChartData:number[]
 	pieChartLabels:string[]
 	pieChartType:string='pie'
+	pieChartOptions={
+		tooltips:{
+			callbacks:{
+				label:function(item,data){
+					return data.labels[item.index]+" : "+data.datasets[0].data[item.index].toFixed(3)+"%";
+				}
+			}
+		}
+	}
 	ngOnChanges(changes) {
       console.log(changes);
   	}
@@ -57,15 +66,16 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			return {
 				generalType:this.getRelationshipType(a.relationshipToDeceased),
 				specificType:a.relationshipToDeceased,
-				share:Number((a.share*100.0).toFixed(2))
+				share:Number((a.share*100.0).toFixed(3))
 			};
 		}).sort((a,b)=>{
-			if(a>b){return 1;}
-			if(a<b){return -1;}
+			if(a.share>b.share){return -1;}
+			if(a.share<b.share){return 1;}
 			return 0;
 		});
 		this.pieChartData=sortedShares.map(s=>{return s.share;})
 		this.pieChartLabels=sortedShares.map(s=>{return s.specificType;})
+
 	}	
 	exampleSituations:inheritanceSituation[]=[]
     constructor() { }
