@@ -1,69 +1,80 @@
 <h2> Inheritance Calculator </h2>
+	<a [routerLink]="['/standards/inheritance-rules']">Details of the Standard</a>
 
+<h3>Description of the deceased:</h3>
 <div class="row">
 	<div class="col-md-6">
-	<h3>Primary heirs</h3>
-	<div class="row">
-		<div class="col-sm-3">
-			<div class="form-group">
-				<label>Father</label>
-				<input type="checkbox" [(ngModel)]="model.hasFather" class="form-control"/>
+		<h3>Primary heirs</h3>
+		<div class="row">
+			<div class="col-sm-3">
+				<div class="form-group">
+					<label>Father</label>
+					<input type="checkbox" [(ngModel)]="model.hasFather" class="form-control"  
+					(ngModelChange)="setShares()"/>
+				</div>
 			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="form-group">
-				<label>Mother</label>
-				<input type="checkbox" [(ngModel)]="model.hasMother" class="form-control"/>
+			<div class="col-sm-3">
+				<div class="form-group">
+					<label>Mother</label>
+					<input type="checkbox" [(ngModel)]="model.hasMother" class="form-control"
+					(ngModelChange)="setShares()"/>
+				</div>
 			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="form-group">
-				<label>Sons</label>
-				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSons" class="form-control"/>
+			<div class="col-sm-3">
+				<div class="form-group">
+					<label>Sons</label>
+					<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSons" class="form-control"
+					(ngModelChange)="setShares()"/>
+				</div>
 			</div>
-		</div>
-		<div class="col-sm-3">
-			<div class="form-group">
-				<label>Daughters</label>
-				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfDaughters" class="form-control"/>
+			<div class="col-sm-3">
+				<div class="form-group">
+					<label>Daughters</label>
+					<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfDaughters" class="form-control"
+					(ngModelChange)="setShares()"/>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 	<div class="col-md-6">
-	<h3>Other heirs</h3>
-	<div class="row">
+		<h3>Other heirs</h3>
+		<div class="row">
 		<div class="col-sm-3">
 			<div class="form-group">
 				<label>Married</label>
-				<input type="checkbox" [(ngModel)]="model.isMarried" class="form-control"/>
+				<input type="checkbox" [(ngModel)]="model.isMarried" class="form-control"
+				(ngModelChange)="setShares()"/>
 			</div>
 		</div>
 		<div class="col-sm-3">
 			<div class="form-group">
 				<label>Male</label>
-				<input type="checkbox" [(ngModel)]="model.isMale" class="form-control"/>
+				<input type="checkbox" [(ngModel)]="model.isMale" class="form-control"
+				(ngModelChange)="setShares()"/>
 			</div>
 		</div>
 		<div class="col-sm-3">
 			<div class="form-group">
 				<label>Brothers</label>
-				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfBrothers" class="form-control"/>
+				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfBrothers" class="form-control"
+				(ngModelChange)="setShares()"/>
 			</div>
 		</div>
 		<div class="col-sm-3">
 			<div class="form-group">
 				<label>Sisters</label>
-				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSisters" class="form-control"/>
+				<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSisters" class="form-control"
+				(ngModelChange)="setShares()"/>
 			</div>
+		</div>
 		</div>
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-sm-2">
 		<h3>Shares</h3>
 		<ul>
-			<template ngFor [ngForOf]="getShares().shares" let-share>
+			<template ngFor [ngForOf]="model.shares" let-share>
 				<li>
 					<dl>
 						<dt>
@@ -81,11 +92,18 @@
 						Total allocated
 					</dt>
 					<dd>
-						{{(getShares().allocatedShare*100).toFixed(3)}} %
+						{{(model.allocatedShare*100).toFixed(3)}} %
 					</dd>
 				</dl>
 			</li>
 		</ul> 
+	</div>
+	<div class="col-sm-10">
+		<base-chart class="chart"
+	           [data]="pieChartData"
+	           [labels]="pieChartLabels"
+	           [chartType]="pieChartType">
+	    </base-chart>
 	</div>
 </div>
 <div *ngIf="overAllocationSituations.length>0">

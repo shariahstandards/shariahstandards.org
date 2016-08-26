@@ -15,7 +15,7 @@ export class StandardsComponent implements OnInit {
     private route:ActivatedRoute,
     private router:Router
  ) { }
-  collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules"]
+  collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules","inheritance-rules"]
   ngOnInit() {
      this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
         this.toggleCollapse(params['section']);

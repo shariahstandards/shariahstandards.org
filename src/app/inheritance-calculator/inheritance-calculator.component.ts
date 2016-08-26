@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
+import {CORE_DIRECTIVES, NgClass,FORM_DIRECTIVES} from '@angular/common';
+import { Component, OnInit, OnChanges,Input } from '@angular/core';
+import { ROUTER_DIRECTIVES } from '@angular/router';
 export interface inheritanceSituation{
 	hasMother:boolean,
 	hasFather:boolean,
@@ -18,9 +21,10 @@ export interface inheritanceShare{
 @Component({
   selector: 'app-inheritance-calculator',
   templateUrl: 'inheritance-calculator.component.html',
-  styleUrls: ['inheritance-calculator.component.css']
+  styleUrls: ['inheritance-calculator.component.css'],
+  directives:[CHART_DIRECTIVES,NgClass,CORE_DIRECTIVES,FORM_DIRECTIVES,ROUTER_DIRECTIVES]
 })
-export class InheritanceCalculatorComponent implements OnInit {
+export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 
 	model:inheritanceSituation={
 		hasMother:false,
@@ -34,10 +38,35 @@ export class InheritanceCalculatorComponent implements OnInit {
 		shares:[],
 		allocatedShare:0
 	};
-	getShares(){
+	pieChartData:number[]
+	pieChartLabels:string[]
+	pieChartType:string='pie'
+	ngOnChanges(changes) {
+      console.log(changes);
+  	}
+  	getRelationshipType(name:string){
+  		var spaceIndex=name.indexOf(" ");
+  		if(spaceIndex>0){
+  			return name.substring(0,spaceIndex);
+  		}
+  		return name;
+  	}
+  	setShares(){
 		this.calculateShares(this.model);
-		return this.model;
-	}
+		var sortedShares=this.model.shares.map((a)=>{
+			return {
+				generalType:this.getRelationshipType(a.relationshipToDeceased),
+				specificType:a.relationshipToDeceased,
+				share:Number((a.share*100.0).toFixed(2))
+			};
+		}).sort((a,b)=>{
+			if(a>b){return 1;}
+			if(a<b){return -1;}
+			return 0;
+		});
+		this.pieChartData=sortedShares.map(s=>{return s.share;})
+		this.pieChartLabels=sortedShares.map(s=>{return s.specificType;})
+	}	
 	exampleSituations:inheritanceSituation[]=[]
     constructor() { }
     calculateShares(situation:inheritanceSituation){
@@ -52,7 +81,7 @@ export class InheritanceCalculatorComponent implements OnInit {
 		if(situation.numberOfSons==0 && situation.numberOfDaughters>=2){
 			for(var d=0;d<situation.numberOfDaughters;d++)
 			situation.shares.push({
-				relationshipToDeceased:"daughter"+(d+1).toString(),
+				relationshipToDeceased:"daughter "+(d+1).toString(),
 				share:(2.0/3.0)/situation.numberOfDaughters
 			});
 		}
@@ -155,7 +184,7 @@ export class InheritanceCalculatorComponent implements OnInit {
 				var adjustedShare=Math.min(1.0/3.0,unallocatedShare);
 				for(var b=0;b<situation.numberOfBrothers;b++){
 					situation.shares.push({
-						relationshipToDeceased:"brother"+(b+1).toString(),
+						relationshipToDeceased:"brother "+(b+1).toString(),
 						share:adjustedShare/siblingCount
 					})
 					//console.log("adding share b");
@@ -163,7 +192,7 @@ export class InheritanceCalculatorComponent implements OnInit {
 				}
 				for(var s=0;s<situation.numberOfSisters;s++){
 					situation.shares.push({
-						relationshipToDeceased:"sister"+(s+1).toString(),
+						relationshipToDeceased:"sister "+(s+1).toString(),
 						share:adjustedShare/siblingCount
 					})
 					//console.log("adding share s");
@@ -183,7 +212,7 @@ export class InheritanceCalculatorComponent implements OnInit {
 
 						for(var s2=0;s2<situation.numberOfSisters;s2++){
 							situation.shares.push({
-								relationshipToDeceased:"sister"+(s2+1).toString(),
+								relationshipToDeceased:"sister "+(s2+1).toString(),
 								share:adjustedShare/situation.numberOfSisters
 							});
 							//console.log("adding share s2");
@@ -194,13 +223,13 @@ export class InheritanceCalculatorComponent implements OnInit {
 					var sistersShare=unallocatedShare/numberOfSiblingsShares;
 					for(var b3=0;b3<situation.numberOfBrothers;b3++){
 						situation.shares.push({
-							relationshipToDeceased:"brother"+(b3+1).toString(),
+							relationshipToDeceased:"brother "+(b3+1).toString(),
 							share:sistersShare*2
 						});
 					}
 					for(var s5=0;s5<situation.numberOfSisters;s5++){
 						situation.shares.push({
-							relationshipToDeceased:"sister"+(s5+1).toString(),
+							relationshipToDeceased:"sister "+(s5+1).toString(),
 							share:sistersShare
 						});
 					}
@@ -220,18 +249,27 @@ export class InheritanceCalculatorComponent implements OnInit {
 			var daughterShare=unallocatedShare/numberOfChildrenShares;
 			for(var s4=0;s4<situation.numberOfSons;s4++){
 				situation.shares.push({
-					relationshipToDeceased:"son"+(s4+1).toString(),
+					relationshipToDeceased:"son "+(s4+1).toString(),
 					share:daughterShare*2
 				});
 			}
 			for(var d2=0;d2<situation.numberOfDaughters;d2++){
 				situation.shares.push({
-					relationshipToDeceased:"daughter"+(d2+1).toString(),
+					relationshipToDeceased:"daughter "+(d2+1).toString(),
 					share:daughterShare
 				});
 			}
 		
 		}
+		this.calculateAllocatedShare(situation);
+		var unallocatedShare = 1.0-situation.allocatedShare;
+		if(unallocatedShare<0.00001){
+			return;
+		}
+		situation.shares.push({
+			relationshipToDeceased:"zakat",
+			share:unallocatedShare
+		});
 		this.calculateAllocatedShare(situation);
 
 
@@ -300,6 +338,7 @@ export class InheritanceCalculatorComponent implements OnInit {
   	this.underAllocationSituations=this.exampleSituations.filter(function(situation){
   		return situation.allocatedShare==0.0
   	});
+  	this.setShares()
   }
   overAllocationSituations:inheritanceSituation[]=[]
   underAllocationSituations:inheritanceSituation[]=[]
