@@ -118,6 +118,31 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
          }]
        }
      ,relatedTerms:[]},
+      { term:"Man",
+       definition:{
+         contents:[{
+           text:"A male human being having reached the age of sexual maturity capable of having children",
+           isADefinedTerm:false
+         }]
+       }
+     ,relatedTerms:[]},
+     { term:"Woman",
+       definition:{
+         contents:[{
+           text:"A female human being having reached the age of sexual maturity capable of having children"
+           +"and being fully physically developed",
+           isADefinedTerm:false
+         }]
+       }
+     ,relatedTerms:[]},
+      { term:"Guardian",
+       definition:{
+         contents:[{
+           text:"An adult with responsibility to act in the best interest of a another human being on their behalf",
+           isADefinedTerm:false
+         }]
+       }
+     ,relatedTerms:[]},
      ]
 
   	  this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
