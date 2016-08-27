@@ -113,7 +113,9 @@
 			           [data]="pieChartData"
 			           [labels]="pieChartLabels"
 			           [chartType]="pieChartType"
-			           [options]="pieChartOptions">
+			           [options]="pieChartOptions"
+			           [colors]="pieChartColors"
+			           >
 			    </base-chart>
 			</div>
 		</div>
@@ -122,30 +124,20 @@
 <div class="row">
 	<div class="col-md-12">
 		<h3>Shares</h3>
-		<ul>
+		<table class="table table-striped">
+			<tbody>
 			<template ngFor [ngForOf]="model.shares" let-share>
-				<li>
-					<dl>
-						<dt>
-							{{share.relationshipToDeceased}}
-						</dt>
-						<dd>
-							{{(share.share*100).toFixed(3)}} %
-						</dd>
-					</dl>
-				</li>
+				<tr>
+					<td>
+						{{share.relationshipToDeceased}}
+					</td>
+					<td>
+						{{(share.share*100).toFixed(6)}} %
+					</td>
+				</tr>
 			</template>
-			<li>
-				<dl>
-					<dt>
-						Total allocated
-					</dt>
-					<dd>
-						{{(model.allocatedShare*100).toFixed(3)}} %
-					</dd>
-				</dl>
-			</li>
-		</ul> 
+			</tbody>
+		</table> 
 	</div>
 </div>
 <div *ngIf="overAllocationSituations.length>0">

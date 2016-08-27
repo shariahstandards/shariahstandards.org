@@ -16,6 +16,7 @@ export interface inheritanceSituation{
 }
 export interface inheritanceShare{
 	relationshipToDeceased:string,
+	counter:number,
 	share:number
 }
 @Component({
@@ -40,16 +41,19 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 	};
 	pieChartData:number[]
 	pieChartLabels:string[]
+	pieChartColours:{}[]
 	pieChartType:string='pie'
 	pieChartOptions={
 		tooltips:{
 			callbacks:{
 				label:function(item,data){
+
 					return data.labels[item.index]+" : "+data.datasets[0].data[item.index].toFixed(3)+"%";
 				}
 			}
 		}
 	}
+	pieChartColors:{}
 	ngOnChanges(changes) {
       console.log(changes);
   	}
@@ -60,23 +64,116 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
   		}
   		return name;
   	}
-  	setShares(){
-		this.calculateShares(this.model);
-		var sortedShares=this.model.shares.map((a)=>{
-			return {
-				generalType:this.getRelationshipType(a.relationshipToDeceased),
-				specificType:a.relationshipToDeceased,
-				share:Number((a.share*100.0).toFixed(3))
-			};
-		}).sort((a,b)=>{
-			if(a.share>b.share){return -1;}
-			if(a.share<b.share){return 1;}
+  	sortDescending(shares:inheritanceShare[]){
+  		return shares.sort((a,b)=>{
+			if(Number(a.share)>Number(b.share)){return -1;}
+			if(Number(a.share)<Number(b.share)){return 1;}
+			if(a.relationshipToDeceased>b.relationshipToDeceased){return 1;}
+			if(a.relationshipToDeceased<b.relationshipToDeceased){return -1;}
+			if(a.counter>b.counter){return 1;}
+			if(a.counter<b.counter){return -1;}
 			return 0;
 		});
-		this.pieChartData=sortedShares.map(s=>{return s.share;})
-		this.pieChartLabels=sortedShares.map(s=>{return s.specificType;})
+  	}
+  	pieChartDataStructure:{}
+  	setShares(){
+		this.calculateShares(this.model);
+		this.pieChartData=this.model.shares.map((a)=>{
+			return Number((a.share*100.0).toFixed(3));
+		});
+		this.pieChartColors= this.buildColourProperties(this.model.shares.map(s=>
+		{
+		 	return this.getColour(s);
+		}));
+		this.pieChartData=this.pieChartData;
+		this.pieChartLabels=this.model.shares.map(s=>{
+			if(s.counter)
+			{
+				return s.relationshipToDeceased+ " "+s.counter;
+			}
+			return s.relationshipToDeceased;
+		});
+		
 
-	}	
+
+		// this.pieChartColours = [this.model.shares.map(s=>
+		//  {
+		//  	return this.getColour(s.relationshipToDeceased);
+		//  })];
+	}
+	buildColourProperties(colours:string[]){
+		return [{
+			backgroundColor:colours,
+			hoverBackgroundColor:colours.map(c=>this.getHoverColour(c))
+		}];
+	}
+	getHoverColour(hexColour:string){
+		console.log(hexColour);
+		var r=hexColour.substring(1,3);
+		var g=hexColour.substring(3,5);
+		var b=hexColour.substring(5);
+		console.log(r+" "+g+" "+b);
+		
+		var reducedColour= "#"
+		+this.reduceIntensity(r)
+		+this.reduceIntensity(g)
+		+this.reduceIntensity(b);
+		console.log(reducedColour);
+		return reducedColour;
+	}
+	reduceIntensity(hexPair:string){
+		var val = parseInt(hexPair, 16);
+		val=val-20;
+		if(val<16){
+			return("00");
+		}
+		return val.toString(16).toUpperCase()
+	}
+	getColour(share:inheritanceShare){
+
+		if(share.relationshipToDeceased== "zakat"){
+			return "#DDFFDD";
+		}
+		if(share.relationshipToDeceased== "mother"){
+			return "#FF9A56";
+		}
+		if(share.relationshipToDeceased=="father"){
+			return "#824E2C"
+		}
+		if(share.relationshipToDeceased=="wives"){
+			return "#A7E2E1"
+		}
+		if(share.relationshipToDeceased=="husband"){
+			return "#35E0DA"
+		}
+		if(share.relationshipToDeceased=="son"){
+			var hex=this.toHexPair(share.counter);
+			return "#0000"+hex;
+		}
+		if(share.relationshipToDeceased=="daughter"){
+			var hex=this.toHexPair(share.counter);
+			return "#"+hex+"00"+hex;
+		}
+		if(share.relationshipToDeceased=="brother"){
+			var hex=this.toHexPair(share.counter);
+			return "#00"+hex+"00";
+		}
+		if(share.relationshipToDeceased=="sister"){
+			var hex=this.toHexPair(share.counter)
+			return "#"+hex+"0000";
+		}
+	}
+	toHexPair(num:number){
+		var val=128;
+	//	console.log("num="+num);
+		if(num!=null){
+			val= 128+((num*32)%127)
+		}
+	//	console.log("value="+val);
+		var hex=val.toString(16)
+	//	console.log("hex="+hex);
+		return hex;
+	}
 	exampleSituations:inheritanceSituation[]=[]
     constructor() { }
     calculateShares(situation:inheritanceSituation){
@@ -85,13 +182,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		if(situation.numberOfSons==0 && situation.numberOfDaughters==1){
 			situation.shares.push({
 				relationshipToDeceased:"daughter",
+				counter:null,
 				share:0.5
 			});
 		}
 		if(situation.numberOfSons==0 && situation.numberOfDaughters>=2){
 			for(var d=0;d<situation.numberOfDaughters;d++)
 			situation.shares.push({
-				relationshipToDeceased:"daughter "+(d+1).toString(),
+				relationshipToDeceased:"daughter",
+				counter:d+1,
 				share:(2.0/3.0)/situation.numberOfDaughters
 			});
 		}
@@ -100,6 +199,7 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				situation.shares.push(
 				{
 					relationshipToDeceased:"father",
+					counter:null,
 					share:(1.0/6.0)
 				});
 			}
@@ -107,6 +207,7 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				situation.shares.push(
 				{
 					relationshipToDeceased:"mother",
+					counter:null,
 					share:(1.0/6.0)
 				});
 			}
@@ -116,6 +217,7 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				situation.shares.push(
 				{
 					relationshipToDeceased:"father",
+					counter:null,
 					share:(1.0/6.0)
 				});
 			}
@@ -124,12 +226,14 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 					situation.shares.push(
 					{
 						relationshipToDeceased:"mother",
+						counter:null,
 						share:(1.0/3.0)
 					});
 				}else{
 					situation.shares.push(
 					{
 						relationshipToDeceased:"mother",
+						counter:null,
 						share:(1.0/6.0)
 					});
 				}
@@ -147,12 +251,14 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				if(!situation.isMale){
 					situation.shares.push({
 						relationshipToDeceased:"husband",
+						counter:null,
 						share: Math.min(0.5,unallocatedShare)
 					});
 				}
 				if(situation.isMale){
 					situation.shares.push({
 						relationshipToDeceased:"wives",
+						counter:null,
 						share:Math.min(0.25,unallocatedShare)
 					});
 				}
@@ -160,12 +266,14 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				if(!situation.isMale){
 					situation.shares.push({
 						relationshipToDeceased:"husband",
+						counter:null,
 						share:Math.min(0.25,unallocatedShare)
 					});
 				}
 				if(situation.isMale){
 					situation.shares.push({
 						relationshipToDeceased:"wives",
+						counter:null,
 						share:Math.min(0.125,unallocatedShare)
 					});
 				}
@@ -194,7 +302,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				var adjustedShare=Math.min(1.0/3.0,unallocatedShare);
 				for(var b=0;b<situation.numberOfBrothers;b++){
 					situation.shares.push({
-						relationshipToDeceased:"brother "+(b+1).toString(),
+						relationshipToDeceased:"brother",
+						counter:b+1,
 						share:adjustedShare/siblingCount
 					})
 					//console.log("adding share b");
@@ -202,7 +311,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				}
 				for(var s=0;s<situation.numberOfSisters;s++){
 					situation.shares.push({
-						relationshipToDeceased:"sister "+(s+1).toString(),
+						relationshipToDeceased:"sister",
+						counter:s+1,
 						share:adjustedShare/siblingCount
 					})
 					//console.log("adding share s");
@@ -214,6 +324,7 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			 			var adjustedShare=Math.min(0.5,unallocatedShare);
 						situation.shares.push({
 							relationshipToDeceased:"sister",
+							counter:null,
 							share:adjustedShare
 						})
 					}
@@ -222,7 +333,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 
 						for(var s2=0;s2<situation.numberOfSisters;s2++){
 							situation.shares.push({
-								relationshipToDeceased:"sister "+(s2+1).toString(),
+								relationshipToDeceased:"sister",
+								counter:s2+1,
 								share:adjustedShare/situation.numberOfSisters
 							});
 							//console.log("adding share s2");
@@ -233,13 +345,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 					var sistersShare=unallocatedShare/numberOfSiblingsShares;
 					for(var b3=0;b3<situation.numberOfBrothers;b3++){
 						situation.shares.push({
-							relationshipToDeceased:"brother "+(b3+1).toString(),
+							relationshipToDeceased:"brother",
+							counter:b3+1,
 							share:sistersShare*2
 						});
 					}
 					for(var s5=0;s5<situation.numberOfSisters;s5++){
 						situation.shares.push({
-							relationshipToDeceased:"sister "+(s5+1).toString(),
+							relationshipToDeceased:"sister",
+							counter:s5+1,
 							share:sistersShare
 						});
 					}
@@ -259,13 +373,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			var daughterShare=unallocatedShare/numberOfChildrenShares;
 			for(var s4=0;s4<situation.numberOfSons;s4++){
 				situation.shares.push({
-					relationshipToDeceased:"son "+(s4+1).toString(),
+					relationshipToDeceased:"son",
+					counter:s4+1,
 					share:daughterShare*2
 				});
 			}
 			for(var d2=0;d2<situation.numberOfDaughters;d2++){
 				situation.shares.push({
-					relationshipToDeceased:"daughter "+(d2+1).toString(),
+					relationshipToDeceased:"daughter",
+					counter:d2+1,
 					share:daughterShare
 				});
 			}
@@ -278,13 +394,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		}
 		situation.shares.push({
 			relationshipToDeceased:"zakat",
+			counter:null,
 			share:unallocatedShare
 		});
 		this.calculateAllocatedShare(situation);
 
-
+		
     }
     calculateAllocatedShare(situation:inheritanceSituation){
+		situation.shares=this.sortDescending(situation.shares);
     	var shares = situation.shares.map(function(share){
 			return share.share;
 		});
