@@ -12,12 +12,67 @@ export interface inheritanceSituation{
 	isMale:boolean,
 	isMarried:boolean,
 	shares:inheritanceShare[],
-	allocatedShare:number
+	allocatedShare:number,
+	allocatedShareFraction:Fraction,
+	unallocatedShare:number,
+	unallocatedShareFraction:Fraction
+}
+export class Fraction{
+	constructor(public top:number,public bottom:number){
+
+	}
+	primes:number[]=[2,3,5,7,11,13,17,19]
+	static add(a:Fraction,b:Fraction){
+		var sum= new Fraction(a.top*b.bottom + b.top*a.bottom,a.bottom*b.bottom);
+		sum.reduce();
+		return sum;
+	}
+	static minus(a:Fraction,b:Fraction){
+	var subtraction= new Fraction(a.top*b.bottom - b.top*a.bottom,a.bottom*b.bottom);
+		subtraction.reduce();
+		return subtraction;	
+	}
+	static minimum(a:Fraction,b:Fraction){
+		var c=Fraction.minus(a,b);
+		if(c.top>0){return b;}
+		return a;
+	}
+	static divideByInt(a:Fraction,n:number){
+		var f = new Fraction(a.top,a.bottom*Math.round(n))
+		f.reduce();
+		return f;
+	}
+	static multiplyByInt(a:Fraction,n:number){
+		var f = new Fraction(a.top*Math.round(n),a.bottom)
+		f.reduce();
+		return f;
+	}
+	reduce(){
+		if(this.top==0){
+			this.bottom=1;
+			return;
+		}
+		var reduced=true;
+		while(reduced){
+			reduced=false;
+			for(var p=0;p<this.primes.length;p++){
+				var prime=this.primes[p];
+				if((this.top%prime)==0 && (this.bottom%prime)==0){
+					this.top = this.top/prime;
+					this.bottom=this.bottom/prime;
+					reduced=true;
+					break;
+				}
+			}
+		}
+
+	}
 }
 export interface inheritanceShare{
 	relationshipToDeceased:string,
 	counter:number,
-	share:number
+	share:number,
+	fraction:Fraction
 }
 @Component({
   selector: 'app-inheritance-calculator',
@@ -37,7 +92,10 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		isMale:false,
 		isMarried:false,
 		shares:[],
-		allocatedShare:0
+		allocatedShare:0,
+		allocatedShareFraction:new Fraction(0,1),
+		unallocatedShare:1,
+		unallocatedShareFraction:new Fraction(1,1)
 	};
 	pieChartData:number[]
 	pieChartLabels:string[]
@@ -183,7 +241,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			situation.shares.push({
 				relationshipToDeceased:"daughter",
 				counter:null,
-				share:0.5
+				share:0.5,
+				fraction:new Fraction(1,2)
 			});
 		}
 		if(situation.numberOfSons==0 && situation.numberOfDaughters>=2){
@@ -191,7 +250,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			situation.shares.push({
 				relationshipToDeceased:"daughter",
 				counter:d+1,
-				share:(2.0/3.0)/situation.numberOfDaughters
+				share:(2.0/3.0)/situation.numberOfDaughters,
+				fraction:Fraction.divideByInt(new Fraction(2,3),situation.numberOfDaughters)
 			});
 		}
 		if(situation.numberOfSons +situation.numberOfDaughters>0){
@@ -200,7 +260,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				{
 					relationshipToDeceased:"father",
 					counter:null,
-					share:(1.0/6.0)
+					share:(1.0/6.0),
+					fraction:new Fraction(1,6)
 				});
 			}
 			if(situation.hasMother){
@@ -208,7 +269,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				{
 					relationshipToDeceased:"mother",
 					counter:null,
-					share:(1.0/6.0)
+					share:(1.0/6.0),
+					fraction:new Fraction(1,6)
 				});
 			}
 		}
@@ -218,7 +280,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				{
 					relationshipToDeceased:"father",
 					counter:null,
-					share:(1.0/6.0)
+					share:(1.0/6.0),
+					fraction:new Fraction(1,6)
 				});
 			}
 			if(situation.hasMother){
@@ -227,23 +290,26 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 					{
 						relationshipToDeceased:"mother",
 						counter:null,
-						share:(1.0/3.0)
+						share:(1.0/3.0),
+						fraction:new Fraction(1,3)
 					});
 				}else{
 					situation.shares.push(
 					{
 						relationshipToDeceased:"mother",
 						counter:null,
-						share:(1.0/6.0)
+						share:(1.0/6.0),
+						fraction:new Fraction(1,6)
 					});
 				}
 			}
 		}
 		//fard shares end
 		this.calculateAllocatedShare(situation);
-		
-		var unallocatedShare = 1.0-situation.allocatedShare;
-		if(unallocatedShare<0.00001){
+		if(situation.unallocatedShare<0.00001){
+			return;
+		}
+		if(situation.unallocatedShareFraction.top==0){
 			return;
 		}
 		if(situation.isMarried){
@@ -252,14 +318,18 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 					situation.shares.push({
 						relationshipToDeceased:"husband",
 						counter:null,
-						share: Math.min(0.5,unallocatedShare)
+						share: Math.min(0.5,situation.unallocatedShare),
+						fraction:Fraction.minimum(new Fraction(1,2),situation.unallocatedShareFraction)
+
 					});
 				}
 				if(situation.isMale){
 					situation.shares.push({
 						relationshipToDeceased:"wives",
 						counter:null,
-						share:Math.min(0.25,unallocatedShare)
+						share:Math.min(0.25,situation.unallocatedShare),
+						fraction:Fraction.minimum(new Fraction(1,4),situation.unallocatedShareFraction)
+
 					});
 				}
 			}else{
@@ -267,44 +337,47 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 					situation.shares.push({
 						relationshipToDeceased:"husband",
 						counter:null,
-						share:Math.min(0.25,unallocatedShare)
+						share:Math.min(0.25,situation.unallocatedShare),
+						fraction:Fraction.minimum(new Fraction(1,4),situation.unallocatedShareFraction)
 					});
 				}
 				if(situation.isMale){
 					situation.shares.push({
 						relationshipToDeceased:"wives",
 						counter:null,
-						share:Math.min(0.125,unallocatedShare)
+						share:Math.min(0.125,situation.unallocatedShare),
+						fraction:Fraction.minimum(new Fraction(1,8),situation.unallocatedShareFraction)
 					});
 				}
 			}
 		}
 		this.calculateAllocatedShare(situation);
 		
-		var unallocatedShare = 1.0-situation.allocatedShare;
-		if(unallocatedShare<0.00001){
+		if(situation.unallocatedShare<0.00001){
 			return;
 		}
-
+		if(situation.unallocatedShareFraction.top==0){
+			return;
+		}
 		//kalalah
 		if(
-			// !situation.isMarried 
-			// && 
 			(!situation.hasFather
 			&& 
 			!situation.hasMother)
 			||(situation.numberOfSons==0 && situation.numberOfDaughters==0)
 			){
 			var siblingCount=situation.numberOfSisters+situation.numberOfBrothers;
-			if(situation.numberOfSons
-				+situation.numberOfDaughters
-				>0){
-				var adjustedShare=Math.min(1.0/3.0,unallocatedShare);
+			if(situation.numberOfSons+situation.numberOfDaughters>0){
+
+				var adjustedShare=Math.min(1.0/3.0,situation.unallocatedShare);
+				var adjustedShareFraction=Fraction.minimum(new Fraction(1,3),situation.unallocatedShareFraction);
+
 				for(var b=0;b<situation.numberOfBrothers;b++){
 					situation.shares.push({
 						relationshipToDeceased:"brother",
 						counter:b+1,
-						share:adjustedShare/siblingCount
+						share:adjustedShare/siblingCount,
+						fraction:Fraction.divideByInt(adjustedShareFraction,siblingCount)
 					})
 					//console.log("adding share b");
 
@@ -313,7 +386,9 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 					situation.shares.push({
 						relationshipToDeceased:"sister",
 						counter:s+1,
-						share:adjustedShare/siblingCount
+						share:adjustedShare/siblingCount,
+						fraction:Fraction.divideByInt(adjustedShareFraction,siblingCount)
+		
 					})
 					//console.log("adding share s");
 
@@ -321,40 +396,48 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			}else{
 				if(situation.numberOfBrothers==0){
 					if(situation.numberOfSisters==1){
-			 			var adjustedShare=Math.min(0.5,unallocatedShare);
+			 			var adjustedShare=Math.min(0.5,situation.unallocatedShare);
+			 			var adjustedShareFraction = Fraction.minimum(new Fraction(1,2),situation.unallocatedShareFraction)
 						situation.shares.push({
 							relationshipToDeceased:"sister",
 							counter:null,
-							share:adjustedShare
+							share:adjustedShare,
+							fraction:adjustedShareFraction
 						})
 					}
 					if(situation.numberOfSisters>1){
-						var adjustedShare=Math.min(2.0/3.0,unallocatedShare);
-
+						var adjustedShare=Math.min(2.0/3.0,situation.unallocatedShare);
+						var adjustedShareFraction = Fraction.minimum(new Fraction(2,3),situation.unallocatedShareFraction)
 						for(var s2=0;s2<situation.numberOfSisters;s2++){
 							situation.shares.push({
 								relationshipToDeceased:"sister",
 								counter:s2+1,
-								share:adjustedShare/situation.numberOfSisters
+								share:adjustedShare/situation.numberOfSisters,
+								fraction:Fraction.divideByInt(adjustedShareFraction,situation.numberOfSisters)
 							});
 							//console.log("adding share s2");
 						}
 					}
 				}else{
 					var numberOfSiblingsShares=(situation.numberOfBrothers*2)+situation.numberOfSisters;
-					var sistersShare=unallocatedShare/numberOfSiblingsShares;
+					var sistersShare=situation.unallocatedShare/numberOfSiblingsShares;
+					var sistersShareFraction =
+						Fraction.divideByInt(situation.unallocatedShareFraction,numberOfSiblingsShares);
+
 					for(var b3=0;b3<situation.numberOfBrothers;b3++){
 						situation.shares.push({
 							relationshipToDeceased:"brother",
 							counter:b3+1,
-							share:sistersShare*2
+							share:sistersShare*2,
+							fraction:Fraction.multiplyByInt(sistersShareFraction,2)
 						});
 					}
 					for(var s5=0;s5<situation.numberOfSisters;s5++){
 						situation.shares.push({
 							relationshipToDeceased:"sister",
 							counter:s5+1,
-							share:sistersShare
+							share:sistersShare,
+							fraction:sistersShareFraction
 						});
 					}
 				}
@@ -362,40 +445,44 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		}
 		//limited shares end
 		this.calculateAllocatedShare(situation);
-		
-		var unallocatedShare = 1.0-situation.allocatedShare;
-		if(unallocatedShare<0.00001){
+		if(situation.unallocatedShare<0.00001){
 			return;
+		}
+		if(situation.unallocatedShareFraction.top==0){
+			return
 		}
 		if(situation.numberOfSons>0){
 
 			var numberOfChildrenShares=(situation.numberOfSons*2)+situation.numberOfDaughters;
-			var daughterShare=unallocatedShare/numberOfChildrenShares;
+			var daughterShare=situation.unallocatedShare/numberOfChildrenShares;
+			var daughtersShareFraction = Fraction.divideByInt(situation.unallocatedShareFraction,numberOfChildrenShares)
 			for(var s4=0;s4<situation.numberOfSons;s4++){
 				situation.shares.push({
 					relationshipToDeceased:"son",
 					counter:s4+1,
-					share:daughterShare*2
+					share:daughterShare*2,
+					fraction:Fraction.multiplyByInt(daughtersShareFraction,2)
 				});
 			}
 			for(var d2=0;d2<situation.numberOfDaughters;d2++){
 				situation.shares.push({
 					relationshipToDeceased:"daughter",
 					counter:d2+1,
-					share:daughterShare
+					share:daughterShare,
+					fraction:daughtersShareFraction
 				});
 			}
 		
 		}
 		this.calculateAllocatedShare(situation);
-		var unallocatedShare = 1.0-situation.allocatedShare;
-		if(unallocatedShare<0.00001){
+		if(situation.unallocatedShare<0.00001){
 			return;
 		}
 		situation.shares.push({
 			relationshipToDeceased:"zakat",
 			counter:null,
-			share:unallocatedShare
+			share:situation.unallocatedShare,
+			fraction:situation.unallocatedShareFraction
 		});
 		this.calculateAllocatedShare(situation);
 
@@ -410,6 +497,19 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			return a+b;
 		});
 		situation.allocatedShare = sum;
+		situation.unallocatedShare = 1.0-sum;
+		this.calculateAllocatedShareFraction(situation);
+    }
+    calculateAllocatedShareFraction(situation:inheritanceSituation){
+		situation.shares=this.sortDescending(situation.shares);
+    	var fractions = situation.shares.map(function(share){
+			return share.fraction;
+		});
+		var sum = [new Fraction(0,1)].concat(fractions).reduce(function(a,b){
+			return Fraction.add(a,b);
+		});
+		situation.allocatedShareFraction = sum;
+		situation.unallocatedShareFraction = Fraction.minus(new Fraction(1,1),sum)
     }
     ngOnInit() {
   	var hasMotherStatuses=[true,false];
@@ -436,7 +536,7 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
   								var isMarriedStatuses=[true,false];
   								for(var m3=0;m3<isMarriedStatuses.length;m3++){
   									var isMarried=isMaleStatuses[m3];
-  									var situation={
+  									var situation:inheritanceSituation={
   										hasFather:hasFather,
   										hasMother:hasMother,
   										isMale:isMale,
@@ -446,7 +546,10 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
   										numberOfSisters:numberOfSisters,
   										numberOfSons:numberOfSons,
   										shares:[],
-  										allocatedShare:0.0
+  										allocatedShare:0.0,
+  										unallocatedShare:1.0,
+  										allocatedShareFraction:new Fraction(0,1),
+  										unallocatedShareFraction:new Fraction(1,1)
   									};
 							  		this.calculateShares(situation);
 
