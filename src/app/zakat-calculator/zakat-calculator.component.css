@@ -34,7 +34,7 @@ h4.grand-total{
 	width: 100%;
 	text-align:center;
 }
-td.money{
+td.money, th.money{
 	text-align: right;
 }
 table.tally td{
