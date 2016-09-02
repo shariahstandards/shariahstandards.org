@@ -17,6 +17,9 @@
 .time-name{
 	text-transform: capitalize;
 }
+tr.friday{
+	background-color: #ddffdd!important
+}
 @media (max-width:767px){
 	.time-name{
 		font-size: medium;

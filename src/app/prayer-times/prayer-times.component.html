@@ -168,7 +168,7 @@
 		  	</thead>
 			<tbody>
 				<template ngFor [ngForOf]="calendar" let-day>
-				<tr>
+				<tr [ngClass]="{'friday':day.isFriday}">
 					<td>{{day.formatedDate}}
 
 				<!-- 		<span *ngIf="day.startOfLunarMonth">*</span> -->
