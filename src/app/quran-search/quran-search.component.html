@@ -1,22 +1,51 @@
 <h2>Qur'an Search</h2>
-<div class="form-group">
-<input class="form-control" type="text" (keyup)="search()" placeholder="type surah:verse or search term in english or arabic" [(ngModel)]="searchText" >
+<div [ngClass]="{'input-group':searchResults.singleVerse,'form-group':!searchResults.singleVerse}">
+	<span class="input-group-btn" *ngIf="searchResults.singleVerse" >
+		<button class="btn btn-default" id="previousVerse" (click)="previousVerse()">&lt; prev</button>
+	</span>
+	<input class="form-control" type="text" (keyup)="search()" placeholder="type surah:verse or search term in english or arabic" [(ngModel)]="searchText" >
+
+	<span class="input-group-btn" *ngIf="searchResults.singleVerse" >
+		<button class="btn btn-default" id="nextVerse" (click)="nextVerse()">next &gt;</button>
+	</span>
 </div>
+<br/>
 <div *ngIf="!searchResults.hasResults && searchResults.hasSearched">
 	<p>No results</p>
 </div>
 <div *ngIf="searchResults.hasResults">
 	<div *ngIf="searchResults.singleVerse">
-		<div class="col-md-1">
-			<button type="button" class="btn btn-default" (click)="previousVerse()">&lt; prev</button>
+		<div class="row">
+			<div class="col-md-6">
+				<blockquote class="arabic-large">
+					{{searchResults.singleVerse.text}}
+				</blockquote> 
+			</div>
+			<div class="col-md-6">
+				<blockquote>
+					{{searchResults.singleVerse.englishTranslation}}
+				</blockquote> 
+			</div>
 		</div>
-		<div class="col-md-10">
-			<blockquote class="arabic-large">
-				{{searchResults.singleVerse.text}}
-			</blockquote> 
+	</div>
+	<div *ngIf="!searchResults.singleVerse">
+		<select [(ngModel)]="selectedReference" (ngModelChange)="showSelectedVerse()" class="form-control">
+			<option *ngFor="let result of searchResults.results" [ngValue]="result">{{result}}</option>
+		</select>
+		<br/>
+		<div *ngIf="selectedSearchResult">
+		<div class="row">
+			<div class="col-md-6">
+				<blockquote class="arabic-large">
+					{{selectedSearchResult.text}}
+				</blockquote> 
+			</div>
+			<div class="col-md-6">
+				<blockquote>
+					{{selectedSearchResult.englishTranslation}}
+				</blockquote> 
+			</div>
 		</div>
-		<div class="col-md-1">
-			<button type="button" class="btn btn-default" (click)="nextVerse()">next &gt;</button>
-		</div>
+	</div>
 	</div>
 </div>

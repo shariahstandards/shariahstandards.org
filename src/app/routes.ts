@@ -13,7 +13,7 @@ export const routes: RouterConfig = [
   ...standardsRoutes,
   ...zakatRoutes,
   ...inheritanceRoutes,
-//  ...quranSearchRoutes,
+  ...quranSearchRoutes,
   { path: '', component: PrayerTimesComponent },
   { path: 'about-us', component: AboutUsComponent }
 ];

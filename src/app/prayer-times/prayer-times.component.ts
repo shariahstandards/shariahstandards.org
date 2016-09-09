@@ -35,6 +35,7 @@ declare var moment: any;
 	locationNotFound: boolean=false;
 	showNewMonthLegend: boolean;
 	map:any;
+	maxZoomService:any;
 	constructor(private prayerTimesCalculatorService: PrayerTimesCalculatorService,
 		private viewContainerRef: ViewContainerRef,
 		private ngZone: NgZone) {
@@ -45,7 +46,6 @@ declare var moment: any;
 		//this.utcOffset=moment().utcOffset()/60.0;
 		this.fajrAngle = 6;
 		this.ishaAngle = 6;
-
 	}
 	ngAfterViewInit() {
 		var self=this;
@@ -62,6 +62,8 @@ declare var moment: any;
 				self.mapClicked(e);
 			});
 			this.resetLocation();
+			this.maxZoomService=new google.maps.MaxZoomService();
+
 		}
 	}
 	getFullDate() {
@@ -72,9 +74,23 @@ declare var moment: any;
 		this.numberOfDaysInCalendar = null;
 		this.buildCalendar();
 	}
+	zoomToBuilding(){
+		var self=this;
+		var latlng = { lat: self.latitude, lng: self.longitude };
+		this.maxZoomService.getMaxZoomAtLatLng(latlng,(response)=>{
+			if(response.status !== 'OK'){
+				alert("Sorry, google maps returned an error");
+			}else{
+				this.map.setZoom(response.zoom);
+				this.map.setMapTypeId('hybrid');
+			}
+		})
+	}
 	resetLocation(){
 		//console.log("resetting location on map"+this.map);
 		var self = this;
+		self.map.setMapTypeId('roadmap');
+
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(p) {
 				self.latitude = p.coords.latitude;
@@ -90,7 +106,7 @@ declare var moment: any;
 				console.log("could not get your current location:"+e.message)
 			});
 		}
-		this.map.setZoom(10);
+		self.map.setZoom(10);
 	}
 	searchForLocation(){
 		var self = this;
@@ -110,7 +126,6 @@ declare var moment: any;
 						self.placeQiblaOnMap();
 						self.getPrayerTimes();
 						self.buildCalendar();
-						self.searchLocation = '';
 						this.map.setZoom(10);
 					}
 				}

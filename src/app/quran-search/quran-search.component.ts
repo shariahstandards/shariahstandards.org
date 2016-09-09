@@ -1,31 +1,34 @@
 import { Component, OnInit ,OnDestroy} from '@angular/core';
 import { QuranService } from '../quran.service';
 import { Router, ActivatedRoute } from '@angular/router';
-
-
+import {NgClass} from '@angular/common';
 export interface verseResult{
 	text:string,
 	surahNumber:number,
-	verseNumber:number
+	verseNumber:number,
+	englishTranslation:string
 }
   export interface quranSearchResults{
   	hasSearched:boolean,
   	hasResults:boolean,
-  	singleVerse:verseResult
+  	singleVerse:verseResult,
+  	results:string[]
   }
 
 @Component({
   selector: 'app-quran-search',
   templateUrl: 'quran-search.component.html',
   styleUrls: ['quran-search.component.css'],
-  providers:[QuranService]
+  providers:[QuranService],
+  directives:[NgClass]
 })
 
 export class QuranSearchComponent implements OnInit {
 
 	constructor(private quranService:QuranService,private route:ActivatedRoute) { }
 	private getRouteParamsSubscribe:any;
-
+	selectedSearchResult:verseResult
+	selectedReference:string
 	searchText:string="";
 	ngOnInit() {
 		this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
@@ -40,7 +43,8 @@ export class QuranSearchComponent implements OnInit {
 	searchResults:quranSearchResults={
 		hasResults:false,
 		hasSearched:false,
-		singleVerse:undefined
+		singleVerse:undefined,
+		results:[]
 	};
 	nextVerse(){
 		if(this.searchResults.singleVerse!=null){
@@ -80,19 +84,24 @@ export class QuranSearchComponent implements OnInit {
 			}
 		}
 	}
-	search(){
-	  	this.searchResults={
+	showSelectedVerse(){
+		this.selectedSearchResult = this.getSearchResult(this.selectedReference).singleVerse;
+	}
+	getSearchResult(searchText:string){
+		var result = 
+	  	{
 	  			hasSearched:false,
 	  			hasResults:false,
-	  			singleVerse:undefined
-	  		};
-	  	if(this.searchText!=null){
-	  		this.searchResults.hasSearched=true;
+	  			singleVerse:undefined,
+	  			results:[]
+	  	};
+		if(searchText!=null){
+	  		result.hasSearched=true;
 	  		var surahs=this.quranService.getSurahs();
-	  		var colonIndex=this.searchText.indexOf(':')
+	  		var colonIndex=searchText.indexOf(':')
 		  	if(colonIndex>0){
-		  		var surahNumber=Number(this.searchText.substring(0,colonIndex));
-		  		var verseNumber=Number(this.searchText.substring(colonIndex+1));
+		  		var surahNumber=Number(searchText.substring(0,colonIndex));
+		  		var verseNumber=Number(searchText.substring(colonIndex+1));
 		  		console.log(surahNumber+":"+verseNumber);
 		  		if(	surahNumber!=null 
 		  			&& verseNumber!=null
@@ -103,13 +112,32 @@ export class QuranSearchComponent implements OnInit {
 		  			&& surahs.length>=surahNumber
 		  			&& surahs[surahNumber-1].length>=verseNumber
 		  			){
-						this.searchResults.hasResults=true;
-						this.searchResults.singleVerse={text:surahs[surahNumber-1][verseNumber-1].join(" "),
+						result.hasResults=true;
+						result.singleVerse={
+							text:surahs[surahNumber-1][verseNumber-1].join(" "),
 			  				surahNumber:surahNumber,
-			  				verseNumber:verseNumber
+			  				verseNumber:verseNumber,
+			  				englishTranslation:this.quranService.translation(surahNumber.toString(),verseNumber.toString())
 			  			};
 		  		}
 		  	}
+			else if(searchText.length>2){
+				var results = this.quranService.search(searchText);
+				if(results.length==0){
+					result.hasResults=false;
+				}
+				else{
+					result.hasResults=true;
+					result.results = results
+				}
+			}
 		}
+		return result;
+
+	}
+	search(){
+		this.selectedSearchResult=null;
+		this.selectedReference=null;
+		this.searchResults=this.getSearchResult(this.searchText)
   	}
 }
