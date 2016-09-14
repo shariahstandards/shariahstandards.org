@@ -1,6 +1,6 @@
-import { RouterConfig }          from '@angular/router';
+import { RouterModule, Routes  }          from '@angular/router';
 import { InheritanceCalculatorComponent }   from './inheritance-calculator.component';
 
-export const inheritanceRoutes: RouterConfig = [
+export const inheritanceRoutes: Routes  = [
   { path: 'inheritance', component: InheritanceCalculatorComponent },
 ];

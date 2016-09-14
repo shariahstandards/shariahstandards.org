@@ -1,9 +1,9 @@
-import {Component, AfterViewInit, ViewChild, ViewContainerRef} from '@angular/core'
+import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef} from '@angular/core'
 import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
-import { ROUTER_DIRECTIVES } from '@angular/router';
-import {AlertComponent, DATEPICKER_DIRECTIVES, MODAL_DIRECTVES} from 'ng2-bootstrap/ng2-bootstrap';
-import {BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
+import {BrowserModule} from '@angular/platform-browser';
+import {RouterModule} from '@angular/router'
+import {AlertComponent, DatepickerModule, ModalModule} from 'ng2-bootstrap/ng2-bootstrap';
 import 'moment';
 declare var $: any;
 declare var google: any;
@@ -13,9 +13,9 @@ declare var moment: any;
 	templateUrl: './prayer-times.component.html',
   styleUrls: ['./prayer-times.component.css'],
   selector: 'prayer-times',
-  directives: [DATEPICKER_DIRECTIVES, MODAL_DIRECTVES, ROUTER_DIRECTIVES],
+ // directives: [DATEPICKER_DIRECTIVES, MODAL_DIRECTVES, ROUTER_DIRECTIVES],
   providers: [PrayerTimesCalculatorService],
-  viewProviders:[BS_VIEW_PROVIDERS],
+ // viewProviders:[BS_VIEW_PROVIDERS],
 }) export class PrayerTimesComponent implements AfterViewInit {
 	date: Date;
 	latitude: number;
@@ -37,7 +37,6 @@ declare var moment: any;
 	map:any;
 	maxZoomService:any;
 	constructor(private prayerTimesCalculatorService: PrayerTimesCalculatorService,
-		private viewContainerRef: ViewContainerRef,
 		private ngZone: NgZone) {
 		if(!moment){return;}
 		this.date = moment().format("YYYY-MM-DD");

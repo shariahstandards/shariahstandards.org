@@ -1,7 +1,8 @@
-import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
-import {CORE_DIRECTIVES, NgClass,FORM_DIRECTIVES} from '@angular/common';
-import { Component, OnInit, OnChanges,Input } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { NgClass} from '@angular/common';
+import { NgModule, Component, OnInit, OnChanges,Input } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 export interface inheritanceSituation{
 	hasMother:boolean,
 	hasFather:boolean,
@@ -15,7 +16,8 @@ export interface inheritanceSituation{
 	allocatedShare:number,
 	allocatedShareFraction:Fraction,
 	unallocatedShare:number,
-	unallocatedShareFraction:Fraction
+	unallocatedShareFraction:Fraction,
+	hasDependentChildren:boolean
 }
 export class Fraction{
 	constructor(public top:number,public bottom:number){
@@ -77,8 +79,9 @@ export interface inheritanceShare{
 @Component({
   selector: 'app-inheritance-calculator',
   templateUrl: 'inheritance-calculator.component.html',
-  styleUrls: ['inheritance-calculator.component.css'],
-  directives:[CHART_DIRECTIVES,NgClass,CORE_DIRECTIVES,FORM_DIRECTIVES,ROUTER_DIRECTIVES]
+  styleUrls: ['inheritance-calculator.component.css']
+  // directives:[NgClass,CORE_DIRECTIVES,FORM_DIRECTIVES,ROUTER_DIRECTIVES]
+ // directives:[NgClass]
 })
 export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 
@@ -95,7 +98,8 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		allocatedShare:0,
 		allocatedShareFraction:new Fraction(0,1),
 		unallocatedShare:1,
-		unallocatedShareFraction:new Fraction(1,1)
+		unallocatedShareFraction:new Fraction(1,1),
+		hasDependentChildren:true
 	};
 	pieChartData:number[]
 	pieChartLabels:string[]
@@ -133,6 +137,30 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			return 0;
 		});
   	}
+  	yesNoStates=[
+  		{
+	  		value:true,display:"Yes"
+	  	},
+	  	{
+	  		value:false,display:"No"
+	  	}
+  	]
+  	genders=[
+  		{
+	  		value:true,display:"Male"
+	  	},
+	  	{
+	  		value:false,display:"Female"
+	  	}
+  	]
+  	marritalStatuses=[
+	  	{
+	  		value:true,display:"Married"
+	  	},
+	  	{
+	  		value:false,display:"Single"
+	  	}
+  	];
   	pieChartDataStructure:{}
   	setShares(){
 		this.calculateShares(this.model);
@@ -364,10 +392,11 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			(!situation.hasFather
 			&& 
 			!situation.hasMother)
-			||(situation.numberOfSons==0 && situation.numberOfDaughters==0)
+			&& ((situation.numberOfSons==0 && situation.numberOfDaughters==0) 
+				|| !situation.hasDependentChildren)
 			){
 			var siblingCount=situation.numberOfSisters+situation.numberOfBrothers;
-			if(situation.numberOfSons+situation.numberOfDaughters>0){
+			if((situation.numberOfSons+situation.numberOfDaughters>0)||!situation.hasDependentChildren){
 
 				var adjustedShare=Math.min(1.0/3.0,situation.unallocatedShare);
 				var adjustedShareFraction=Fraction.minimum(new Fraction(1,3),situation.unallocatedShareFraction);
@@ -536,24 +565,30 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
   								var isMarriedStatuses=[true,false];
   								for(var m3=0;m3<isMarriedStatuses.length;m3++){
   									var isMarried=isMaleStatuses[m3];
-  									var situation:inheritanceSituation={
-  										hasFather:hasFather,
-  										hasMother:hasMother,
-  										isMale:isMale,
-  										isMarried:isMarried,
-  										numberOfBrothers:numberOfBrothers,
-  										numberOfDaughters:numberOfDaughters,
-  										numberOfSisters:numberOfSisters,
-  										numberOfSons:numberOfSons,
-  										shares:[],
-  										allocatedShare:0.0,
-  										unallocatedShare:1.0,
-  										allocatedShareFraction:new Fraction(0,1),
-  										unallocatedShareFraction:new Fraction(1,1)
-  									};
-							  		this.calculateShares(situation);
+  									var hasDependentChildrenStatuses=[true,false];
+  									for(var ca=0;ca<hasDependentChildrenStatuses.length;ca++)
+  									{
+  										var hasDependentChildren=hasDependentChildrenStatuses[ca];
+	  									var situation:inheritanceSituation={
+	  										hasFather:hasFather,
+	  										hasMother:hasMother,
+	  										isMale:isMale,
+	  										isMarried:isMarried,
+	  										numberOfBrothers:numberOfBrothers,
+	  										numberOfDaughters:numberOfDaughters,
+	  										numberOfSisters:numberOfSisters,
+	  										numberOfSons:numberOfSons,
+	  										shares:[],
+	  										allocatedShare:0.0,
+	  										unallocatedShare:1.0,
+	  										allocatedShareFraction:new Fraction(0,1),
+	  										unallocatedShareFraction:new Fraction(1,1),
+	  										hasDependentChildren:hasDependentChildren
+	  									};
+								  		this.calculateShares(situation);
+								  		this.exampleSituations.push(situation);
+  									}
 
-							  		this.exampleSituations.push(situation);
 							  	//	console.log(situation.allocatedShare);
 							  	}
 						  	}

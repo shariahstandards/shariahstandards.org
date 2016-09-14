@@ -1,4 +1,6 @@
-export class Angular2SalahTimesPage {
+import { browser, element, by } from 'protractor/globals';
+
+export class ShariahstandardsPage {
   navigateTo() {
     return browser.get('/');
   }

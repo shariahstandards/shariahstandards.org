@@ -7,7 +7,7 @@ import { QuranReferenceComponent } from '../quran-reference/quran-reference.comp
   selector: 'app-standards',
   templateUrl: 'standards.component.html',
   styleUrls: ['standards.component.css'],
-  directives:[TermComponent,QuranReferenceComponent]
+  // directives:[TermComponent,QuranReferenceComponent]
 })
 export class StandardsComponent implements OnInit {
 

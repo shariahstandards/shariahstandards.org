@@ -21,7 +21,7 @@ interface DefinitionText{
   selector: 'app-term-definitions',
   templateUrl: './term-definitions.component.html',
   styleUrls: ['./term-definitions.component.css'],
-  directives:[TermComponent]
+//  directives:[TermComponent]
 })
 export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   public term:string;
