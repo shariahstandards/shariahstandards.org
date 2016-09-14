@@ -1,89 +1,67 @@
 <h2>Qur'an Search</h2>
 
 <div class="row">
+	<div class="col-xs-5">
+		<label>Surah</label>
+		<select class="form-control" (ngModelChange)="gotoSurah($event)" 
+			[(ngModel)]="selectedSurah">
+			<option *ngFor="let surah of surahsForSelection" [ngValue]="surah">{{surah.number}} - {{surah.englishName}} - {{surah.arabicName}}</option>
+		</select>
+			
+	</div>
+	<div class="col-xs-2">
+		<label>Verse</label>
+		<select class="form-control" (ngModelChange)="gotoVerse($event)" 
+			[(ngModel)]="selectedVerseNumber">
+			<option *ngFor="let verse of verseSelectionItems" [ngValue]="verse">{{verse}}</option>
+		</select>
+	</div>
 	<div class="col-xs-3">
+		<label>Search text</label>
 		<div class="form-group">
-			<select class="form-control" (ngModelChange)="searchTypeChanged()" [(ngModel)]="searchType">
-				<option *ngFor="let searchType of searchTypes" [ngValue]="searchType">{{searchType.text}}</option>
-			</select>
+			<input class="form-control" type="text" placeholder=" type search phrase in english "
+			 [(ngModel)]="searchText"
+			 (keyup)="searchTextChanged()" ><br/>
 		</div>
 	</div>
-	<div class="col-xs-9" *ngIf="(searchType.code=='ref')">
-		<div class="row">
-			<div class="col-xs-6">
-				<select class="form-control" (ngModelChange)="surahChanged($event)" 
-				[(ngModel)]="selectedSurah">
-					<option *ngFor="let surah of surahsForSelection" [ngValue]="surah">{{surah.number}} - {{surah.englishName}} - {{surah.arabicName}}</option>
-				</select>
-				<select class="form-control" (ngModelChange)="verseChanged($event)" 
-				[(ngModel)]="selectedVerseNumber">
-					<option *ngFor="let verse of verseSelectionItems" [ngValue]="verse">{{verse}}</option>
-				</select>
-			</div>
-		</div>
-	</div>
-	<div class="col-xs-10" *ngIf="(searchType.code=='eng')">
+	<div class="col-xs-2">
 		<div class="form-group">
-			<input class="form-control" type="text" placeholder=" type search phrase in english " [(ngModel)]="searchText" ><br/>
-			<button class="btn btn-primary" type="button" (click)="gotoSearch()">Search</button>
+			<button class="btn btn-primary"  [disabled]="searchText.length<3" type="button" (click)="gotoSearch()">Search</button>
 		</div>
 	</div>
 </div>
-<br/>
-<div *ngIf="searchType.code=='ref' && selectedSurah!=null">
-		<div>Surah {{selectedSurah.englishName}} - {{selectedSurah.arabicName}}</div>
-		<div>Verse {{selectedVerseNumber}}</div>
-		<div *ngIf="selectedVerseResult!=null">
-			<div class="row">
-				<div class="col-md-6">
-					<blockquote class="arabic-large">
-						{{selectedVerseResult.text}}
-					</blockquote> 
-				</div>
-				<div class="col-md-6">
-					<blockquote>
-						{{selectedVerseResult.englishTranslation}}
-					</blockquote> 
-				</div>
-			</div>
-		</div>
-</div>
-<div *ngIf="searchType.code=='eng'">
 
-	<div *ngIf="!searchResults.hasResults && searchResults.hasSearched">
+<div *ngIf="searchResults.hasSearched">
+	<h4>Search Results</h4>
+	<div *ngIf="!searchResults.hasResults">
 		<p>No results</p>
 	</div>
-
 	<div *ngIf="searchResults.hasResults">
-		<div *ngIf="searchResults.singleVerse">
-			<div class="row">
-				<div class="col-md-6">
-					<blockquote class="arabic-large">
-						{{searchResults.singleVerse.text}}
-					</blockquote> 
-				</div>
-				<div class="col-md-6">
-					<blockquote>
-						{{searchResults.singleVerse.englishTranslation}}
-					</blockquote> 
-				</div>
-			</div>
-		</div>
-		<div *ngIf="!searchResults.singleVerse">
-			<h4>Search Results</h4>
-			<!-- <select [(ngModel)]="selectedReference" (ngModelChange)="showSelectedVerse($event)" class="form-control">
-				<option *ngFor="let result of searchResults.results" [ngValue]="result">{{result}}</option>
-			</select> -->
+		<ul class="list-inline">
+			<li  *ngFor="let result of searchResults.results">
+				<a routerLinkActive="active-route"
+				[routerLink]="'/quran/surah/' + result.surah + '/verse/' + result.verse + '/' + result.searchText">
+					{{result.surah}}:{{result.verse}}
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div *ngIf="selectedSurah!=null">
 
-			<br/>
-			<div class="row" *ngFor="let result of searchResults.results">
-				<div class="col-md-12">
-					  <a routerLinkActive="active-route"
-					  [routerLink]="'/quran/surah/'+result.surah+'/verse/'+result.verse">
-					  	{{result.surah}}:{{result.verse}}
-					  </a>
-  
-				</div>
+	<div>Surah {{selectedSurah.englishName}} - {{selectedSurah.arabicName}}</div>
+	<div>Verse {{selectedVerseNumber}}</div>
+	<div *ngIf="selectedVerseResult!=null">
+		<div class="row">
+			<div class="col-md-6">
+				<blockquote class="arabic-large">
+					{{selectedVerseResult.text}}
+				</blockquote> 
+			</div>
+			<div class="col-md-6">
+				<blockquote>
+					<span *ngFor="let part of selectedVerseResult.englishTranslation" [ngClass]="{highlight:part.highlight}">{{part.text}}</span>
+				</blockquote> 
 			</div>
 		</div>
 	</div>

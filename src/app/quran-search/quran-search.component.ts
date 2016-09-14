@@ -6,7 +6,7 @@ export interface verseResult{
 	text:string,
 	surahNumber:number,
 	verseNumber:number,
-	englishTranslation:string
+	englishTranslation:any[]
 }
 export interface quranSearchResults{
 	hasSearched:boolean,
@@ -57,13 +57,7 @@ export class QuranSearchComponent implements OnInit {
 		self.surahsForSelection=self.getSurahsForSelection();
 		
 		self.getRouteParamsSubscribe=self.route.params.subscribe(params=>{
-  	  		var searchText=params['searchText'];
-  	  		if(searchText){
-				self.searchType=self.searchTypes[1];
-  	  			self.searchText=searchText;
-  	  			self.search();
-  	  			return;
-  	  		}
+  	  		
   	  		var surahNumber=params['surahNumber'];
   	  		var verseNumber=params['verseNumber'];
 			self.searchType=self.searchTypes[0];
@@ -72,7 +66,13 @@ export class QuranSearchComponent implements OnInit {
   	  			self.setSurahAndVerse(Number(surahNumber),Number(verseNumber));
   	  		}
   	  		else{
-				self.surahChanged(self.surahsForSelection[0]);
+				self.setSurahAndVerse(1,1);
+  	  		}
+  	  		var searchText=params['searchText'];
+  	  		if(searchText){
+				self.searchType=self.searchTypes[1];
+  	  			self.searchText=searchText;
+  	  			self.search();
   	  		}
 
 	  	});
@@ -226,6 +226,13 @@ export class QuranSearchComponent implements OnInit {
 		});
 		return results;
 	}
+	gotoSurah(selectedSurah){
+		this.router.navigate(["/quran/surah/"+ selectedSurah.number+'/verse/1/'+this.searchText]);
+	}
+	gotoVerse(selectedVerse){
+		this.router.navigate(["/quran/surah/"+ this.selectedSurah.number+'/verse/'
+			+selectedVerse+'/'+this.searchText]);		
+	}
 	surahChanged(selectedSurah){
 
 		this.selectedSurah=selectedSurah
@@ -249,12 +256,30 @@ export class QuranSearchComponent implements OnInit {
 			text:surahs[this.selectedSurah.number-1][this.selectedVerseNumber-1].join(" "),
 			surahNumber:this.selectedSurah.number,
 			verseNumber:this.selectedVerseNumber,
-			englishTranslation:this.quranService.translation(
-				this.selectedSurah.number.toString(),this.selectedVerseNumber.toString())
+			englishTranslation:this.highlight(this.quranService.translation(
+				this.selectedSurah.number.toString(),this.selectedVerseNumber.toString()))
 		};
 	}
-	searchTypeChanged(){
-				
+	highlight(verseText:string){
+		if(this.searchText==null || this.searchText==""){
+			return [{text:verseText}];
+		}
+		//var re = new RegExp("(?text"+this.searchText+")","g");
+		//var result =  verseText.replace(re, '');
+		var parts=[];
+		var lowerCaseVerseText=verseText.toLowerCase();
+		var lowerCaseSearchText=this.searchText.toLowerCase();
+		var nextMatchIndex=lowerCaseVerseText.indexOf(lowerCaseSearchText);
+		var previousMatchIndex=0;
+
+		while(nextMatchIndex>=0){
+			parts.push({text:verseText.substring(previousMatchIndex,nextMatchIndex),highlight:false})
+			parts.push({text:verseText.substring(nextMatchIndex,nextMatchIndex+this.searchText.length),highlight:true})			
+			var previousMatchIndex = nextMatchIndex+this.searchText.length;
+			nextMatchIndex=lowerCaseVerseText.indexOf(lowerCaseSearchText,previousMatchIndex);
+		}
+		parts.push({text:verseText.substring(previousMatchIndex),highlight:false});
+		return parts;
 	}
 	ngOnDestroy() {
   		this.getRouteParamsSubscribe.unsubscribe();
@@ -265,48 +290,48 @@ export class QuranSearchComponent implements OnInit {
 		singleVerse:undefined,
 		results:[]
 	};
-	nextVerse(){
-		if(this.searchResults.singleVerse!=null){
-			var surah=this.searchResults.singleVerse.surahNumber;
-			var verse=this.searchResults.singleVerse.verseNumber;
-			this.searchText=""+surah+":"+(verse+1);
-			this.search();
-			if(!this.searchResults.hasResults){
-				this.searchText=""+(surah+1)+":1";
-				this.search();
-				if(!this.searchResults.hasResults){
-					this.searchText="1:1";
-					this.search();
-				}
-			}
-		}
-	}
-	previousVerse(){
-		if(this.searchResults.singleVerse!=null){
-			var surah=this.searchResults.singleVerse.surahNumber;
-			var verse=this.searchResults.singleVerse.verseNumber;
-			console.log("back from "+ surah+":"+verse);
+	// nextVerse(){
+	// 	if(this.searchResults.singleVerse!=null){
+	// 		var surah=this.searchResults.singleVerse.surahNumber;
+	// 		var verse=this.searchResults.singleVerse.verseNumber;
+	// 		this.searchText=""+surah+":"+(verse+1);
+	// 		this.search();
+	// 		if(!this.searchResults.hasResults){
+	// 			this.searchText=""+(surah+1)+":1";
+	// 			this.search();
+	// 			if(!this.searchResults.hasResults){
+	// 				this.searchText="1:1";
+	// 				this.search();
+	// 			}
+	// 		}
+	// 	}
+	// }
+	// previousVerse(){
+	// 	if(this.searchResults.singleVerse!=null){
+	// 		var surah=this.searchResults.singleVerse.surahNumber;
+	// 		var verse=this.searchResults.singleVerse.verseNumber;
+	// 		console.log("back from "+ surah+":"+verse);
 
-			if(verse>1){
-				this.searchText=""+surah+":"+(verse-1);
-				this.search();
-			}
-			else{
-				var surahs=this.quranService.getSurahs();
-				if(surah>1){
-					this.searchText=""+(surah-1)+":"+surahs[surah-2].length;
-					this.search();
-				}else{
-					this.searchText="114:"+surahs[113].length;
-					this.search();
-				}
-			}
-		}
-	}
-	showSelectedVerse(selectedReference){
-		this.selectedReference=selectedReference;
-		this.selectedSearchResult = this.getSearchResult(this.selectedReference).singleVerse;
-	}
+	// 		if(verse>1){
+	// 			this.searchText=""+surah+":"+(verse-1);
+	// 			this.search();
+	// 		}
+	// 		else{
+	// 			var surahs=this.quranService.getSurahs();
+	// 			if(surah>1){
+	// 				this.searchText=""+(surah-1)+":"+surahs[surah-2].length;
+	// 				this.search();
+	// 			}else{
+	// 				this.searchText="114:"+surahs[113].length;
+	// 				this.search();
+	// 			}
+	// 		}
+	// 	}
+	// }
+	// showSelectedVerse(selectedReference){
+	// 	this.selectedReference=selectedReference;
+	// 	this.selectedSearchResult = this.getSearchResult(this.selectedReference).singleVerse;
+	// }
 	getSearchResult(searchText:string){
 		var result = 
 	  	{
@@ -356,12 +381,16 @@ export class QuranSearchComponent implements OnInit {
 
 	}
 	gotoSearch(){
-		this.router.navigate(["/quran/englishSearch/"+ this.searchText]);
+		this.router.navigate(["/quran/search/"+ this.searchText]);
+	}
+	searchTextChanged(){
+		this.searchResults.hasResults=false;
+		this.searchResults.hasSearched=false;
 	}
 	search(){
 		this.selectedSearchResult=null;
 		this.selectedReference=null;
 		this.searchResults=this.getSearchResult(this.searchText);
-		
+			
   	}
 }

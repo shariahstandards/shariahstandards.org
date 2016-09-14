@@ -43,7 +43,7 @@ constructor() {
   	});
   	matchingVerseNumbers.forEach(verseNumber=>{
   		var verse=verses[verseNumber];
-		results.push({surah:verse.surah,verse:verse.ayah,englishHighlight:text});
+		results.push({surah:verse.surah,verse:verse.ayah,searchText:text});
 
 		// results.push(verse.surah+":"+verse.ayah);
   	});
