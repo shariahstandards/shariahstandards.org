@@ -90,7 +90,7 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 	stripArabicVowels(word)
 	{
 		var output=word;
-		var chars=['\u064e','\u064f','\u0650','\u0652'];
+		var chars=['\u064e','\u064f','\u0650','\u0652','و','ا','ى','ي'];
 		for(var c=0;c<chars.length;c++){
 			output=(output.split(chars[c])).join('');				
 		}
