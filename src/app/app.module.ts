@@ -17,6 +17,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {routing,appRoutingProviders} from './routes';
 import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
+import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router
     StandardsComponent,
     QuranSearchComponent,
     PrayerTimesComponent,
-    AboutUsComponent
+    AboutUsComponent,
+    ArabicKeyboardComponent
       ],
   imports: [
     BrowserModule,

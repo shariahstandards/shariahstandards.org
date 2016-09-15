@@ -6,4 +6,5 @@ export const quranSearchRoutes: Routes = [
   { path: 'quran/search/:searchText', component: QuranSearchComponent },
   { path: 'quran/surah/:surahNumber/verse/:verseNumber', component: QuranSearchComponent },
   { path: 'quran/surah/:surahNumber/verse/:verseNumber/:searchText', component: QuranSearchComponent },
+  { path: 'quran/surah/:surahNumber/verse/:verseNumber/:searchText/:wordToHighlight', component: QuranSearchComponent },
 ];

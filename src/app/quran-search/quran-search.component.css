@@ -1,7 +1,14 @@
 .arabic-large{
 	font-size: 20pt;
 }
+.searchTextBox{
+	font-size: 14pt;
+}
 .highlight{
 	color:#0000FF;
 	font-weight: bold;
+}
+.heightLimited{
+	max-height: 400px;
+	overflow: auto;
 }
