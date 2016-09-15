@@ -9,6 +9,7 @@ import { ShariahStandardsAppComponent } from './shariah-standards.component';
 import { ZakatCalculatorComponent } from './zakat-calculator/zakat-calculator.component';
 import { InheritanceCalculatorComponent } from './inheritance-calculator/inheritance-calculator.component';
 import { TermDefinitionsComponent} from './term-definitions/term-definitions.component';
+import { TermComponent } from './term/term.component';
 import { StandardsComponent } from './standards/standards.component';
 import { QuranSearchComponent } from './quran-search/quran-search.component';
 import { PrayerTimesComponent } from './prayer-times/prayer-times.component';
@@ -26,6 +27,7 @@ import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.compo
     ZakatCalculatorComponent,
     InheritanceCalculatorComponent,
     TermDefinitionsComponent,
+    TermComponent,
     StandardsComponent,
     QuranSearchComponent,
     PrayerTimesComponent,
