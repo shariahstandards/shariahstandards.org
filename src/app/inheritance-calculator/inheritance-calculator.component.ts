@@ -389,9 +389,7 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		}
 		//kalalah
 		if(
-			(!situation.hasFather
-			&& 
-			!situation.hasMother)
+			(!situation.hasFather && !situation.hasMother)
 			&& ((situation.numberOfSons==0 && situation.numberOfDaughters==0) 
 				|| !situation.hasDependentChildren)
 			){
@@ -401,6 +399,11 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				var adjustedShare=Math.min(1.0/3.0,situation.unallocatedShare);
 				var adjustedShareFraction=Fraction.minimum(new Fraction(1,3),situation.unallocatedShareFraction);
 
+				if(siblingCount==1){
+					adjustedShare=Math.min(1.0/6.0,situation.unallocatedShare);
+					adjustedShareFraction=Fraction.minimum(new Fraction(1,6),situation.unallocatedShareFraction);
+				}
+				
 				for(var b=0;b<situation.numberOfBrothers;b++){
 					situation.shares.push({
 						relationshipToDeceased:"brother",
