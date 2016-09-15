@@ -1,6 +1,6 @@
 {
   "name": "shariahstandards",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
@@ -32,7 +32,7 @@
     "zone.js": "^0.6.21"
   },
   "devDependencies": {
-    "angular-cli": "^1.0.0-beta.11-webpack.8",
+    "angular-cli": "^1.0.0-beta.14",
     "@types/jasmine": "^2.2.30",
     "@types/protractor": "^1.5.16",
     "codelyzer": "0.0.26",
