@@ -39,6 +39,16 @@ export class Fraction{
 		if(c.top>0){return b;}
 		return a;
 	}
+	static divide(a:Fraction,b:Fraction){
+		var f = new Fraction(a.top*b.bottom,a.bottom*b.top)
+		f.reduce();
+		return f;
+	}
+	static multiply(a:Fraction,b:Fraction){
+		var f = new Fraction(a.top*b.top,a.bottom*b.bottom)
+		f.reduce();
+		return f;
+	}
 	static divideByInt(a:Fraction,n:number){
 		var f = new Fraction(a.top,a.bottom*Math.round(n))
 		f.reduce();
@@ -194,17 +204,17 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		}];
 	}
 	getHoverColour(hexColour:string){
-		console.log(hexColour);
+		//console.log(hexColour);
 		var r=hexColour.substring(1,3);
 		var g=hexColour.substring(3,5);
 		var b=hexColour.substring(5);
-		console.log(r+" "+g+" "+b);
+		// console.log(r+" "+g+" "+b);
 		
 		var reducedColour= "#"
 		+this.reduceIntensity(r)
 		+this.reduceIntensity(g)
 		+this.reduceIntensity(b);
-		console.log(reducedColour);
+	//	console.log(reducedColour);
 		return reducedColour;
 	}
 	reduceIntensity(hexPair:string){
@@ -303,15 +313,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			}
 		}
 		if(situation.numberOfSons +situation.numberOfDaughters	==0){
-			if(situation.hasFather){
-				situation.shares.push(
-				{
-					relationshipToDeceased:"father",
-					counter:null,
-					share:(1.0/6.0),
-					fraction:new Fraction(1,6)
-				});
-			}
+			// if(situation.hasFather){
+			// 	situation.shares.push(
+			// 	{
+			// 		relationshipToDeceased:"father",
+			// 		counter:null,
+			// 		share:(1.0/6.0),
+			// 		fraction:new Fraction(1,6)
+			// 	});
+			// }
 			if(situation.hasMother){
 				if(situation.numberOfBrothers==0){
 					situation.shares.push(
@@ -388,13 +398,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			return;
 		}
 		//kalalah
+		var hasDependentChildren=situation.hasDependentChildren&&(situation.numberOfDaughters>0 || situation.numberOfSons>0);
+
 		if(
 			(!situation.hasFather && !situation.hasMother)
 			&& ((situation.numberOfSons==0 && situation.numberOfDaughters==0) 
-				|| !situation.hasDependentChildren)
+				|| !hasDependentChildren)
 			){
 			var siblingCount=situation.numberOfSisters+situation.numberOfBrothers;
-			if((situation.numberOfSons+situation.numberOfDaughters>0)||!situation.hasDependentChildren){
+			if((situation.numberOfSons+situation.numberOfDaughters>0) && !hasDependentChildren){
 
 				var adjustedShare=Math.min(1.0/3.0,situation.unallocatedShare);
 				var adjustedShareFraction=Fraction.minimum(new Fraction(1,3),situation.unallocatedShareFraction);
@@ -506,6 +518,54 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			}
 		
 		}
+		if(situation.numberOfSons==0 && situation.numberOfDaughters==0 && situation.hasFather){
+			situation.shares.push({
+				relationshipToDeceased:"father",
+				fraction:situation.unallocatedShareFraction,
+				share:situation.unallocatedShare,
+				counter:null
+			})
+		}
+		this.calculateAllocatedShare(situation);
+		if(situation.unallocatedShare<0.00001){
+			return;
+		}
+		// if(situation.hasFather || situation.hasMother
+		//  || situation.numberOfSons>0 || situation.numberOfDaughters>0){
+			// var parentsAndChildrensTotalShareFraction=new Fraction(0,1);
+			// situation.shares.forEach(share=>{
+			// 	if(share.relationshipToDeceased=="father" 
+			// 		|| share.relationshipToDeceased=="mother"
+			// 		|| share.relationshipToDeceased=="daughter"
+			// 		|| share.relationshipToDeceased=="son")
+			// 	{
+			// 		parentsAndChildrensTotalShareFraction=
+			// 		Fraction.add(parentsAndChildrensTotalShareFraction,share.fraction);
+			// 	}
+			// })
+			console.log("reallocating unused shares to minimum shares");
+			// console.log("qualifying minimum shares"+parentsAndChildrensTotalShareFraction.top+" / "+parentsAndChildrensTotalShareFraction.bottom);
+			situation.shares.forEach(share=>{
+				// if(share.relationshipToDeceased=="father" 
+				// 	|| share.relationshipToDeceased=="mother"
+				// 	|| share.relationshipToDeceased=="daughter"
+				// 	|| share.relationshipToDeceased=="son")
+				// {
+					var additionalShareOfRemainder=Fraction
+						.divide(share.fraction,situation.allocatedShareFraction);
+					console.log(share.relationshipToDeceased+ " has share of remainder = "
+						+additionalShareOfRemainder.top+" / "+additionalShareOfRemainder.bottom);
+					
+					var additionalShareOfEstate=
+						Fraction.multiply(situation.unallocatedShareFraction,additionalShareOfRemainder);
+					console.log(share.relationshipToDeceased+ " has additional share of estate = "
+						+additionalShareOfEstate.top+" / "+additionalShareOfEstate.bottom);
+				
+					share.fraction = Fraction.add(share.fraction,additionalShareOfEstate);
+					share.share=share.share+(additionalShareOfEstate.top/additionalShareOfEstate.bottom)
+				// }
+			});
+		// }
 		this.calculateAllocatedShare(situation);
 		if(situation.unallocatedShare<0.00001){
 			return;
