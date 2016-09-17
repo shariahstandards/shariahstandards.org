@@ -604,7 +604,11 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		situation.unallocatedShareFraction = Fraction.minus(new Fraction(1,1),sum)
     }
     ngOnInit() {
-  	var hasMotherStatuses=[true,false];
+  		this.setShares()
+   	}
+    calculateAllExampleShares(){
+
+   	var hasMotherStatuses=[true,false];
   	for(var m=0;m<hasMotherStatuses.length;m++){
   		var hasMother=hasMotherStatuses[m];
   		var hasFatherStatuses =[true,false];
@@ -667,7 +671,6 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
   	this.underAllocationSituations=this.exampleSituations.filter(function(situation){
   		return situation.allocatedShare==0.0
   	});
-  	this.setShares()
   }
   overAllocationSituations:inheritanceSituation[]=[]
   underAllocationSituations:inheritanceSituation[]=[]

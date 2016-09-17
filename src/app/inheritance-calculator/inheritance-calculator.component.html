@@ -150,7 +150,7 @@
 	</div>
 </div>
 <div *ngIf="overAllocationSituations.length>0">
-Example situations
+<h3>All situation permutations</h3>
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -158,6 +158,7 @@ Example situations
 			<th> Father </th>
 			<th> Sons</th>
 			<th> Daughters</th>
+			<th> Dependent Children</th>
 			<th> Married </th>
 			<th> Male </th>
 			<th> Brothers </th>
@@ -166,7 +167,7 @@ Example situations
 		</tr>
 	</thead>
 	<tbody>
-		<template ngFor [ngForOf]="overAllocationSituations" let-situation>
+		<template ngFor [ngForOf]="exampleSituations" let-situation>
 			<tr>
 				<td>
 					<span *ngIf="situation.hasMother">Y</span>
@@ -181,6 +182,10 @@ Example situations
 				</td>
 				<td>
 					{{situation.numberOfDaughters}}
+				</td>
+				<td>
+					<span *ngIf="situation.hasDependentChildren">Y</span>
+					<span *ngIf="!situation.hasDependentChildren">N</span>
 				</td>
 				<td>
 					<span *ngIf="situation.isMarried">Y</span>
