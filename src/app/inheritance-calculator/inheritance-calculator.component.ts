@@ -292,7 +292,7 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				fraction:Fraction.divideByInt(new Fraction(2,3),situation.numberOfDaughters)
 			});
 		}
-		if(situation.numberOfSons +situation.numberOfDaughters>0){
+		if((situation.numberOfSons +situation.numberOfDaughters)>0){
 			if(situation.hasFather){
 				situation.shares.push(
 				{
