@@ -1,14 +1,39 @@
- <h1  class="pull-left"><img title="logo" src="/assets/content/images/logo.svg" width="100px">ShariahStandards.org</h1><span class="tagline">Developing a global open standard interpretation of Islamic law in English</span>
- <div class="clearfix"></div>
+<div class="row">
+  <div class="col-md-2">
+    <div class="pull-right">
+      <img title="logo" src="/assets/content/images/logo.svg" width="100px"/>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <h1>
+      ShariahStandards.org
+    </h1>
+    <span>
+      Developing a global open standard interpretation of Islamic law in English
+    </span>
+  </div>
+  <div class="col-md-3">
+    <div *ngIf="auth.userProfile" class="user-profile">
+      <img [src]="auth.userProfile.picture" width="50" alt="" class="profile-img"/>
+      {{auth.userProfile.name}}
+      <a class="btn btn-default" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</a>
+    </div>
+    <div *ngIf="!auth.authenticated()" class="user-profile">
+      <a class="btn btn-default" (click)="auth.login()">Log In</a>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
  
-  <nav>
-    <a routerLinkActive="active-route" 
-    [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
-    <a routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
-    <a routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>
-    <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a>
-    <a routerLinkActive="active-route" [routerLink]="'/terms'">Terminology</a>
-    <a routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
-    <a routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a>
-  </nav>
+<nav>
+  <a routerLinkActive="active-route" 
+  [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
+  <a routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
+  <a routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>
+  <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a>
+  <a routerLinkActive="active-route" [routerLink]="'/terms'">Terminology</a>
+  <a routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
+  <a routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a>
+ 
+</nav>
   <router-outlet></router-outlet>

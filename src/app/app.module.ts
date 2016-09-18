@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ApplicationRef } from '@angular/core';
-import { HttpModule }       from '@angular/http'
+import { NgModule, ApplicationRef,Provider } from '@angular/core';
+import { HttpModule, XHRBackend,RequestOptions,Http }       from '@angular/http'
 // import {  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,12 +14,14 @@ import { StandardsComponent } from './standards/standards.component';
 import { QuranSearchComponent } from './quran-search/quran-search.component';
 import { PrayerTimesComponent } from './prayer-times/prayer-times.component';
 import { AboutUsComponent } from './about-us/about-us.component';
-
+import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {routing,appRoutingProviders} from './routes';
 import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
 import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
-
+import { AuthService} from './auth.service'
+import {UserProfileRegistrationService} from './user-profile-registration.service'
+import {AuthenticatedHttpService} from './authenticated-http.service'
 
 @NgModule({
   declarations: [
@@ -44,7 +46,17 @@ import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.compo
     routing
   ],
    providers: [
-    appRoutingProviders
+    appRoutingProviders,
+    UserProfileRegistrationService,
+    AUTH_PROVIDERS,
+    AuthService,
+    AuthenticatedHttpService,
+    {
+      provide:Http,
+      useFactory: (backend: XHRBackend, defaultOptions: RequestOptions) => 
+        new AuthenticatedHttpService(backend, defaultOptions),
+      deps: [XHRBackend, RequestOptions]
+    }
   ],
   entryComponents: [ShariahStandardsAppComponent],
   bootstrap: [ShariahStandardsAppComponent]

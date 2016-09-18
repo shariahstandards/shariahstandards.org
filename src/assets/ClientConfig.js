@@ -1,0 +1,1 @@
+var shariahStandardsApiUrlBase="http://localhost:4500/api/"

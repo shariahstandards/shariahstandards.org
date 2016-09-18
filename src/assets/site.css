@@ -11,6 +11,7 @@ nav a {
   display: inline-block;
   background-color: #eee;
   border-radius: 4px;
+  cursor: pointer;
 }
 nav a:visited, a:link {
   color: #607D8B;
@@ -22,7 +23,10 @@ nav a:hover {
 nav a.active {
   color: #039be5;
 }
-@media (min-width:992px){
+.tagline{
+  float:left;
+}
+/*@media (min-width:992px){
 		.tagline{
 		display: inline-block;
 	    padding-left: 30px;
@@ -34,3 +38,4 @@ nav a.active {
 	display: inline-block;
     padding-left: 5px;
 }
+*/
