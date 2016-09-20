@@ -35,3 +35,7 @@ Thumbs.db
 api/packages/*
 api/WebApi/bin/*
 api/WebApi/obj/*
+**/obj/*
+**/bin/*
+**/*.ncrunchsolution
+**/*.ncrunchproject
