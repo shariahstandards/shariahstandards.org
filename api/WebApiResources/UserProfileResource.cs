@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services
+namespace WebApiResources
 {
-    public interface IUserService
-    {
-    }
-    public class UserService:IUserService
+    public class UserProfileResource
     {
     }
 }

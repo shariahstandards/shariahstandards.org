@@ -33,7 +33,6 @@ namespace WebApi
             // Setting the MetadataEndpoint so the middleware can download the RS256 certificate
             MetadataEndpoint = $"{issuer.TrimEnd('/')}/wsfed/{audience}/FederationMetadata/2007-06/FederationMetadata.xml"
                 });
-            UnityConfig.RegisterComponents();
             // Configure Web API
             WebApiConfig.Configure(app);
         }

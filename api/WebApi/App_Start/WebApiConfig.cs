@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
 using Owin;
+using Unity.WebApi;
 
 namespace WebApi
 {
@@ -11,7 +12,8 @@ namespace WebApi
             HttpConfiguration config = new HttpConfiguration();
             var cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
-
+            
+            config.DependencyResolver=new UnityDependencyResolver(UnityConfig.GetConfiguredContainer());
             // Web API routes
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute(

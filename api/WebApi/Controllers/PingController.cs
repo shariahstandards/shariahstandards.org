@@ -3,6 +3,8 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Web.Http;
+using Services;
+using WebApiResources;
 
 namespace WebApi.Controllers
 {
@@ -10,6 +12,13 @@ namespace WebApi.Controllers
 
     public class PingController : ApiController
     {
+        private readonly IUserService _userService;
+
+        public PingController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [Route("ping")]
         [HttpGet]
         public IHttpActionResult Ping()
@@ -39,9 +48,11 @@ namespace WebApi.Controllers
         [Authorize]
         [Route("register")]
         [HttpPost]
-        public HttpResponseMessage Register(UserProfile profile)
+        public HttpResponseMessage Register(Auth0UserProfile profile)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, true);
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+
+            return Request.CreateResponse(HttpStatusCode.OK, _userService.TrackLogin(profile,claimsIdentity));
         }
     }
 }

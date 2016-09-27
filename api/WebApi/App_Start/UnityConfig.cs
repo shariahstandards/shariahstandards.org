@@ -1,21 +1,19 @@
 using Microsoft.Practices.Unity;
 using System.Web.Http;
+using Services;
 using Unity.WebApi;
 
 namespace WebApi
 {
     public static class UnityConfig
     {
-        public static void RegisterComponents()
+        public static IUnityContainer GetConfiguredContainer()
         {
-			var container = new UnityContainer();
-            
-            // register all your components with the container here
-            // it is NOT necessary to register your controllers
-            
-            // e.g. container.RegisterType<ITestService, TestService>();
-            
-            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+            var container = new UnityContainer();
+            container.RegisterAllServicesForWebsites();
+
+            return container;
         }
+       
     }
 }
