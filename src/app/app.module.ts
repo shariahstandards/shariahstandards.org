@@ -19,7 +19,7 @@ import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {routing,appRoutingProviders} from './routes';
 import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
 import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 
 @NgModule({
   declarations: [
@@ -41,6 +41,7 @@ import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.compo
     FormsModule,
     ChartsModule,
     DatepickerModule,
+    NgbModule,
     routing
   ],
    providers: [

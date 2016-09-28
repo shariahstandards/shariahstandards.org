@@ -1,213 +1,210 @@
    <h2>Worldwide Muslim Prayer Times and Direction</h2>
    <p>
 	<a [routerLink]="['/standards/prayer-times-rules']">Details of the Standard</a>
-  	
-    <div id="googleMap"></div>
-    <div>&nbsp;</div>
-	<div class="row">
-				<div class="col-md-6">
-	  			<h4>{{locationFound}}</h4>
-	  			<div *ngIf="locationNotFound">
-			    	No location found
-			    </div>
-			</div>
-	  		<div class="col-md-6">
-	  			<div class="input-group">
-	  				<span class="input-group-btn">
-	    				<button class="btn btn-default" (click)="resetLocation()">Here</button>
-	    			</span>
-	    			<span class="input-group-btn">
-	    				<button class="btn btn-default" (click)="zoomToBuilding()">Zoom to Building</button>
-	    			</span>
-	    			<input class="form-control" type="text" [(ngModel)]="searchLocation" 
-	    				placeholder="lookup a location"/>
-	    			<span class="input-group-btn">
-	    				<button class="btn btn-default" type="button"
-	    				 (click)="searchForLocation()">
-	    				 Search
-	    				 </button>
-	    			</span>
+	<div class="row" >
+	    <div class="col-sm-6">
+	    	<div class="row">
+	    		<div class="col-xs-4">  
+    				<div class="time-name">Fajr</div>
+    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.fajr}}</div>
+    			</div>
+    			<div class="col-xs-4">  
+    				<div class="time-name">Sunrise</div>
+    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.sunrise}}</div>
+    			</div>
+    			<div class="col-xs-4">  
+    				<div class="time-name">Zuhr</div>
+    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.zuhr}}</div>
+    			</div>
+	    	</div>
+	    </div>
+	    <div class="col-sm-6">
+	    	<div class="row">
+	    		<div class="col-xs-4">  
+    				<div class="time-name">Asr</div>
+    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.asr}}</div>
+    			</div>
+    			<div class="col-xs-4">  
+    				<div class="time-name">Maghrib</div>
+    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.maghrib}}</div>
+    			</div>
+    			<div class="col-xs-4">  
+    				<div class="time-name">Isha</div>
+    				<div  *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.isha}}</div>
+    			</div>
+	    	</div>
+	    </div>
+	</div>
+	<!-- <div *ngIf="startOfLunarMonth">
+		<p>There is a new moon visible before isha</p>
+	</div> -->
 
-	  			</div>
-	  		</div>
+	<div>
+		{{timeZone}}
+		<span *ngIf="timeZone == null || timeZone == ''">
+		Greenwich Mean Time
+		</span>
+		- 
+		<span *ngIf="fajrIsAdjusted">
+	    	Fajr and isha use adjusted times (zuhr -/+ 10 hours)
+	    </span>
+	    <span *ngIf="maghribIsAdjusted">
+	    	Maghrib and Sunrise use adjusted times (zuhr -/+ 9 hours)
+	    </span>
+	    <span *ngIf="fajrIsAdjustedEarlier">
+	    	Fajr and isha use adjusted times (zuhr -/+ 3 hours)
+	    </span>
+	    <span *ngIf="maghribIsAdjustedLater">
+	    	Maghrib and Sunrise use adjusted times (zuhr -/+ 2 hours)
+	    </span>
+	    <span *ngIf="!fajrIsAdjusted && !maghribIsAdjusted && !fajrIsAdjustedEarlier && !maghribIsAdjustedLater">
+	    	No adjustments were made for these times.
+	    </span>
+	</div>
+	<div>&nbsp;</div>		   	    
+	<div class="row">
+
+        <div class="col-md-12">
+			<div class="input-group">
+        		<input class="form-control" type="number" min="1" max="31" placeholder="Number of Days" 
+        		 [(ngModel)]="numberOfDaysInCalendar" value="7"/>
+    			<span class="input-group-btn">
+			      <button class="btn btn-default" type="button" (click)="buildCalendar()">
+			      	Build calendar
+			      </button>
+			      <button class="btn btn-default" *ngIf="calendar.length>0" type="button" (click)="removeCalendar()">
+			    	X
+			</button>
+			    </span>
+ 			</div>
+  		</div>
+    </div>
+	<div class="row" *ngIf="calendar.length>0">
+		<div>&nbsp;</div>
+		<div class="col-md-12">
+			<h4>Calculated Prayer times for {{locationFound}} in {{timeZone}}
+			 </h4>
 		</div>
-					
-	<div>&nbsp;</div>
-	<div [hidden]="calendar.length>0">
-		<div class="row">
-			<div class="col-md-4 dateSelection">
-				<datepicker [(ngModel)]="date" [showWeeks]="false" (ngModelChange)=dateChanged()
-				showWeeks ="false">
-				</datepicker>
-			</div>
-			<div class="col-md-8">
+
+
+		<div class="col-md-12">
+		   	<table  class="prayer-time-table table table-striped">
+			  	 <thead>
+			  		<tr>
+			  			<th>Date</th>
+			  			<th>Hijri</th>
+			  			<th>
+			  				fajr
+			  			</th>
+			  			<th>
+			  				sunrise
+			  			</th>
+			  			<th>
+			  				zuhr
+			  			</th>
+			  			<th>
+			  				asr
+			  			</th>
+			  			<th>
+			  				maghrib
+			  			</th>
+			  			<th>
+			  				isha
+			  			</th>
+			  		</tr>
+			  	</thead>
+				<tbody>
+					<template ngFor [ngForOf]="calendar" let-day>
+					<tr [ngClass]="{'friday':day.isFriday}">
+						<td>{{day.formatedDate}}
+
+					<!-- 		<span *ngIf="day.startOfLunarMonth">*</span> -->
+						</td> 
+						<td>
+							{{day.hijriDate.day}}
+							{{day.hijriDate.month.englishName}}
+							{{day.hijriDate.month.arabicName}}
+						</td>			
+						<td>
+							{{day.times.fajr}}
+						</td>
+						<td>
+							{{day.times.sunrise}}
+						</td>
+						<td>
+							{{day.times.zuhr}}
+						</td>
+						<td>
+							{{day.times.asr}}
+						</td>
+						<td>
+							{{day.times.maghrib}}
+						</td>
+						<td>
+							{{day.times.isha}}
+						</td>
+					</tr>
+					<!-- <tr *ngIf="day.times.startOfLunarMonth">
+						<td colspan="7">
+							There is a new moon visible before isha on {{day.formatedDate}}
+						</td>
+					</tr> -->
+					</template>
+				</tbody>
+		  	</table>
+	  	</div>
+	</div>
+	<div>&nbsp;</div>	
+
+	<div class="row">
+		
+		<div class="col-md-6">
+			<div [hidden]="calendar.length>0">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 					
-						<h2> {{getFullDate()}} 
+						<h4> {{getFullDate()}} 
 						<span *ngIf="hijriDate"> - {{hijriDate.day}} {{hijriDate.month.englishName}} {{hijriDate.year}}
 						</span>
 							
-						</h2>
-						<h3>{{timeZone}}<span *ngIf="timeZone == null || timeZone == ''">Greenwich Mean Time</span></h3>
+						</h4>
+						
 
 					</div>
-					<div class="panel-body">
+					<div>
 						
-					    <div class="row" >
-						    <div class="col-sm-6">
-						    	<div class="row">
-						    		<div class="col-xs-4">  
-					    				<div class="time-name">Fajr</div>
-					    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.fajr}}</div>
-					    			</div>
-					    			<div class="col-xs-4">  
-					    				<div class="time-name">Sunrise</div>
-					    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.sunrise}}</div>
-					    			</div>
-					    			<div class="col-xs-4">  
-					    				<div class="time-name">Zuhr</div>
-					    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.zuhr}}</div>
-					    			</div>
-						    	</div>
-						    </div>
-						    <div class="col-sm-6">
-						    	<div class="row">
-						    		<div class="col-xs-4">  
-					    				<div class="time-name">Asr</div>
-					    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.asr}}</div>
-					    			</div>
-					    			<div class="col-xs-4">  
-					    				<div class="time-name">Maghrib</div>
-					    				<div *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.maghrib}}</div>
-					    			</div>
-					    			<div class="col-xs-4">  
-					    				<div class="time-name">Isha</div>
-					    				<div  *ngIf="prayerTimes.fajr" class="main-time">{{prayerTimes.isha}}</div>
-					    			</div>
-						    	</div>
-						    </div>
-						</div>
-						<!-- <div *ngIf="startOfLunarMonth">
-							<p>There is a new moon visible before isha</p>
-						</div> -->
-						<div *ngIf="fajrIsAdjusted">
-					    	Fajr and isha use adjusted times (zuhr -/+ 10 hours)
-					    </div>
-					    <div *ngIf="maghribIsAdjusted">
-					    	Maghrib and Sunrise use adjusted times (zuhr -/+ 9 hours)
-					    </div>
-					    <div *ngIf="fajrIsAdjustedEarlier">
-					    	Fajr and isha use adjusted times (zuhr -/+ 3 hours)
-					    </div>
-					    <div *ngIf="maghribIsAdjustedLater">
-					    	Maghrib and Sunrise use adjusted times (zuhr -/+ 2 hours)
-					    </div>
-					    <div *ngIf="!fajrIsAdjusted && !maghribIsAdjusted && !fajrIsAdjustedEarlier && !maghribIsAdjustedLater">
-					    	No adjustments were made for these times.
-					    </div>
 
-
-						<div class="row">
-				  
-					        <div class="col-md-12">
-								<div class="input-group">
-					        		<input class="form-control" type="number" min="1" max="31" placeholder="Number of Days" 
-					        		 [(ngModel)]="numberOfDaysInCalendar" value="7"/>
-					    			<span class="input-group-btn">
-								      <button class="btn btn-default" type="button" (click)="buildCalendar()">
-								      	Build calendar
-								      </button>
-								    </span>
-					 			</div>
-					  		</div>
-				   	    </div>
 				    </div>
 				</div>
+				<div class="dateSelection">
+					<ngb-datepicker #dp [(ngModel)]="date" (ngModelChange)="dateChanged()"></ngb-datepicker>
+				</div>
 			</div>
-		</div>	
-	    
-	  
-	<div>&nbsp;</div>
-</div>
-<div class="panel panel-default" *ngIf="calendar.length>0">
-	<div class="panel-heading">
-		<div class="pull-right">
-			<button class="btn btn-default" *ngIf="calendar.length>0" type="button" (click)="removeCalendar()">
-		    	X
-		    </button> 
-		    
-	    </div>
-		<h4>Calculated Prayer times for {{locationFound}} in {{timeZone}}</h4>
-	    <div class="clearfix"></div>
-	</div>
+		</div>
+		<div class="col-md-6">
+			<h4>{{locationFound}}</h4>
+  			<div *ngIf="locationNotFound">
+		    	No location found
+		    </div>
+		    <div class="input-group">
+  				<span class="input-group-btn">
+    				<button class="btn btn-default" (click)="resetLocation()">Here</button>
+    			</span>
+    			<span class="input-group-btn">
+    				<button class="btn btn-default" (click)="zoomToBuilding()">Zoom to Building</button>
+    			</span>
+    			<input class="form-control" type="text" [(ngModel)]="searchLocation" 
+    				placeholder="lookup a location"/>
+    			<span class="input-group-btn">
+    				<button class="btn btn-default" type="button"
+    				 (click)="searchForLocation()">
+    				 Search
+    				 </button>
+    			</span>
+  			</div>
+		    <div id="googleMap"></div>
+		</div>
+	</div>  	
+  
 
-
-	<div class="panel-body">
-	   	<table  class="prayer-time-table table table-striped">
-		  	 <thead>
-		  		<tr>
-		  			<th>Date</th>
-		  			<th>Hijri</th>
-		  			<th>
-		  				fajr
-		  			</th>
-		  			<th>
-		  				sunrise
-		  			</th>
-		  			<th>
-		  				zuhr
-		  			</th>
-		  			<th>
-		  				asr
-		  			</th>
-		  			<th>
-		  				maghrib
-		  			</th>
-		  			<th>
-		  				isha
-		  			</th>
-		  		</tr>
-		  	</thead>
-			<tbody>
-				<template ngFor [ngForOf]="calendar" let-day>
-				<tr [ngClass]="{'friday':day.isFriday}">
-					<td>{{day.formatedDate}}
-
-				<!-- 		<span *ngIf="day.startOfLunarMonth">*</span> -->
-					</td> 
-					<td>
-						{{day.hijriDate.day}}
-						{{day.hijriDate.month.englishName}}
-						{{day.hijriDate.month.arabicName}}
-					</td>			
-					<td>
-						{{day.times.fajr}}
-					</td>
-					<td>
-						{{day.times.sunrise}}
-					</td>
-					<td>
-						{{day.times.zuhr}}
-					</td>
-					<td>
-						{{day.times.asr}}
-					</td>
-					<td>
-						{{day.times.maghrib}}
-					</td>
-					<td>
-						{{day.times.isha}}
-					</td>
-				</tr>
-				<!-- <tr *ngIf="day.times.startOfLunarMonth">
-					<td colspan="7">
-						There is a new moon visible before isha on {{day.formatedDate}}
-					</td>
-				</tr> -->
-				</template>
-			</tbody>
-	  	</table>
-  	</div>
-</div>
 

@@ -4,6 +4,7 @@ import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInf
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router'
 import {AlertComponent, DatepickerModule, ModalModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {NgbModule,NgbDateStruct} from '@ng-bootstrap/ng-bootstrap'
 import 'moment';
 declare var $: any;
 declare var google: any;
@@ -17,7 +18,7 @@ declare var moment: any;
   providers: [PrayerTimesCalculatorService],
  // viewProviders:[BS_VIEW_PROVIDERS],
 }) export class PrayerTimesComponent implements AfterViewInit {
-	date: Date;
+	date: NgbDateStruct;
 	latitude: number;
 	longitude: number;
 	initialiseMap: any;
@@ -39,7 +40,8 @@ declare var moment: any;
 	constructor(private prayerTimesCalculatorService: PrayerTimesCalculatorService,
 		private ngZone: NgZone) {
 		if(!moment){return;}
-		this.date = moment().format("YYYY-MM-DD");
+		var now=new Date();
+		this.date={year: now.getFullYear(), month: now.getMonth(), day: now.getDate()}
 		this.latitude = 53.482863;
 		this.longitude = -2.3459968;
 		//this.utcOffset=moment().utcOffset()/60.0;
@@ -64,6 +66,7 @@ declare var moment: any;
 			this.maxZoomService=new google.maps.MaxZoomService();
 
 		}
+		console.log("the date is"+this.getFullDate());
 	}
 	getFullDate() {
 		if(!moment){return "";}
@@ -179,7 +182,9 @@ declare var moment: any;
 	buildCalendar(){
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
 	}
-
+	getDate(){
+		return new Date(this.date.year,this.date.month,this.date.day);
+	}
 	getPrayerTimeTableForNextNDays(days:number){
 		var self = this;
 		self.showNewMonthLegend = false;
@@ -187,7 +192,7 @@ declare var moment: any;
 		if(days==null){
 			return;
 		}
-		return self.prayerTimesCalculatorService.getDefaultTimeZone(self.date, self.latitude, self.longitude)
+		return self.prayerTimesCalculatorService.getDefaultTimeZone(self.getDate(), self.latitude, self.longitude)
 			.subscribe(timeZone => {
 				self.calendar = [];
 				var dateMoment = moment(self.date).startOf('d');
@@ -209,10 +214,10 @@ declare var moment: any;
 	hijriDate:hijriDate;
 	getPrayerTimes() {
 		var self = this;
-		return self.prayerTimesCalculatorService.getDefaultTimeZone(self.date, self.latitude, self.longitude)
+		return self.prayerTimesCalculatorService.getDefaultTimeZone(self.getDate(), self.latitude, self.longitude)
 			.subscribe(timeZone => {
 				console.log("getting prayer times");
-				var prayerTimesDay = self.getPrayerTimesForDate(self.date, timeZone, null,false);
+				var prayerTimesDay = self.getPrayerTimesForDate(self.getDate(), timeZone, null,false);
 				self.prayerTimes = prayerTimesDay.times;
 				self.startOfLunarMonth = prayerTimesDay.startOfLunarMonth;
 				self.timeZone = prayerTimesDay.timeZoneName;
@@ -230,6 +235,7 @@ declare var moment: any;
 			self.latitude, self.longitude, timeZone, yesterdayHijri,yesterdayWasNewMoon);
 	}
 	dateChanged(){
+		console.log("the date is"+this.getFullDate());
 		this.getPrayerTimes();
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
 	}

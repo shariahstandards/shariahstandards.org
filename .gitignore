@@ -3,6 +3,11 @@
 # compiled output
 /dist
 /tmp
+**/obj/*
+**/bin/*
+**/*.ncrunchsolution
+**/*.ncrunchproject
+api/packages/*
 
 # dependencies
 /node_modules

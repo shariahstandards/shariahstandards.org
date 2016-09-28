@@ -13,9 +13,14 @@
 }
 .new-lunar-month{
 	border-bottom: 5px solid purple;
+	text-align: center;
 }
 .time-name{
 	text-transform: capitalize;
+	text-align: center;
+}
+.main-time{
+	text-align: center;
 }
 tr.friday{
 	background-color: #ddffdd!important
