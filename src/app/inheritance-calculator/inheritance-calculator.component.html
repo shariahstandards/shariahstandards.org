@@ -105,19 +105,40 @@
 		</div>
 	</div>
 	<div class="col-md-8">
-		<div class="row">
+		<!-- <div class="row">
 			
 			<div class="col-xs-12">
-				<base-chart class="chart"
+				<template ngFor [ngForOf]="model.shares" let-share>
+					<div [style.width]="share.share*100+'%'" class="block-share" 
+						[style.background-color]="getColour(share)">
+					</div>
+				</template>
+			</div>
+		</div> -->
+		<div class="pie-chart-holder">
+			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+				[style.width]="pieChartSize+'px'" [style.height]="pieChartSize+'px'">
+				<template ngFor [ngForOf]="calculateSectors()" let-sector>
+					<circle [attr.cx]="sector.L" [attr.cy]="sector.L" [attr.r]="sector.L" 
+					[attr.fill]="sector.color" *ngIf="sector.percentage==1"/>
+
+				   	<path xmlns="http://www.w3.org/2000/svg" *ngIf="sector.percentage!=1"
+				   	 [attr.fill]="sector.color" 
+				   	[attr.d]="'M' + sector.L + ',' + sector.L + ' L' + sector.L*2 +',' + sector.L + ' A' + sector.L + ',' + sector.L + ' 0 '+sector.largeArc+','+sector.arcSweep+' ' + sector.X + ', ' + sector.Y "
+				   	[attr.transform]="'rotate(' + sector.R + ', '+ sector.L+', '+ sector.L+')'"
+				   	/>
+				
+				</template>
+		 	</svg>
+	 	</div>
+		<!-- <base-chart class="chart"
 			           [data]="pieChartData"
 			           [labels]="pieChartLabels"
 			           [chartType]="pieChartType"
 			           [options]="pieChartOptions"
 			           [colors]="pieChartColors"
 			           >
-			    </base-chart>
-			</div>
-		</div>
+			    </base-chart> -->
 	</div>
 </div>
 <div class="row">
@@ -126,6 +147,7 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
+					<th>Colour</th>
 					<th>Relationship</th>
 					<th>Share as percent</th>
 					<th>Share as a fraction</th> 
@@ -134,6 +156,9 @@
 			<tbody>
 			<template ngFor [ngForOf]="model.shares" let-share>
 				<tr>
+					<td [style.background-color]="getColour(share)">
+						&nbsp;
+					</td>
 					<td>
 						{{share.relationshipToDeceased}}
 					</td>

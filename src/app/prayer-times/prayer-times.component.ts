@@ -68,9 +68,13 @@ declare var moment: any;
 		}
 		console.log("the date is"+this.getFullDate());
 	}
+	getWeekDay() {
+		if(!moment){return "";}
+		return moment(this.date).format("dddd");
+	}
 	getFullDate() {
 		if(!moment){return "";}
-		return moment(this.date).format("dddd Do MMMM YYYY");
+		return moment(this.date).format("D MMMM YYYY");
 	}
 	removeCalendar(){
 		this.numberOfDaysInCalendar = null;
@@ -83,8 +87,8 @@ declare var moment: any;
 			if(response.status !== 'OK'){
 				alert("Sorry, google maps returned an error");
 			}else{
-				this.map.setZoom(response.zoom);
-				this.map.setMapTypeId('hybrid');
+				self.map.setZoom(response.zoom);
+				self.map.setMapTypeId('hybrid');
 			}
 		})
 	}
@@ -128,7 +132,7 @@ declare var moment: any;
 						self.placeQiblaOnMap();
 						self.getPrayerTimes();
 						self.buildCalendar();
-						this.map.setZoom(10);
+						self.map.setZoom(10);
 					}
 				}
 				if (status === google.maps.GeocoderStatus.ZERO_RESULTS){

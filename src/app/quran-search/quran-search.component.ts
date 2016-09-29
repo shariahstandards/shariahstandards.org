@@ -1,4 +1,4 @@
-import { Component, OnInit ,OnDestroy} from '@angular/core';
+import { Component, OnInit ,OnDestroy, Input,ChangeDetectorRef} from '@angular/core';
 import { QuranService } from '../quran.service';
 import { QuranDataService } from '../quran-data.service';
 import { surahSelection } from '../quran-data.service';
@@ -34,13 +34,18 @@ export class QuranSearchComponent implements OnInit {
 
 	constructor(private quranService:QuranService,
 		private route:ActivatedRoute,
-		private router:Router) {
+		private router:Router,
+		private changeDetectorRef:ChangeDetectorRef) {
 
 	}
 	private getRouteParamsSubscribe:any;
+	// @Input()
 	selectedSearchResult:verseResult
+	// @Input()
 	selectedReference:string
+	// @Input()
 	searchText:string="";
+	// @Input()
 	wordToHighlight:string;
 	ngOnInit() {
 		var self=this;
@@ -50,21 +55,21 @@ export class QuranSearchComponent implements OnInit {
   	  		
   	  		var surahNumber=params['surahNumber'];
   	  		var verseNumber=params['verseNumber'];
-
+			self.wordToHighlight=params["wordToHighlight"];
+			var searchText=params['searchText'];
+  	  		if(searchText){
+  	  			self.searchText=searchText;
+  	  			self.search();
+  	  		}
   	  		if(surahNumber && verseNumber){
   	  			self.setSurahAndVerse(Number(surahNumber),Number(verseNumber));
   	  		}
   	  		else{
 				self.setSurahAndVerse(1,1);
   	  		}
-  	  		var searchText=params['searchText'];
-  	  		if(searchText){
-  	  			self.searchText=searchText;
-  	  			self.search();
-  	  		}
-  	  		this.wordToHighlight=params["wordToHighlight"];
-
-
+  	  		
+  	  		self.changeDetectorRef.detectChanges(); 
+  	  		console.log("initialising-"+surahNumber+":"+verseNumber);
 	  	});
 	}
 	toggleKeyboard(arabicKeyboard){
@@ -73,11 +78,13 @@ export class QuranSearchComponent implements OnInit {
 	gotoEnglishSearchResult(result:any){
 		this.router.navigate(['/quran/surah/' + result.surah + '/verse/' + result.verse + '/' + result.searchText]);
 	}
+	// @Input()
 	selectedEnglishSearchResult:any
 	arabicKeyboardValueChanged(value:string){
 		console.log("arabic keyboard value update :"+ value)
 		this.searchText=value;
 	}
+	// @Input() 
 	selectedVerseNumber:number;
 	verseSelectionItems:number[]=[];
 	getVerseSelectionItems(){
@@ -99,6 +106,7 @@ export class QuranSearchComponent implements OnInit {
 		}
 		this.verseSelectionItems= items;
 	}
+	// @Input()
 	selectedSurah:surahSelection;
 	surahsForSelection:surahSelection[]=[];
 	gotoSurah(selectedSurah){
@@ -118,7 +126,9 @@ export class QuranSearchComponent implements OnInit {
 		this.selectedSurah=this.surahsForSelection[surahNumber-1];
 		this.setVersesForSelection();
 		this.verseChanged(verseNumber);
+		console.log("setting surah and verse-"+this.selectedSurah.number+":"+this.selectedVerseNumber);
 	}
+	// @Input() 
 	selectedVerseResult:verseResult;
 	verseChanged(selectedVerseNumber){
 		this.selectedVerseNumber=selectedVerseNumber;

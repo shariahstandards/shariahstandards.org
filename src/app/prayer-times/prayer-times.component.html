@@ -158,15 +158,19 @@
 
 	<div class="row">
 		
-		<div class="col-md-6">
+		<div class="col-md-4">
 			<div [hidden]="calendar.length>0">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 					
-						<h4> {{getFullDate()}} 
-						<span *ngIf="hijriDate"> - {{hijriDate.day}} {{hijriDate.month.englishName}} {{hijriDate.year}}
-						</span>
-							
+						<h4>
+							{{getWeekDay()}} 
+							<br/>
+						 	{{getFullDate()}} 
+							<br/>
+							<span *ngIf="hijriDate">
+							{{hijriDate.day}} {{hijriDate.month.englishName}} {{hijriDate.year}}
+							</span>
 						</h4>
 						
 
@@ -181,7 +185,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-8">
 			<h4>{{locationFound}}</h4>
   			<div *ngIf="locationNotFound">
 		    	No location found
@@ -191,10 +195,12 @@
     				<button class="btn btn-default" (click)="resetLocation()">Here</button>
     			</span>
     			<span class="input-group-btn">
-    				<button class="btn btn-default" (click)="zoomToBuilding()">Zoom to Building</button>
+    				<button class="btn btn-default" (click)="zoomToBuilding()">Zoom 
+    					<span class="hidden-md-down">to Building</span>
+    				</button>
     			</span>
     			<input class="form-control" type="text" [(ngModel)]="searchLocation" 
-    				placeholder="lookup a location"/>
+    				placeholder="location"/>
     			<span class="input-group-btn">
     				<button class="btn btn-default" type="button"
     				 (click)="searchForLocation()">
