@@ -1,4 +1,4 @@
-import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef} from '@angular/core'
+import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef,ChangeDetectorRef} from '@angular/core'
 import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
 import {BrowserModule} from '@angular/platform-browser';
@@ -38,7 +38,7 @@ declare var moment: any;
 	map:any;
 	maxZoomService:any;
 	constructor(private prayerTimesCalculatorService: PrayerTimesCalculatorService,
-		private ngZone: NgZone) {
+		private ngZone: NgZone,private changeDetectorRef:ChangeDetectorRef) {
 		if(!moment){return;}
 		var now=new Date();
 		this.date={year: now.getFullYear(), month: now.getMonth(), day: now.getDate()}
@@ -66,6 +66,7 @@ declare var moment: any;
 			this.maxZoomService=new google.maps.MaxZoomService();
 
 		}
+		this.changeDetectorRef.detectChanges();
 		console.log("the date is"+this.getFullDate());
 	}
 	getWeekDay() {
