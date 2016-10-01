@@ -11,13 +11,15 @@ declare var moment: any;
 export interface timeZoneInfo {
 	rawOffset: number,
 	dstOffset: number,
-	timeZoneName: string
+	timeZoneName: string,
+	timeZoneId:string
 }
 export interface prayerTime
 { name: string, time: string }
 export interface hijriMonth{
 	englishName:string,
 	arabicName:string,
+	phoneticName:string
 	number:number
 }
 export interface hijriDate{
@@ -32,8 +34,13 @@ export interface prayerTimesForDay {
 	//lunarCalandarDayAtIsha: number,
 	date:Date,
 	isFriday:boolean,
+	simpleDate:string,
 	formatedDate:string,
+	weekDay:string,
 	timeZoneName: string,
+	timeZoneId: string,
+	timeZoneAbbreviation:string;
+	timeZoneChange:boolean;
 	maghribIsAdjusted: boolean,
 	fajrIsAdjusted: boolean,
 	fajrIsAdjustedEarlier: boolean,
@@ -125,62 +132,74 @@ export class PrayerTimesCalculatorService {
 	hijriMonths:hijriMonth[]=[
 	{
 		arabicName:'مُحَرَّم',
-		englishName:'Muḥarram',
+		phoneticName:'Muḥarram',
+		englishName:'Muharram',
 		number:1
 	},
 	{
 		arabicName:'صَفَر',
-		englishName:'Ṣafar',
+		phoneticName:'Ṣafar',
+		englishName:'Safar',
 		number:2
 	},
 	{
 		arabicName:'رَبيع الأوّل',
-		englishName:'Rabī‘ al-awwal',
+		phoneticName:'Rabī‘ al-awwal',
+		englishName:'Rabi al-awwal',
 		number:3
 	},
 	{
 		arabicName:'رَبيع الثاني',
-		englishName:'Rabī‘ ath-thānī',
+		phoneticName:'Rabī‘ ath-thānī',
+		englishName:'Rabi athani',
 		number:4
 	},
 	{
 		arabicName:'جُمادى الأولى',
-		englishName:'Jumādá al-ūlá',
+		phoneticName:'Jumādá al-ūlá',
+		englishName:'Jumada al-ula',
 		number:5
 	},
 	{
 		arabicName:'جُمادى الآخرة',
-		englishName:'Jumādá al-ākhirah',
+		phoneticName:'Jumādá al-ākhirah',
+		englishName:'Ju. al-akhirah',
 		number:6
 	},
 	{	
 		arabicName:'رَجَب',
+		phoneticName:'Rajab',
 		englishName:'Rajab',
 		number:7	
 	},
 	{
 		arabicName:'شَعْبان',
-		englishName:'Sha‘bān',
+		phoneticName:'Sha‘bān',
+		englishName:'Shaban',
 		number:8
 	},
 	{
 		arabicName:'رَمَضان',
-		englishName:'Ramaḍān',
+		phoneticName:'Ramaḍān',
+		englishName:'Ramadan',
 		number:9
 	},
 	{
 		arabicName:'شَوّال',
-		englishName:'Shawwāl',
+		phoneticName:'Shawwāl',
+		englishName:'Shawwal',
 		number:10
 	},
 	{
 		arabicName:'ذو القعدة',
-		englishName:'Dhū al-Qa‘dah',
+		phoneticName:'Dhū al-Qa‘dah',
+		englishName:'Dhu al-Qa\'dah',
 		number:11
 	},
 	{
 		arabicName:'ذو الحجة',
-		englishName:'Dhū al-Ḥijjah',
+		phoneticName:'Dhū al-Ḥijjah',
+		englishName:'Dhu al-Hijjah',
 		number:12
 	}
 	]
@@ -318,7 +337,10 @@ export class PrayerTimesCalculatorService {
 				if (date != null && moment(date).isValid()) {
 					dateMoment = moment(date).add(12, 'h');
 				}
-				var utcOffset = (timeZone.dstOffset + timeZone.rawOffset) / 3600.0;
+				var timestamp=dateMoment.format("x");
+				var utcOffset=0-moment.tz.zone(timeZone.timeZoneId).offset(timestamp)/ 60.0;
+				var timeZoneAbbreviation=moment.tz.zone(timeZone.timeZoneId).abbr(timestamp);
+				//utcOffset = (timeZone.dstOffset + timeZone.rawOffset) / 3600.0;
 
 				SunCalc.addTime(-18, 'fajr', 'isha');
 				var times = self.getAdjustedTimes(latitude, longitude, dateMoment.toDate(), utcOffset);
@@ -347,8 +369,13 @@ export class PrayerTimesCalculatorService {
 					startOfLunarMonth: times.startOfLunarMonth,
 					date: date,
 					isFriday:moment(dateMoment).day()==5,
-					formatedDate:moment(dateMoment).format("ddd Do MMM"),
+					simpleDate:moment(dateMoment).format("DD/MM/YYYY"),
+					formatedDate:moment(dateMoment).format("Do MMM YYYY"),
+					weekDay:moment(dateMoment).format("ddd"),
 					timeZoneName: timeZone.timeZoneName,
+					timeZoneId: timeZone.timeZoneId,
+					timeZoneAbbreviation:timeZoneAbbreviation,
+					timeZoneChange:false,
 					maghribIsAdjusted: times.maghribIsAdjusted,
 					maghribIsAdjustedLater: times.maghribIsAdjustedLater,
 					fajrIsAdjusted: times.fajrIsAdjusted,

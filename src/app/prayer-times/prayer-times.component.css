@@ -25,6 +25,9 @@
 tr.friday{
 	background-color: #ddffdd!important
 }
+tr.timeZoneChange{
+	font-weight: bold;
+}
 @media (max-width:767px){
 	.time-name{
 		font-size: medium;
