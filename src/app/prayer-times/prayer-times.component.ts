@@ -384,13 +384,17 @@ interface FileReaderEvent extends Event {
 				pdf.setFontSize(10);
 				self.placeTextCenteredOnPdf(pdf,'ShariahStandards.org generated prayer timetable', 105, 282);
 			}else{
+				self.topPosMm+=8;
 				pdf.addImage(self.logoSrc, 'JPEG', 20, 15, 20, 20);
 				pdf.setFontSize(20);
 				self.placeTextCenteredOnPdf(pdf,'ShariahStandards.org Prayer Timetable', 105, self.topPosMm);
 				self.topPosMm+=10;
 				pdf.setFontSize(15);
-				self.placeTextCenteredOnPdf(pdf,self.locationFound, 105, self.topPosMm);
-				self.topPosMm+=20;
+				self.locationFound.split(',').forEach(line=>{	
+					self.placeTextCenteredOnPdf(pdf,line, 105, self.topPosMm);	
+					self.topPosMm+=7;
+				})
+				self.topPosMm+=10;
 			}
 			pdf.setFontSize(12);
 			
