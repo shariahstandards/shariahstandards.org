@@ -128,100 +128,121 @@
         		<input class="form-control" type="number" min="1" max="31" placeholder="Number of Days" 
         		 [(ngModel)]="numberOfDaysInCalendar" value="7"/>
     			<span class="input-group-btn">
-			      <button class="btn btn-default" type="button" (click)="buildCalendar()">
-			      	Build calendar
-			      </button>
-			      <button class="btn btn-default" *ngIf="calendar.length>0" type="button" (click)="removeCalendar()">
-			    	X
-			</button>
-			    </span>
+			      	<button class="btn btn-default" type="button" (click)="buildCalendar()">
+			      		Build calendar
+			      	</button>
+			      	<button class="btn btn-default" *ngIf="calendar.length>0" type="button" (click)="removeCalendar()">
+			    		X
+			      	</button>
+		    	</span>
  			</div>
   		</div>
     </div>
     <div>&nbsp;</div>
-
-	<div class="row" *ngIf="calendar.length>0">
-		<div>&nbsp;</div>
-		<div class="col-md-10">
-			<h4>Calculated Prayer times for {{locationFound}}
-			 </h4>
+    <div *ngIf="calendar.length>0">
+		<div class="row">
+			<div>&nbsp;</div>
+			<div class="col-md-12">
+				<h4>Calculated Prayer times for {{locationFound}}
+				 </h4>
+			</div>
 		</div>
-		<div class="col-md-2">
-			<button (click)="getPdfTimetable()">Download as PDF</button>
+		<div class="row">
+			<div class="col-md-12">
+				<div class ="form-group">
+					<label>Choose your custom header image (19cm wide)</label>
+					<div class="input-group">
+        				<input class="form-control" (change)="setPdfHeaderImage($event)"
+					 	id="pdf-header-image" type="file" />
+					 	<span class="input-group-btn">
+			    
+						 	<button  class="btn btn-default" (click)="getPdfTimetable()">
+								<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+								Download as PDF
+							</button>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2">
+				
+			</div>
+
 		</div>
+		<div class="row">
+		
+			<div class="col-md-12">
+			   	<table  class="prayer-time-table table table-striped">
+				  	 <thead>
+				  		<tr>
+				  			<th>Date</th>
+				  			<th>Hijri</th>
+				  			<th>
+				  				fajr
+				  			</th>
+				  			<th>
+				  				sunrise
+				  			</th>
+				  			<th>
+				  				zuhr
+				  			</th>
+				  			<th>
+				  				asr
+				  			</th>
+				  			<th>
+				  				maghrib
+				  			</th>
+				  			<th>
+				  				isha
+				  			</th>
+				  		</tr>
+				  	</thead>
+					<tbody>
+						<template ngFor [ngForOf]="calendar" let-day>
+						<tr *ngIf="day.timeZoneChange">
+							<td colspan="8">
+								<div style="text-align:center">
+									*** Start of {{day.timeZoneAbbreviation}} ***
+								</div>
+							</td>
+						</tr>
+						<tr [ngClass]="{'friday':day.isFriday,'timeZoneChange':day.timeZoneChange}">
+							<td>{{day.weekDay}} {{day.formatedDate}}
 
-
-		<div class="col-md-12">
-		   	<table  class="prayer-time-table table table-striped">
-			  	 <thead>
-			  		<tr>
-			  			<th>Date</th>
-			  			<th>Hijri</th>
-			  			<th>
-			  				fajr
-			  			</th>
-			  			<th>
-			  				sunrise
-			  			</th>
-			  			<th>
-			  				zuhr
-			  			</th>
-			  			<th>
-			  				asr
-			  			</th>
-			  			<th>
-			  				maghrib
-			  			</th>
-			  			<th>
-			  				isha
-			  			</th>
-			  		</tr>
-			  	</thead>
-				<tbody>
-					<template ngFor [ngForOf]="calendar" let-day>
-					<tr *ngIf="day.timeZoneChange">
-						<td colspan="8">
-							<div style="text-align:center">
-								*** Start of {{day.timeZoneAbbreviation}} ***
-							</div>
-						</td>
-					</tr>
-					<tr [ngClass]="{'friday':day.isFriday,'timeZoneChange':day.timeZoneChange}">
-						<td>{{day.weekDay}} {{day.formatedDate}}
-
-					<!-- 		<span *ngIf="day.startOfLunarMonth">*</span> -->
-						</td> 
-						<td>
-							{{day.hijriDate.day}}
-							{{day.hijriDate.month.phoneticName}}
-							{{day.hijriDate.month.arabicName}}
-						</td>			
-						<td>
-							{{day.times.fajr}}
-						</td>
-						<td>
-							{{day.times.sunrise}}
-						</td>
-						<td>
-							{{day.times.zuhr}}
-						</td>
-						<td>
-							{{day.times.asr}}
-						</td>
-						<td>
-							{{day.times.maghrib}}
-						</td>
-						<td>
-							{{day.times.isha}}
-						</td>
-					</tr>
-					<!-- <tr *ngIf="day.times.startOfLunarMonth">
-						<td colspan="7">
-							There is a new moon visible before isha on {{day.formatedDate}}
-						</td>
-					</tr> -->
-					</template>
-				</tbody>
-		  	</table>
-	  	</div>
+						<!-- 		<span *ngIf="day.startOfLunarMonth">*</span> -->
+							</td> 
+							<td>
+								{{day.hijriDate.day}}
+								{{day.hijriDate.month.phoneticName}}
+								{{day.hijriDate.month.arabicName}}
+							</td>			
+							<td>
+								{{day.times.fajr}}
+							</td>
+							<td>
+								{{day.times.sunrise}}
+							</td>
+							<td>
+								{{day.times.zuhr}}
+							</td>
+							<td>
+								{{day.times.asr}}
+							</td>
+							<td>
+								{{day.times.maghrib}}
+							</td>
+							<td>
+								{{day.times.isha}}
+							</td>
+						</tr>
+						<!-- <tr *ngIf="day.times.startOfLunarMonth">
+							<td colspan="7">
+								There is a new moon visible before isha on {{day.formatedDate}}
+							</td>
+						</tr> -->
+						</template>
+					</tbody>
+			  	</table>
+		  	</div>
+		</div>
 	</div>
