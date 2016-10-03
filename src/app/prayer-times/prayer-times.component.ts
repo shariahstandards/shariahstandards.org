@@ -1,4 +1,4 @@
-import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef,ChangeDetectorRef} from '@angular/core'
+import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef,ChangeDetectorRef,ElementRef} from '@angular/core'
 import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
 import {BrowserModule} from '@angular/platform-browser';
@@ -50,7 +50,8 @@ interface FileReaderEvent extends Event {
 	map:any;
 	maxZoomService:any;
 	constructor(private prayerTimesCalculatorService: PrayerTimesCalculatorService,
-		private ngZone: NgZone,private changeDetectorRef:ChangeDetectorRef) {
+		private ngZone: NgZone,private changeDetectorRef:ChangeDetectorRef,
+		private myElement: ElementRef) {
 		if(!moment){return;}
 		var now=new Date();
 		this.date={year: now.getFullYear(), month: now.getMonth(), day: now.getDate()}
@@ -297,18 +298,32 @@ interface FileReaderEvent extends Event {
 	topPosMm:number=30;
 	pageNumber:number=1;
 	headerImageData;
-
+	imageErrorText:string;
 	prepareHeaderImage(){
 		var self=this;
+		self.imageErrorText="";
 		return new Promise((resolve,reject)=>{
-			if(this.pdfHeaderImage==null){
+			if(self.pdfHeaderImage==null){
 				resolve();
 			}
-			this.headerImageData={
-				type:this.pdfHeaderImage.type === 'image/jpeg' ? 'JPEG' : 'PNG'	,
+			self.headerImageData={
+				type: undefined,
 				src:undefined,
 				h:undefined,
 				w:undefined
+			}
+			
+			if(self.pdfHeaderImage.type === 'image/jpeg'){
+				self.headerImageData.type="JPEG"
+			}
+			if(self.pdfHeaderImage.type === 'image/png'){
+				self.headerImageData.type="PNG"
+			}
+			if(!self.headerImageData.type){
+				self.headerImageData=null;
+				self.pdfHeaderImage=null;
+				self.imageErrorText="only jpeg and png images are supported";
+				resolve();
 			}
 			var reader = new FileReader();
 			reader.onload = (event:FileReaderEvent) =>{
@@ -320,6 +335,7 @@ interface FileReaderEvent extends Event {
 					self.headerImageData.w = user_img.width;
 					self.headerImageData.h = user_img.height;
 					resolve();
+					self.changeDetectorRef.detectChanges();
 				};
 				user_img.src = self.headerImageData.src;
 			};
@@ -373,18 +389,37 @@ interface FileReaderEvent extends Event {
 	setPdfHeaderImage(event){
 		 var files = event.srcElement.files;
 		 this.pdfHeaderImage=files[0];
+		 this.prepareHeaderImage().then(()=>
+		 {
+			 this.changeDetectorRef.detectChanges();
+		 });
 	}
-
+	clearHeaderImage(){
+		this.pdfHeaderImage=null;
+		this.headerImageData=null;
+	}
+	showFileInput(){
+		if(this.pdfHeaderImage==null){
+			return true;
+		}
+		if(this.headerImageData==null){
+			return true;
+		}
+		if(this.headerImageData.src==null){
+			return true;
+		}
+		return false;
+	}
 	addPdfHeader(pdf:any){
 		var self=this;
-			self.topPosMm=20;
+			self.topPosMm=15;
 			if(self.pdfHeaderImage!=null){
 				self.addHeaderImage(pdf);
 				pdf.addImage(self.logoSrc, 'JPEG', 50, 275, 10, 10);
 				pdf.setFontSize(10);
 				self.placeTextCenteredOnPdf(pdf,'ShariahStandards.org generated prayer timetable', 105, 282);
 			}else{
-				self.topPosMm+=8;
+				self.topPosMm+=13;
 				pdf.addImage(self.logoSrc, 'JPEG', 20, 15, 20, 20);
 				pdf.setFontSize(20);
 				self.placeTextCenteredOnPdf(pdf,'ShariahStandards.org Prayer Timetable', 105, self.topPosMm);

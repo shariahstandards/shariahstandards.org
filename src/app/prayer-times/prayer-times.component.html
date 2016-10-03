@@ -150,13 +150,23 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class ="form-group">
-					<label>Choose your custom header image (19cm wide)</label>
+					<label>Custom header image (19cm wide): 
+						<span style="color:red;">{{imageErrorText}}</span>
+					</label>
+					<span *ngIf="!showFileInput()">
+				 		<img style="width:100%" 
+				 		[src]="headerImageData.src"  alt="header image" title="header image" />
+				 		<br/>
+				 	</span>
+		 			<button  class="btn btn-default" *ngIf="!showFileInput()" (click)="clearHeaderImage()">
+						Clear
+					</button>
+					
 					<div class="input-group">
-        				<input class="form-control" (change)="setPdfHeaderImage($event)"
+        				<input *ngIf="showFileInput()" class="form-control" (change)="setPdfHeaderImage($event)"
 					 	id="pdf-header-image" type="file" />
 					 	<span class="input-group-btn">
-			    
-						 	<button  class="btn btn-default" (click)="getPdfTimetable()">
+			    		 	<button  class="btn btn-default" (click)="getPdfTimetable()">
 								<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
 								Download as PDF
 							</button>
