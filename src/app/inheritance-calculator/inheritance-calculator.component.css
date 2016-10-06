@@ -4,3 +4,14 @@
 .large-checkbox-control{
 	width:40px;
 }
+.block-share{
+	border: solid 1px black;
+	height:100px;
+	float: left;
+    padding: 10px;
+}
+.pie-chart-holder svg{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

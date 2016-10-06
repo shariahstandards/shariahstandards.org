@@ -3,7 +3,7 @@
 		<div class="spacer1">&nbsp;</div>
 		<div class="key" *ngFor="let key of keys.rows[0]" (click)="add(key)">{{key}}</div>
 		<div class="backspaceKey" (click)="backspace()">
-		<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+			<i class="fa fa-arrow-left" aria-hidden="true"></i>
 		</div>
 		<div class="clear"></div>
 		<div class="spacer2">&nbsp;</div>
@@ -12,7 +12,7 @@
 		<div class="spacer3">&nbsp;</div>
 		<div class="key" *ngFor="let key of keys.rows[2]" (click)="add(key)">{{key}}</div>
 		<div class="clear"></div>
-		<div class="shiftKey" (click)="shift()">shift</div>
+		<div class="shiftKey" (click)="shift()"><i class="fa fa-arrow-up" aria-hidden="true"></i></div>
 		<div class="spacer4">&nbsp;</div>
 		<div class="key" *ngFor="let key of keys.rows[3]" (click)="add(key)">{{key}}</div>
 	</div>
@@ -20,7 +20,7 @@
 		<div class="spacer1">&nbsp;</div>
 		<div class="key" *ngFor="let key of keys.shiftedRows[0]" (click)="add(key)">{{key}}</div>
 		<div class="backspaceKey" (click)="backspace()">
-			<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+			<i class="fa fa-arrow-left" aria-hidden="true"></i>
 		</div>
 		<div class="clear"></div>
 		<div class="spacer2">&nbsp;</div>
@@ -29,7 +29,9 @@
 		<div class="spacer3">&nbsp;</div>
 		<div class="key" *ngFor="let key of keys.shiftedRows[2]" (click)="add(key)">{{key}}</div>
 		<div class="clear"></div>
-		<div class="shiftKey" (click)="shift()">shift</div>
+		<div class="shiftKey" (click)="shift()">
+			<i class="fa fa-arrow-down" aria-hidden="true"></i>
+		</div>
 		<div class="spacer4">&nbsp;</div>
 		<div class="key" *ngFor="let key of keys.shiftedRows[3]" (click)="add(key)">{{key}}</div>
 	</div>

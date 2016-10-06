@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { TermComponent } from '../term/term.component';
 import { Router, ActivatedRoute }       from '@angular/router';
 import { QuranReferenceComponent } from '../quran-reference/quran-reference.component';
@@ -13,17 +13,19 @@ export class StandardsComponent implements OnInit {
 
   constructor(   
     private route:ActivatedRoute,
-    private router:Router
+    private router:Router,
+    private changeDetectorRef:ChangeDetectorRef
  ) { }
   activeSection:string;
   collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules","inheritance-rules","decision-making-rules"]
 //  collapsedSections:string[]=["website-management","prayer-times-rules","zakat-rules",]
   ngOnInit() {
      this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
-       if(params['section']){
-        this.activeSection=params['section'];
-        //this.toggleCollapse(params['section']);
-      }
+        if(params['section']){
+          this.activeSection=params['section'];
+          //this.toggleCollapse(params['section']);
+        }
+        this.changeDetectorRef.detectChanges();
      });
   }
 
@@ -47,7 +49,7 @@ export class StandardsComponent implements OnInit {
   ngOnDestroy() {
     this.getRouteParamsSubscribe.unsubscribe();
   }
-  expand(sectionName:string){
+  expanded(sectionName:string){
       return this.activeSection==sectionName;
   //	var index=this.collapsedSections.indexOf(sectionName);
  	//return index<0;

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>"C:\BupaSelfPay2\BSP.ConsumerWebsiteApp\dist1.15a.1" "selfpay-dev2\%24selfpay-dev2" "ZopinNhGyNPD162v1WRdjrc8EzLjLvj8ixkrcTuG6PXhhnujr4u0KkaYB7ab" "ftp://waws-prod-db3-021.ftp.azurewebsites.windows.net/site/"</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectView>ShowAllFiles</ProjectView>
+  </PropertyGroup>
+</Project>

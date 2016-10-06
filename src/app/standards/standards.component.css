@@ -5,11 +5,22 @@
 	font-size: 14px;
 }
 ol { counter-reset: item }
-li { display: block; }
+li { display: block;
+	font-size: 16pt;
+}
+li ol li{
+	font-size: 12pt;
+}
 li:before { 
 	content: counters(item, ".") " "; 
 	counter-increment: item ;
-	float:left; padding-right:10px; 
+	float:left; padding-right:10px;
+	font-size: 16pt;
+	font-weight: bold; 
+}
+li ol li:before{
+	font-size: 12pt;
+	font-weight: normal;
 }
 .mnemonic{
 	border:solid 2px red;
@@ -20,4 +31,7 @@ li:before {
 h4{
 	font-weight: bold;
 	padding-top: 15px;
+}
+h4{
+	font-size: 16px;
 }

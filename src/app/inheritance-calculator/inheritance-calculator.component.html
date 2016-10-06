@@ -1,32 +1,26 @@
 <h2> Inheritance Calculator </h2>
 	<a [routerLink]="['/standards/inheritance-rules']">Details of the Standard</a>
 
-<h3>Description of the deceased:</h3>
+
 <div class="row">
 	<div class="col-md-4">
 		<div class="row">
-			<div class="col-xs-3" *ngFor="let maritalStatus of marritalStatuses">
-        		<div class="form-group">
-					<label>{{maritalStatus.display}}
-					<input type="radio" 
-					class="form-control large-radio-control" 
-					[value]="maritalStatus.value"
-					[(ngModel)]="model.isMarried" 
-					(ngModelChange)="setShares()"
-					name="maritalStatus">
-					</label>
-				</div>
-			</div>
-			<div class="col-xs-3" *ngFor="let gender of genders">
-        		<div class="form-group">
-					<label>{{gender.display}}
-					<input type="radio" 
-					class="form-control large-radio-control" 
-					[value]="gender.value"
-					[(ngModel)]="model.isMale" 
-					(ngModelChange)="setShares()"
-					name="gender">
-					</label>
+			<div class="col-xs-12" >
+				<h3>Gender of the deceased:</h3>
+				<div class="row">
+					<div class="col-xs-3" *ngFor="let gender of genders">
+		        		<div class="form-group pull-left" >
+							<label>{{gender.display}}
+							<input type="radio" 
+							class="form-control large-radio-control" 
+							[value]="gender.value"
+							[(ngModel)]="model.isMale" 
+							(ngModelChange)="setShares()"
+							name="gender">
+							</label>
+						</div>
+					</div>
+					<div class="col-xs-6"></div>
 				</div>
 			</div>
 		</div>
@@ -83,41 +77,77 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="row">
 			<div class="col-xs-12">
 				<h3>Other heirs</h3>
 				<div class="row">		
-				<div class="col-xs-6">
-					<div class="form-group">
-						<label>Brothers</label>
-						<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfBrothers" class="form-control"
-						(ngModelChange)="setShares()"/>
+					
+					<div class="col-xs-4" *ngIf="model.isMale">
+		        		<div class="form-group">
+							<label>
+								Wives
+							</label>
+							<input type="number" min="0" max="4" 
+									class="form-control" 
+									[(ngModel)]="model.wives" 
+									(ngModelChange)="setShares()"/>
+							</div>
 					</div>
-				</div>
-				<div class="col-xs-6">
-					<div class="form-group">
-						<label>Sisters</label>
-						<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSisters" class="form-control"
-						(ngModelChange)="setShares()"/>
+					<div class="col-xs-4" *ngIf="!model.isMale">
+						<div class="form-group">
+							<label>
+								Husband
+							</label>
+							<input type="checkbox"  
+								class="form-control" 
+								[(ngModel)]="model.husband" 
+								(ngModelChange)="setShares()"/>
+						</div>
 					</div>
-				</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label>Brothers</label>
+							<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfBrothers" class="form-control"
+							(ngModelChange)="setShares()"/>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label>Sisters</label>
+							<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSisters" class="form-control"
+							(ngModelChange)="setShares()"/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-8">
-		<div class="row">
-			
-			<div class="col-xs-12">
-				<base-chart class="chart"
+		<div class="pie-chart-holder">
+			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+				[style.width]="pieChartSize+'px'" [style.height]="pieChartSize+'px'">
+				<template ngFor [ngForOf]="calculateSectors()" let-sector>
+					<circle [attr.cx]="sector.L" [attr.cy]="sector.L" [attr.r]="sector.L" 
+					[attr.fill]="sector.color" *ngIf="sector.percentage==1"/>
+
+				   	<path xmlns="http://www.w3.org/2000/svg" *ngIf="sector.percentage!=1"
+				   	 [attr.fill]="sector.color" 
+				   	[attr.d]="'M' + sector.L + ',' + sector.L + ' L' + sector.L*2 +',' + sector.L + ' A' + sector.L + ',' + sector.L + ' 0 '+sector.largeArc+','+sector.arcSweep+' ' + sector.X + ', ' + sector.Y "
+				   	[attr.transform]="'rotate(' + sector.R + ', '+ sector.L+', '+ sector.L+')'"
+				   	/>
+				
+				</template>
+		 	</svg>
+	 	</div>
+		<!-- <base-chart class="chart"
 			           [data]="pieChartData"
 			           [labels]="pieChartLabels"
 			           [chartType]="pieChartType"
 			           [options]="pieChartOptions"
 			           [colors]="pieChartColors"
 			           >
-			    </base-chart>
-			</div>
-		</div>
+			    </base-chart> -->
 	</div>
 </div>
 <div class="row">
@@ -126,6 +156,7 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
+					<th>Colour</th>
 					<th>Relationship</th>
 					<th>Share as percent</th>
 					<th>Share as a fraction</th> 
@@ -134,6 +165,9 @@
 			<tbody>
 			<template ngFor [ngForOf]="model.shares" let-share>
 				<tr>
+					<td [style.background-color]="getColour(share)">
+						&nbsp;
+					</td>
 					<td>
 						{{share.relationshipToDeceased}}
 					</td>

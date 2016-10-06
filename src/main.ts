@@ -14,3 +14,4 @@ if (environment.production) {
 }
 
 platformBrowserDynamic().bootstrapModule(ShariahStandardsModule);
+

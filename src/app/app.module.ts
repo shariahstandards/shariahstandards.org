@@ -4,7 +4,7 @@ import { HttpModule, XHRBackend,RequestOptions,Http }       from '@angular/http'
 // import {  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChartsModule } from 'ng2-charts/ng2-charts';
+// import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { ShariahStandardsAppComponent } from './shariah-standards.component';
 import { ZakatCalculatorComponent } from './zakat-calculator/zakat-calculator.component';
 import { InheritanceCalculatorComponent } from './inheritance-calculator/inheritance-calculator.component';
@@ -15,11 +15,12 @@ import { QuranSearchComponent } from './quran-search/quran-search.component';
 import { PrayerTimesComponent } from './prayer-times/prayer-times.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { AUTH_PROVIDERS }      from 'angular2-jwt';
-import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
+//import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {routing,appRoutingProviders} from './routes';
 import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
 import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
 import { AuthService} from './auth.service'
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {UserProfileRegistrationService} from './user-profile-registration.service'
 import {AuthenticatedHttpService} from './authenticated-http.service'
 
@@ -41,8 +42,9 @@ import {AuthenticatedHttpService} from './authenticated-http.service'
     HttpModule,
     CommonModule,
     FormsModule,
-    ChartsModule,
-    DatepickerModule,
+    // ChartsModule,
+    //DatepickerModule,
+    NgbModule,
     routing
   ],
    providers: [
