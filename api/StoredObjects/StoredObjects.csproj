@@ -51,9 +51,9 @@
   <ItemGroup>
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Auth0User.cs" />
-    <Compile Include="DeclaredRight.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShurahBasedOrganisation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
