@@ -49,12 +49,13 @@ interface FileReaderEvent extends Event {
 	showNewMonthLegend: boolean;
 	map:any;
 	maxZoomService:any;
+	pdfTitle:string;
 	constructor(private prayerTimesCalculatorService: PrayerTimesCalculatorService,
 		private ngZone: NgZone,private changeDetectorRef:ChangeDetectorRef,
 		private myElement: ElementRef) {
 		if(!moment){return;}
-		var now=new Date();
-		this.date={year: now.getFullYear(), month: now.getMonth(), day: now.getDate()}
+		var now = moment();
+		this.date= {year: now.year(), month: now.month()+1, day: now.date()}
 		this.latitude = 53.482863;
 		this.longitude = -2.3459968;
 		//this.utcOffset=moment().utcOffset()/60.0;
@@ -87,13 +88,14 @@ interface FileReaderEvent extends Event {
 		this.changeDetectorRef.detectChanges();
 		console.log("the date is"+this.getFullDate());
 	}
+
 	getWeekDay() {
 		if(!moment){return "";}
-		return moment(this.date).format("dddd");
+		return moment(this.getDate()).format("dddd");
 	}
 	getFullDate() {
 		if(!moment){return "";}
-		return moment(this.date).format("D MMMM YYYY");
+		return moment(this.getDate()).format("D MMMM YYYY");
 	}
 	removeCalendar(){
 		this.numberOfDaysInCalendar = null;
@@ -206,16 +208,19 @@ interface FileReaderEvent extends Event {
 	numberOfDaysInCalendar:number
 	buildingCalendar: boolean = false;
 	buildCalendar(){
+		if(this.locationFound!=null){
+			this.pdfTitle=this.locationFound.split(',').join("\n");
+		}
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
 	}
-	getDate(){
-		return new Date(this.date.year,this.date.month,this.date.day);
+	getDate(){//NgbDateStruct uses sane month number need tp convert to javascript insane standard
+		return new Date(this.date.year,this.date.month-1,this.date.day);
 	}
 	getPrayerTimeTableForTimeZone(days:number,initialTimeZone:timeZoneInfo){
 		var self = this;
 
 		self.calendar = [];
-		var dateMoment = moment(self.date).startOf('d');
+		var dateMoment = moment(self.getDate()).startOf('d');
 		var yesterdayHijriDate=null;
 		var yesterdayWasNewMoon=false;
 		var previousTimeZoneAbbreviation=null;
@@ -425,7 +430,7 @@ interface FileReaderEvent extends Event {
 				self.placeTextCenteredOnPdf(pdf,'ShariahStandards.org Prayer Timetable', 105, self.topPosMm);
 				self.topPosMm+=10;
 				pdf.setFontSize(15);
-				self.locationFound.split(',').forEach(line=>{	
+				self.pdfTitle.split('\n').forEach(line=>{	
 					self.placeTextCenteredOnPdf(pdf,line, 105, self.topPosMm);	
 					self.topPosMm+=7;
 				})
@@ -494,7 +499,7 @@ interface FileReaderEvent extends Event {
 
 	
         pdf.save('ShariahStandardsTimeTable'+self.latitude+"_"
-        	+self.longitude+'_'+moment(self.date).format("YYYYMMDD")+self.numberOfDaysInCalendar+'.pdf');	
+        	+self.longitude+'_'+moment(self.getDate()).format("YYYYMMDD")+self.numberOfDaysInCalendar+'.pdf');	
 	}	
 	getPdfTimetable(){
 		var self=this;

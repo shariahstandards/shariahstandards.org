@@ -15,7 +15,7 @@ import { QuranSearchComponent } from './quran-search/quran-search.component';
 import { PrayerTimesComponent } from './prayer-times/prayer-times.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { AUTH_PROVIDERS }      from 'angular2-jwt';
-//import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {routing,appRoutingProviders} from './routes';
 import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
 import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
@@ -43,8 +43,8 @@ import {AuthenticatedHttpService} from './authenticated-http.service'
     CommonModule,
     FormsModule,
     // ChartsModule,
-    //DatepickerModule,
-    NgbModule,
+    DatepickerModule,
+    NgbModule.forRoot(),
     routing
   ],
    providers: [

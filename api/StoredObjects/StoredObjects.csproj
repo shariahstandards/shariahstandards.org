@@ -49,16 +49,61 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Action.cs" />
+    <Compile Include="ActionStatus.cs" />
+    <Compile Include="ActionUpdate.cs" />
     <Compile Include="ApplicationContext.cs" />
+    <Compile Include="ArchivedStandard.cs" />
     <Compile Include="Auth0User.cs" />
+    <Compile Include="DelegatedPermission.cs" />
+    <Compile Include="LeaderRecognition.cs" />
+    <Compile Include="Mappings\ActionUpdateMapping.cs" />
+    <Compile Include="Mappings\ActionMapping.cs" />
+    <Compile Include="Mappings\MembershipRuleViolationJudgementMapping.cs" />
+    <Compile Include="Mappings\MembershipRuleViolationAccusationMapping.cs" />
+    <Compile Include="Mappings\MembershipRuleTermDefinitionMapping.cs" />
+    <Compile Include="Mappings\MembershipRuleSectionRelationshipMapping.cs" />
+    <Compile Include="Mappings\MembershipRuleSectionMapping.cs" />
+    <Compile Include="Mappings\MembershipRuleMapping.cs" />
+    <Compile Include="Mappings\OrganisationLeaderMapping.cs" />
+    <Compile Include="Mappings\MemberAuth0UserMapping.cs" />
+    <Compile Include="Mappings\LeaderRecognitionMapping.cs" />
+    <Compile Include="Mappings\SuggestionVoteMapping.cs" />
+    <Compile Include="Mappings\SuggestionMapping.cs" />
+    <Compile Include="Mappings\MembershipApplicationAcceptanceMapping.cs" />
+    <Compile Include="Mappings\MemberMapping.cs" />
+    <Compile Include="Mappings\ShurahBasedOrganisationMapping.cs" />
+    <Compile Include="MemberAuth0User.cs" />
+    <Compile Include="Mappings\Auth0UserMapping.cs" />
+    <Compile Include="Mappings\MembershipApplicationMapping.cs" />
+    <Compile Include="Member.cs" />
+    <Compile Include="MembershipApplication.cs" />
+    <Compile Include="MembershipApplicationAcceptance.cs" />
+    <Compile Include="MembershipInvitation.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="OrganisationLeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShurahBasedOrganisation.cs" />
+    <Compile Include="ShurahOrganisationPermission.cs" />
+    <Compile Include="MembershipRule.cs" />
+    <Compile Include="MembershipRuleViolationJudgement.cs" />
+    <Compile Include="MembershipRuleViolationClaim.cs" />
+    <Compile Include="MembershipRuleComprehensionAnswer.cs" />
+    <Compile Include="MembershipRuleExplanation.cs" />
+    <Compile Include="MembershipRuleComprehensionQuestion.cs" />
+    <Compile Include="MembershipRuleComprehensionTestResult.cs" />
+    <Compile Include="MembershipRuleSection.cs" />
+    <Compile Include="MembershipRuleSectionRelationship.cs" />
+    <Compile Include="MembershipRuleTermDefinition.cs" />
+    <Compile Include="Suggestion.cs" />
+    <Compile Include="SuggestionVote.cs" />
+    <Compile Include="SuggestionVoteSummary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
