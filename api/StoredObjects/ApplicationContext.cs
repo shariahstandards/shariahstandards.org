@@ -18,7 +18,6 @@ namespace StoredObjects
         {
             this.Configuration.LazyLoadingEnabled = true;
         }
-        public IDbSet<Auth0User> Users { get; set; } 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

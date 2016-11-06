@@ -22,11 +22,4 @@ namespace StoredObjects
         public virtual OrganisationLeader OrganisationLeader { get; set; }
         public virtual IList<MembershipRuleTermDefinition> Terms { get; set; }
     }
-
-    public enum JoiningPolicy
-    {
-        NoApplicationNeeded=0,
-        ApplicationAndTwoAcceptancesByOtherMembers=1
-    }
-
 }
