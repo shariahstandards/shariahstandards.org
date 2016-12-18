@@ -11,5 +11,7 @@ namespace StoredObjects
         public virtual Member AuthorMember { get; set; }
         public virtual IList<SuggestionVote> SuggestionVotes { get; set; }
         bool Removed { get; set; }
+        bool VotingAllowed { get; set; }
+        bool PendingModeration { get; set; }
     }
 }

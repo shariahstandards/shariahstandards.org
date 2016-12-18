@@ -4,10 +4,13 @@ import {Observable} from 'rxjs/Observable';
 declare var shariahStandardsApiUrlBase:string;
 
 @Injectable()
-export class UserProfileRegistrationService {
+export class ShurahService {
 
-  constructor(private http: Http) { }
-  getRecogniserUser(profile:Object){
-  	return this.http.post(shariahStandardsApiUrlBase+"UserProfile",profile);
+  constructor(private http: Http) { 
+  	
   }
+  getRootOrganisation(){
+  		return this.http.get(shariahStandardsApiUrlBase+"RootOrganisation");
+  	}
+
 }

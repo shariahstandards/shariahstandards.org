@@ -21,5 +21,8 @@ namespace StoredObjects
         public JoiningPolicy JoiningPolicy { get; set; }
         public virtual OrganisationLeader OrganisationLeader { get; set; }
         public virtual IList<MembershipRuleTermDefinition> Terms { get; set; }
+        public virtual OrganisationRelationship ParentOrganisationRelationship { get; set; }
+        public virtual IList<OrganisationRelationship> ChildOrganisationRelationships { get; set; }
+
     }
 }

@@ -6,10 +6,6 @@ namespace StoredObjects
     public class Member
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public virtual IList<Suggestion> AuthoredSuggestions { get; set; } 
         public DateTime JoinedOnDateAndTimeUtc{ get; set; }
         public virtual ShurahBasedOrganisation Organisation { get; set; }
         public int OrganisationId { get; set; }
@@ -27,6 +23,7 @@ namespace StoredObjects
         public virtual IList<ActionUpdate> ActionUpdates { get; set; }
         public virtual IList<MembershipRuleViolationAccusation> ReceivedMembershipRuleViolationAccusations { get; set; }
         public virtual IList<MembershipRuleViolationAccusation> MadeMembershipRuleViolationAccusations { get; set; }
+        public string PublicName { get; set; }
 
         //public virtual IList<MembershipRuleAgreementViolationClaim> MembershipRuleAgreementViolationClaims { get; set; }
     }

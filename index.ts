@@ -1,2 +1,2 @@
-export * from './inheritance-calculator';
-export * from './zakat-calculator';
+// export * from './inheritance-calculator';
+// export * from './zakat-calculator';

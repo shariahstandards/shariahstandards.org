@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration;
 
 namespace StoredObjects.Mappings
@@ -16,6 +18,8 @@ namespace StoredObjects.Mappings
             E.Property(x => x.Name).IsRequired().HasMaxLength(250);
             E.Property(x => x.Description).IsOptional().HasMaxLength(4000);
             E.Property(x => x.UrlDomain).IsOptional().HasMaxLength(200);
+            E.Property(x => x.Name)
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
         }
     }
 }

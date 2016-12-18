@@ -9,5 +9,6 @@ namespace StoredObjects
         public int RecognisedLeaderMemberId { get; set; }
         public virtual Member RecognisedLeaderMember { get; set; }
         public DateTime LastUpdateDateTimeUtc { get; set; }
+        public int FolloweCount { get; set; }
     }
 }

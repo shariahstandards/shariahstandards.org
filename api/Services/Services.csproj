@@ -65,6 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LinqService.cs" />
+    <Compile Include="OrganisationService.cs" />
     <Compile Include="StorageService.cs" />
     <Compile Include="UnityRegistrationConfig.cs" />
     <Compile Include="UserService.cs" />

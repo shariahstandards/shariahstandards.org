@@ -6,7 +6,10 @@ using Microsoft.Owin.Security.DataHandler.Encoder;
 using Microsoft.Owin.Security.Jwt;
 using Owin;
 using System.Linq;
+using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode;
 
 [assembly: OwinStartup(typeof(WebApi.Startup))]
@@ -17,6 +20,7 @@ namespace WebApi
     {
         public void Configuration(IAppBuilder app)
         {
+          
             var issuer = $"https://{ConfigurationManager.AppSettings["Auth0Domain"]}/";
             var audience = ConfigurationManager.AppSettings["Auth0ClientID"];
 
@@ -35,6 +39,10 @@ namespace WebApi
                 });
             // Configure Web API
             WebApiConfig.Configure(app);
+
+            
+      
+
         }
     }
 }

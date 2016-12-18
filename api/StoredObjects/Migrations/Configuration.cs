@@ -29,18 +29,18 @@ namespace StoredObjects.Migrations
 
             context.SaveChanges();
 
+            mainOrganisation = context.Set<ShurahBasedOrganisation>().First(x => x.Name == mainOrganisation.Name);
             var member = new Member
             {
-                Name = "Lamaan Ball",
-                Email = "lamaan@lamaan.com",
                 Introduction = "For some explanations of my views you can visit my personal blog http://investigatingIslam.org ",
                 JoinedOnDateAndTimeUtc = theStartDate,
                 Moderated = false,
                 Removed = false,
                 Organisation = mainOrganisation,
+                OrganisationId = mainOrganisation.Id,
                 LastDateAndTimeUtcAgreedToMembershipRules = theStartDate
             };
-            context.Set<Member>().AddOrUpdate(x=>x.Email,member);
+            context.Set<Member>().AddOrUpdate(x=>x.Introduction,member);
 
             context.SaveChanges();
         }

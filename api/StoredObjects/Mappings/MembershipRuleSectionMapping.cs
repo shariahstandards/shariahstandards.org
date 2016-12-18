@@ -14,6 +14,7 @@ namespace StoredObjects.Mappings
             _modelBuilder = modelBuilder;
             E.HasKey(x => x.Id);
             E.Property(x => x.Title).IsRequired().HasMaxLength(250);
+            E.Property(x => x.UniqueInOrganisationName).IsRequired().HasMaxLength(100);
             E.HasRequired(x => x.ShurahBasedOrganisation).WithMany(x => x.MembershipRuleSections).HasForeignKey(x => x.ShurahBasedOrganisationId);
         }
     }

@@ -73,8 +73,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrganisationServiceTests\GettingRootLevelOrganisation.cs" />
+    <Compile Include="OrganisationServiceTests\OrganisationServiceTestContext.cs" />
     <Compile Include="UserServiceTests\FakeDbSet.cs" />
-    <Compile Include="UserServiceTests\TrackingAUserLogin.cs" />
+    <Compile Include="UserServiceTests\GettingALoggedInUser.cs" />
+    <Compile Include="UserServiceTests\GettingAUserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceTestContext.cs" />
     <Compile Include="UserServiceTests\UserServiceTestContext.cs" />
@@ -100,6 +103,9 @@
       <Project>{4bfde9ec-fe23-4857-a779-94f5585f9d18}</Project>
       <Name>WebApi</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

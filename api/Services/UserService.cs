@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using StoredObjects;
@@ -11,19 +12,24 @@ namespace Services
     public interface IUserServiceDependencies
     {
         IStorageService StorageService { get; set; }
+        ILinqService LinqService { get; set; }
+
     }
     public class UserServiceDependencies : IUserServiceDependencies
     {
         public IStorageService StorageService { get; set; }
+        public ILinqService LinqService { get; set; }
 
-        public UserServiceDependencies(IStorageService storageService)
+        public UserServiceDependencies(IStorageService storageService,ILinqService linqService)
         {
             StorageService = storageService;
+            LinqService = linqService;
         }
     }
     public interface IUserService
     {
-        UserProfileResource TrackLogin(Auth0UserProfile auth0UserProfile, ClaimsIdentity claimsIdentity);
+        UserProfileResource GetUserProfile(Auth0UserProfile auth0UserProfile, IPrincipal principal);
+        Auth0User GetAuthenticatedUser(IPrincipal principal);
     }
     public class UserService:IUserService
     {
@@ -33,8 +39,10 @@ namespace Services
             _dependencies = dependencies;
         }
 
-        public virtual UserProfileResource TrackLogin(Auth0UserProfile auth0UserProfile, ClaimsIdentity claimsIdentity)
+        public virtual UserProfileResource GetUserProfile(Auth0UserProfile auth0UserProfile, IPrincipal principal)
         {
+            var claimsIdentity = principal.Identity as ClaimsIdentity;
+
             VerifyProfile(auth0UserProfile, claimsIdentity);
             var user =
                 _dependencies.StorageService.SetOf<Auth0User>().FirstOrDefault(x => x.Id == auth0UserProfile.user_id);
@@ -45,6 +53,13 @@ namespace Services
                 _dependencies.StorageService.SaveChanges();
             }
             return BuildUserProfileResource(user);
+        }
+
+        public virtual Auth0User GetAuthenticatedUser(IPrincipal principal)
+        {
+            var userId = GetLoggedInUserId(principal.Identity as ClaimsIdentity);
+            return _dependencies.LinqService.SingleOrDefault(
+                _dependencies.StorageService.SetOf<Auth0User>(), u => u.Id == userId);
         }
 
         public virtual Auth0User BuildAuth0User(Auth0UserProfile auth0Profile)
@@ -58,20 +73,33 @@ namespace Services
 
         public virtual void VerifyProfile(Auth0UserProfile auth0Profile, ClaimsIdentity claimsIdentity)
         {
-            var authenticatedUserId = claimsIdentity.Claims.ToList()
-                .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            if (authenticatedUserId != null && claimsIdentity.IsAuthenticated &&
-                authenticatedUserId.Value == auth0Profile.user_id)
+            var authenticatedUserId = GetLoggedInUserId(claimsIdentity);
+            if (authenticatedUserId != null && authenticatedUserId == auth0Profile.user_id)
             {
                 return;
             }
             throw new AccessViolationException("Not authenticated for the identified user");
         }
 
+        public virtual string GetLoggedInUserId(ClaimsIdentity claimsIdentity)
+        {
+            var authenticatedUserId = claimsIdentity.Claims.ToList()
+                .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            if (claimsIdentity.IsAuthenticated && authenticatedUserId != null)
+            {
+                return authenticatedUserId.Value;
+            }
+            return null;
+        }
+
         public virtual UserProfileResource BuildUserProfileResource(Auth0User user)
         {
-            return new UserProfileResource();
-            //throw new NotImplementedException();
+            return new UserProfileResource
+            {
+                Name=user.Name,
+                PictureUrl = user.PictureUrl,
+                UserId = user.Id
+            };
         }
     }
 }

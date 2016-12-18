@@ -13,7 +13,9 @@ namespace StoredObjects
         public string PictureUrl { get; set; }
         public virtual IList<MemberAuth0User> MemberAuth0Users { get; set; }
         public virtual IList<MembershipApplication> MembershipApplications { get; set; }
-
+        public virtual IList<ContactDetail> ContactDetails { get; set; }
+        public virtual IList<MembershipRuleSectionAcceptance> MembershipRuleSectionAcceptances { get; set; }
+        public virtual IList<MembershipRuleComprehensionTestResult> MembershipRuleComprehensionTestResults { get; set; }
     }
 
 }

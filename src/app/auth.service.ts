@@ -16,27 +16,38 @@ export class AuthService {
 	});
 	userProfile: Object;
 
-	constructor(private registrationService:UserProfileRegistrationService) {
+	constructor(private userProfileService:UserProfileRegistrationService) {
 		var self=this;
-		self.userProfile = JSON.parse(localStorage.getItem('profile'));
+		//self.userProfile = JSON.parse(localStorage.getItem('profile'));
 
 		// Add callback for lock `authenticated` event
 		self.lock.on("authenticated", (authResult) => {
 			localStorage.setItem('id_token', authResult.idToken);
-		    self.lock.getProfile(authResult.idToken, (error, profile) => {
+		   	self.loadUserProfile();
+		});
+		if(tokenNotExpired()){
+			self.loadUserProfile();
+		}
+	}
+	loadUserProfile(){
+		var self=this;
+		var idToken = localStorage.getItem('id_token');
+		if(tokenNotExpired()){
+	 		self.lock.getProfile(idToken, (error, profile) => {
 		        if (error) {
 		          // Handle error
 		          alert(error);
 		          return;
 		        }
-		        localStorage.setItem('profile', JSON.stringify(profile));
-		        self.userProfile = profile;
-		        self.registrationService.register(profile).subscribe(x=>{
-		        	var result = x.json();
+		      //  self.userProfile = profile;
+		        self.userProfileService.getRecogniserUser(profile).subscribe(recognisedUser=>{
+		        	var result = recognisedUser.json();
+		        self.userProfile = result;
+		        //localStorage.setItem('profile', JSON.stringify(profile));
 		        	console.log(result);
 		        });
-      		});
-		});
+	  		});
+	 	}
 	}
 	public login() {
 		// Call the show method to display the widget.
@@ -45,13 +56,13 @@ export class AuthService {
 	public authenticated() {
     	// Check if there's an unexpired JWT
     	// This searches for an item in localStorage with key == 'id_token'
-    	return tokenNotExpired();
+    	return tokenNotExpired() && this.userProfile!=null;
   	};
 
   	public logout() {
     	// Remove token from localStorage
     	localStorage.removeItem('id_token');
-		localStorage.removeItem('profile');
+		//localStorage.removeItem('profile');
     	this.userProfile = undefined;
   	};
 

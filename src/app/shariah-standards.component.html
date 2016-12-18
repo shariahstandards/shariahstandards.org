@@ -10,7 +10,7 @@
   </div>
   <div class="col-md-3">
     <div *ngIf="auth.userProfile" class="user-profile">
-      <img [src]="auth.userProfile.picture" width="50" alt="" class="profile-img"/>
+      <img [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"/>
       {{auth.userProfile.name}}
       <a class="btn btn-default" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</a>
     </div>

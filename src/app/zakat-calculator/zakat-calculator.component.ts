@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {CurrencyService} from '../currency.service';
-// import { ROUTER_DIRECTIVES } from '@angular/router';
 export interface asset{
 	description:string,
 	amount:number
