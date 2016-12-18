@@ -3,8 +3,8 @@ import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: '[term]',
-  templateUrl: 'term.component.html',
-  styleUrls: ['term.component.css'],
+  templateUrl: './term.component.html',
+  styleUrls: ['./term.component.css'],
   // directives: [ROUTER_DIRECTIVES]
 })
 export class TermComponent implements OnInit {

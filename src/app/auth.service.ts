@@ -1,7 +1,8 @@
 import { Injectable }      from '@angular/core';
 import { tokenNotExpired } from 'angular2-jwt';
 import { UserProfileRegistrationService } from './user-profile-registration.service'
-
+import { HttpModule, XHRBackend,RequestOptions,Http }       from '@angular/http'
+import { AuthenticatedHttpService } from './authenticated-http.service';
 declare var Auth0Lock: any;
 
 @Injectable()
@@ -67,3 +68,6 @@ export class AuthService {
   	};
 
 }
+export function getAuthenticationFactory(backend: XHRBackend, defaultOptions: RequestOptions){ 
+        return new AuthenticatedHttpService(backend, defaultOptions);
+    };

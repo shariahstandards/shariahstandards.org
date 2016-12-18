@@ -19,11 +19,11 @@ import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {routing,appRoutingProviders} from './routes';
 import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
 import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
-import { AuthService} from './auth.service'
+import { AuthService,getAuthenticationFactory} from './auth.service'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
+// import {NgBootstrapModule} from './ng-bootstrap-module'
 import {UserProfileRegistrationService} from './user-profile-registration.service'
 import {AuthenticatedHttpService} from './authenticated-http.service'
-
 @NgModule({
   declarations: [
     ShariahStandardsAppComponent,
@@ -45,7 +45,7 @@ import {AuthenticatedHttpService} from './authenticated-http.service'
     // ChartsModule,
     DatepickerModule,
     NgbModule.forRoot(),
-    routing
+   routing
   ],
    providers: [
     appRoutingProviders,
@@ -55,8 +55,7 @@ import {AuthenticatedHttpService} from './authenticated-http.service'
     AuthenticatedHttpService,
     {
       provide:Http,
-      useFactory: (backend: XHRBackend, defaultOptions: RequestOptions) => 
-        new AuthenticatedHttpService(backend, defaultOptions),
+      useFactory: getAuthenticationFactory,
       deps: [XHRBackend, RequestOptions]
     }
   ],

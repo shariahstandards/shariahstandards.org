@@ -5,6 +5,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router'
 import {AlertComponent, DatepickerModule, ModalModule} from 'ng2-bootstrap/ng2-bootstrap';
 import {NgbModule,NgbDateStruct} from '@ng-bootstrap/ng-bootstrap'
+import {Subscription} from 'rxjs/Subscription'
 import 'moment';
 import 'moment-timezone'
 declare var $: any;

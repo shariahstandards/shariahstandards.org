@@ -2,16 +2,16 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute }       from '@angular/router';
 import { TermComponent } from '../term/term.component';
 
-interface TermDefinition{
+export interface TermDefinition{
 	term:string,
 	definition:DefinitionText,
   relatedTerms:string[]
 }
-interface DefinitionSequentialContent{
+export interface DefinitionSequentialContent{
   text:string,
   isADefinedTerm:boolean
 }
-interface DefinitionText{
+export interface DefinitionText{
   contents:[DefinitionSequentialContent],
 }
 

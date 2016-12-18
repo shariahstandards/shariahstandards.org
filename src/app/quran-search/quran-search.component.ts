@@ -25,8 +25,8 @@ interface searchType{
 
 @Component({
   selector: 'app-quran-search',
-  templateUrl: 'quran-search.component.html',
-  styleUrls: ['quran-search.component.css'],
+  templateUrl: './quran-search.component.html',
+  styleUrls: ['./quran-search.component.css'],
   providers:[QuranService,QuranDataService]
 //  directives:[NgClass]
 })

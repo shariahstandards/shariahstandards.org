@@ -6,8 +6,8 @@ import { ShurahService } from '../shurah.service';
 
 @Component({
   selector: 'app-standards',
-  templateUrl: 'standards.component.html',
-  styleUrls: ['standards.component.css'],
+  templateUrl: './standards.component.html',
+  styleUrls: ['./standards.component.css'],
   providers:[ShurahService]
   // directives:[TermComponent,QuranReferenceComponent]
 })
