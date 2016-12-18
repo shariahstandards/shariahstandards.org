@@ -1,7 +1,7 @@
 import "./polyfills.ts";
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import {ShariahStandardsModule} from './app/app.module'
+import {ShariahStandardsModule} from './app/shariah-standards.module'
 // import { bootstrap } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
 // import {AlertComponent, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
