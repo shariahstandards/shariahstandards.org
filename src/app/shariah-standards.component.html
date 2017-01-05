@@ -14,9 +14,9 @@
       {{auth.userProfile.name}}
       <a class="btn btn-default" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</a>
     </div>
-    <div *ngIf="!auth.authenticated()" class="user-profile">
+   <!--  <div *ngIf="!auth.authenticated()" class="user-profile">
       <a class="btn btn-default" (click)="auth.login()">Log In</a>
-    </div>
+    </div> -->
   </div>
 </div>
 <div class="clearfix"></div>

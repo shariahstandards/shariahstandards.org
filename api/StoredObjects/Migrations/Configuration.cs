@@ -38,10 +38,25 @@ namespace StoredObjects.Migrations
                 Removed = false,
                 Organisation = mainOrganisation,
                 OrganisationId = mainOrganisation.Id,
-                LastDateAndTimeUtcAgreedToMembershipRules = theStartDate
+                LastDateAndTimeUtcAgreedToMembershipRules = theStartDate,
+                PublicName = "Lamaan Ball"
             };
             context.Set<Member>().AddOrUpdate(x=>x.Introduction,member);
 
+            context.SaveChanges();
+
+            member = context.Set<Member>().First(x => x.PublicName == "Lamaan Ball");
+            var user = new Auth0User {Id = "facebook|10154497931532170",Name = "Lamaan Ball",PictureUrl = "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/1959327_10152239153037170_2068892341_n.jpg?oh=9197c2274a8a0b7c3f548ca6407da74e&oe=5884F154" };
+
+            context.Set<Auth0User>().AddOrUpdate(x=>x.Id,user);
+            context.SaveChanges();
+            var memberAuthUser = new MemberAuth0User
+            {
+                Auth0UserId = user.Id,
+                Confirmed = true,
+                MemberId = member.Id
+            };
+            context.Set<MemberAuth0User>().AddOrUpdate(x=> new{x.Auth0UserId,x.MemberId},memberAuthUser);
             context.SaveChanges();
         }
     }

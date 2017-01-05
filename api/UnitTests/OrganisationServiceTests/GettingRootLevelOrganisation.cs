@@ -240,6 +240,42 @@ namespace UnitTests.OrganisationServiceTests
                         Assert.AreEqual(member.LeaderRecognition.RecognisedLeaderMember.PublicName,result.LeaderPublicName);
                         Assert.AreEqual(member.PublicName,result.PublicName);
                     }
+
+                    public class MemberRecognisesAnotherMemberAsARepresentative : OrganisationServiceTestContext
+                    {
+                        [Test]
+                        public void PropertiesAreBuiltCorrectly()
+                        {
+                            MethodToTest(() => service.BuildMemberResource(A<Member>.Ignored));
+                            var member = new Member
+                            {
+                                Id = 123,
+                                Followers = new List<LeaderRecognition>(),
+                                ActionUpdates = new List<ActionUpdate>(),
+                                PublicName = "some name",
+
+                            };
+                            A.CallTo(() => dependencies.LinqService.EnumerableCount(member.Followers)).Returns(12);
+                            A.CallTo(() => dependencies.LinqService.EnumerableSum(member.Followers,
+                                A<Func<LeaderRecognition, int>>.That.Matches(x =>
+                                    x.Invoke(new LeaderRecognition { FolloweCount = 89 }) == 89))).Returns(108);
+                            A.CallTo(() => service.GetPendingActionsCount(member.ActionUpdates)).Returns(2);
+
+                            var result = service.BuildMemberResource(member);
+
+                            Assert.AreEqual(member.Id, result.Id);
+                            Assert.AreEqual(12, result.DirectFollowers);
+                            Assert.AreEqual(108, result.IndirectFollowers);
+                            Assert.AreEqual(member.Id, result.Id);
+                            Assert.AreEqual(member.Id, result.Id);
+                            Assert.AreEqual(2, result.ToDoCount);
+                            Assert.IsNull(result.LeaderPublicName);
+                            Assert.AreEqual(member.PublicName, result.PublicName);
+                        }
+
+
+
+                    }
                 }
             }
 

@@ -210,7 +210,9 @@ interface FileReaderEvent extends Event {
 	buildingCalendar: boolean = false;
 	buildCalendar(){
 		if(this.locationFound!=null){
-			this.pdfTitle=this.locationFound.split(',').join("\n");
+			this.pdfTitle=this.locationFound.split(',').map(l=>{
+				return l.trim();
+			}).join("\n");
 		}
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
 	}
