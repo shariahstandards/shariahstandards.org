@@ -50,3 +50,4 @@ api/WebApi/obj/*
 **NCrunch*
 api/_NCrunch*/*
 **/.suo
+**/*.user
