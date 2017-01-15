@@ -1,0 +1,1 @@
+var shariahStandardsApiUrlBase="https://shariahStandards.org/api/"

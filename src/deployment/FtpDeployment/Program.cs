@@ -40,10 +40,12 @@ namespace deployViaFtp
 
             var credentials = new NetworkCredential(userName, password);
             
-            DeleteFolder(ftpRootFolder, credentials, "nextwwwroot");
+            //DeleteFolder(ftpRootFolder, credentials, "nextwwwroot");
             UploadFolder(ftpRootFolder, credentials, "nextwwwroot", sourceFolder,true);
             UploadFolder(ftpRootFolder, credentials, "nextwwwroot", additionalRootFolderItemsFolder,false);
-            DeleteFolder(ftpRootFolder, credentials, "nextapi");
+         //   DeleteFile(ftpRootFolder, credentials, "nextwwwroot" + "/assets/clientConfig.js");
+           // UploadFile(ftpRootFolder + "/nextwwwroot/assets", credentials, additionalRootFolderItemsFolder, "clientConfig.js");
+            //DeleteFolder(ftpRootFolder, credentials, "nextapi");
             UploadFolder(ftpRootFolder, credentials, "nextapi", apiSourceFolder,true);
             RenameFolder(ftpRootFolder, credentials, "wwwroot", "wwwrootBackup" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
             RenameFolder(ftpRootFolder, credentials, "api", "apiBackup" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
@@ -66,26 +68,47 @@ namespace deployViaFtp
             response.Close();
             return result == FtpStatusCode.PathnameCreated;
         }
-        static bool DeleteFolder(
+        static bool DeleteFile(
            string ftpRootFolder,
            NetworkCredential credentials,
-           string folderName)
+           string filePath)
         {
             try
             {
-                var request = (FtpWebRequest) WebRequest.Create(new Uri(ftpRootFolder + "/" + folderName));
+                var request = (FtpWebRequest)WebRequest.Create(new Uri(ftpRootFolder +"/"+ filePath));
                 request.Credentials = credentials;
-                request.Method = WebRequestMethods.Ftp.RemoveDirectory;
-                FtpWebResponse response = (FtpWebResponse) request.GetResponse();
+                request.Method = WebRequestMethods.Ftp.DeleteFile;
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
                 var result = response.StatusCode;
                 response.Close();
                 return result == FtpStatusCode.PathnameCreated;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
         }
+
+        //static bool DeleteFolder(
+        //   string ftpRootFolder,
+        //   NetworkCredential credentials,
+        //   string folderName)
+        //{
+        //    try
+        //    {
+        //        var request = (FtpWebRequest) WebRequest.Create(new Uri(ftpRootFolder + "/" + folderName));
+        //        request.Credentials = credentials;
+        //        request.Method = WebRequestMethods.Ftp.RemoveDirectory;
+        //        FtpWebResponse response = (FtpWebResponse) request.GetResponse();
+        //        var result = response.StatusCode;
+        //        response.Close();
+        //        return result == FtpStatusCode.PathnameCreated;
+        //    }
+        //    catch(Exception)
+        //    {
+        //        return false;
+        //    }
+        //}
         static bool RenameFolder(
            string ftpRootFolder,
            NetworkCredential credentials,
@@ -126,7 +149,7 @@ namespace deployViaFtp
             {
                 UploadFolder(ftpRootFolder + "/" + folderName
                     , credentials, directory.Substring(directory.LastIndexOf("\\", StringComparison.Ordinal)+1)
-                    , directory,true);
+                    , directory,create);
             }
             return true;
         }
