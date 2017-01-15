@@ -46,3 +46,7 @@ api/WebApi/obj/*
 **/bin/*
 **/*.ncrunchsolution
 **/*.ncrunchproject
+
+**NCrunch*
+api/_NCrunch*/*
+**/.suo

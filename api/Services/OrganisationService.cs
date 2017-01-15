@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using StoredObjects;
 using WebApiResources;
@@ -133,7 +134,52 @@ namespace Services
         public virtual List<RuleFragmentResource> ParseRuleStatement(string ruleStatement, IEnumerable<MembershipRuleTermDefinition> terms)
         {
             var fragments = CreateNewFragmentList(ruleStatement);
-            return _dependencies.LinqService.Aggregate(terms,fragments, ApplyTerm);
+            fragments=_dependencies.LinqService.Aggregate(terms,fragments, ApplyTerm);
+            return _dependencies.LinqService.EnumerableToList(
+                _dependencies.LinqService.SelectMany(fragments, AddQuranReferences));
+
+        }
+        public static Regex QuranRefRegex=new Regex("Q([1-9]{1,3}):([0-9]{1,3})");
+        public virtual IEnumerable<RuleFragmentResource> AddQuranReferences(RuleFragmentResource ruleFragmentResource)
+        {
+            if (!ruleFragmentResource.IsPlainText)
+            {
+                return new List<RuleFragmentResource>() {ruleFragmentResource};
+            }
+            return ParseForQuranReferences(ruleFragmentResource.Text);
+        }
+
+        public virtual IEnumerable<RuleFragmentResource> ParseForQuranReferences(string text)
+        {
+            var matches = QuranRefRegex.Matches(text);
+            var fragments = new List<RuleFragmentResource>();
+            var currentTextIndex = 0;
+            for(var i=0;i<matches.Count;i++)
+            {
+                var match = matches[i];
+                if (match.Groups.Count == 3)
+                {
+                    fragments.Add(new RuleFragmentResource { IsPlainText = true, Text = text.Substring(currentTextIndex, match.Index - currentTextIndex) });
+                    fragments.Add(new RuleFragmentResource
+                    {
+
+                        QuranReference = new QuranReferenceResource
+                        {
+                            Surah = int.Parse(match.Groups[1].Value),
+                            Verse = int.Parse(match.Groups[2].Value)
+                        }
+                    });
+                    currentTextIndex = match.Index + match.Length;
+
+                }
+
+            }
+            var lastFragment = new RuleFragmentResource {IsPlainText = true, Text = text.Substring(currentTextIndex)};
+            if (!string.IsNullOrEmpty(lastFragment.Text))
+            {
+                fragments.Add(lastFragment);
+            }
+            return fragments;
         }
 
         public virtual List<RuleFragmentResource> ApplyTerm(List<RuleFragmentResource> fragments, MembershipRuleTermDefinition term)
@@ -166,6 +212,7 @@ namespace Services
             results.Add(new RuleFragmentResource
             {
                 IsPlainText = false,
+                IsTerm = true,
                 Text = term.Term,
                 TermId = term.Id
             });

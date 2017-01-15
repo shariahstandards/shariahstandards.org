@@ -21,8 +21,8 @@ namespace deployViaFtp
                     "3 - The ftp password"+
                     "4 - The destination ftpfolder above wwwroot"+
                     "5 - Additional root level files source folder (for web.config, favicon.ico etc)"
-                    //+"6 - The source folder where the publised api is found"
-                    // +"7 - The database connection string for the api"
+                    +"6 - The source folder where the publised api is found"
+                    +"7 - The database connection string for the api"
                     );
                 return;
             }
@@ -31,23 +31,24 @@ namespace deployViaFtp
             var password = args[2];
             var ftpRootFolder = args[3];
             var additionalRootFolderItemsFolder = args[4];
-//            var apiSourceFolder = args[5];
-  //          var apiConnectionString = args[6];
+            var apiSourceFolder = args[5];
+            var apiConnectionString = args[6];
 
-            //var apiWebConfigFile = File.ReadAllText(apiSourceFolder + "\\web.config");
-            //apiWebConfigFile = apiWebConfigFile.Replace("%CONNECTION_STRING%", apiConnectionString);
-            //File.WriteAllText(apiSourceFolder + "\\web.config",apiWebConfigFile);
+            var apiWebConfigFile = File.ReadAllText(apiSourceFolder + "\\web.config");
+            apiWebConfigFile = apiWebConfigFile.Replace("%CONNECTION_STRING%", apiConnectionString);
+            File.WriteAllText(apiSourceFolder + "\\web.config",apiWebConfigFile);
 
             var credentials = new NetworkCredential(userName, password);
             
             DeleteFolder(ftpRootFolder, credentials, "nextwwwroot");
             UploadFolder(ftpRootFolder, credentials, "nextwwwroot", sourceFolder,true);
             UploadFolder(ftpRootFolder, credentials, "nextwwwroot", additionalRootFolderItemsFolder,false);
-//            UploadFolder(ftpRootFolder, credentials, "nextapi", apiSourceFolder);
+            DeleteFolder(ftpRootFolder, credentials, "nextapi");
+            UploadFolder(ftpRootFolder, credentials, "nextapi", apiSourceFolder,true);
             RenameFolder(ftpRootFolder, credentials, "wwwroot", "wwwrootBackup" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
-    //        RenameFolder(ftpRootFolder, credentials, "api", "apiBackup" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
+            RenameFolder(ftpRootFolder, credentials, "api", "apiBackup" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
             RenameFolder(ftpRootFolder, credentials, "nextwwwroot", "wwwroot");
-  //          RenameFolder(ftpRootFolder, credentials, "nextapi", "api");
+            RenameFolder(ftpRootFolder, credentials, "nextapi", "api");
 
         }
 

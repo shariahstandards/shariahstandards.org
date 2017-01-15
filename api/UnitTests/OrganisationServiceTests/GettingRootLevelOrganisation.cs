@@ -436,10 +436,23 @@ namespace UnitTests.OrganisationServiceTests
                         var fragments = new List<RuleFragmentResource>();
                         A.CallTo(() => dependencies.LinqService.Aggregate(terms,
                            initialFragmentList, service.ApplyTerm)).Returns(fragments);
+                     //   var exampleParsedFragments = new List<RuleFragmentResource>();
+                      //  var exampleFragment = new RuleFragmentResource {Text = "some text"};
+                        var parsedFragments = new List<RuleFragmentResource>();
+                        //A.CallTo(() => service.ParseForQuranReferences(exampleFragment.Text))
+                        //    .Returns(exampleParsedFragments);
+                      //  A.CallTo(() => dependencies.LinqService.SelectMany(fragments,
+                            //A<Func<RuleFragmentResource, IEnumerable<RuleFragmentResource>>>.That.Matches(x =>
+                            //    x.Invoke(exampleFragment) == exampleParsedFragments))).Returns(parsedFragments);
+                        A.CallTo(() => dependencies.LinqService.SelectMany(fragments, service.AddQuranReferences))
+                            .Returns(parsedFragments);
+                        var parsedFragmentsList = new List<RuleFragmentResource>();
+                        A.CallTo(() => dependencies.LinqService.EnumerableToList(parsedFragments))
+                            .Returns(parsedFragmentsList);
 
                         var result = service.ParseRuleStatement(statement, terms);
 
-                        Assert.AreSame(fragments,result);
+                        Assert.AreSame(parsedFragmentsList,result);
 
                     }
 

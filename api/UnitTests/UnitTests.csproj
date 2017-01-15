@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="OrganisationServiceTests\GettingRootLevelOrganisation.cs" />
     <Compile Include="OrganisationServiceTests\OrganisationServiceTestContext.cs" />
+    <Compile Include="OrganisationServiceTests\ParseQuranReference.cs" />
     <Compile Include="UserServiceTests\FakeDbSet.cs" />
     <Compile Include="UserServiceTests\GettingALoggedInUser.cs" />
     <Compile Include="UserServiceTests\GettingAUserProfile.cs" />
