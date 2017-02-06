@@ -15,6 +15,6 @@ namespace StoredObjects
         public int NumberOfCorrectAnswersRequired { get; set; }
         public virtual IList<MembershipRuleViolationAccusation> MembershipRuleViolationClaims { get; set; }
         public virtual IList<MembershipRuleComprehensionQuestion> MembershipRuleComprehensionQuestions { get; set; }
-        public virtual MembershipRuleExplanation Explanation { get; set; }
+        //public virtual MembershipRuleExplanation Explanation { get; set; }
     }
 }

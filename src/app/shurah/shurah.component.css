@@ -1,0 +1,37 @@
+.clickable{
+	cursor: pointer;
+}
+.rule{
+	font-size: 14px;
+}
+ol { counter-reset: item }
+li { display: block;
+	font-size: 16pt;
+}
+li ol li{
+	font-size: 12pt;
+}
+li:before { 
+	content: counters(item, ".") " "; 
+	counter-increment: item ;
+	float:left; padding-right:10px;
+	font-size: 16pt;
+	font-weight: bold; 
+}
+li ol li:before{
+	font-size: 12pt;
+	font-weight: normal;
+}
+.mnemonic{
+	border:solid 2px red;
+	background: white;
+	color:black;
+	padding:10px;
+}
+h4{
+	font-weight: bold;
+	padding-top: 15px;
+}
+h4{
+	font-size: 16px;
+}

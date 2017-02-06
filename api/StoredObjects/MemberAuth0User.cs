@@ -7,6 +7,6 @@
         public string Auth0UserId { get; set; }
         public int MemberId { get; set; }
         public virtual Member Member { get; set; }
-        public bool Confirmed { get; set; }
+        public bool Suspended { get; set; }
     }
 }

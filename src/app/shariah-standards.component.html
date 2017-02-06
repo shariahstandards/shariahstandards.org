@@ -14,9 +14,9 @@
       {{auth.userProfile.name}}
       <a class="btn btn-default" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</a>
     </div>
-   <!--  <div *ngIf="!auth.authenticated()" class="user-profile">
+    <div *ngIf="!auth.authenticated()" class="user-profile">
       <a class="btn btn-default" (click)="auth.login()">Log In</a>
-    </div> -->
+    </div>
   </div>
 </div>
 <div class="clearfix"></div>
@@ -29,7 +29,8 @@
   <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a>
   <a routerLinkActive="active-route" [routerLink]="'/terms'">Terminology</a>
   <a routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
-  <a routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a>
+  <a routerLinkActive="active-route" [routerLink]="'/shurah'">Shurah</a>
+    <!-- <a routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a> -->
  
 </nav>
 <router-outlet></router-outlet>

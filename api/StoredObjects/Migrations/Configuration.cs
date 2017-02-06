@@ -53,7 +53,6 @@ namespace StoredObjects.Migrations
             var memberAuthUser = new MemberAuth0User
             {
                 Auth0UserId = user.Id,
-                Confirmed = true,
                 MemberId = member.Id
             };
             context.Set<MemberAuth0User>().AddOrUpdate(x=> new{x.Auth0UserId,x.MemberId},memberAuthUser);

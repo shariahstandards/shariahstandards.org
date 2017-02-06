@@ -31,7 +31,9 @@ export class StandardsComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
      });
      this.shurahService.getRootOrganisation().subscribe(result=>{
-       this.rootOrganisation=result.json;
+       this.rootOrganisation=result.json();
+       this.changeDetectorRef.detectChanges();
+      // console.log(JSON.stringify(this.rootOrganisation));
      })
   }
   rootOrganisation:{}

@@ -1,0 +1,25 @@
+<div *ngIf="rootOrganisation!=null">
+  <h2>
+    Shurah 
+  </h2>
+  <p *ngIf="rootOrganisation.member==null && auth.authenticated()">
+  	To use the shurah tools, please agree to the following rules:
+  </p>
+  <h3> {{rootOrganisation.name}} rules</h3>
+  <ol>
+  <li *ngFor="let section of rootOrganisation.ruleSections" [id]="section.uniqueName">
+  	<h3>{{section.title}}</h3>
+  </li>
+  </ol>
+  <div *ngIf="rootOrganisation.ruleSections.length==0">
+  	<p>No rules have been set for this organisation</p>
+  </div>
+  <p *ngIf="rootOrganisation.member==null && auth.authenticated()">
+  	I agree to hold to the rules of this organisation and to become a member.
+  	<button (click)="join()"> Join </button>
+  </p>
+   <p *ngIf="rootOrganisation.member!=null && auth.authenticated()">
+  	I no longer agree to hold to the rules of this organisation and want to stop being a member.
+  	<button (click)="leave()"> Leave </button>
+  </p>
+</div>

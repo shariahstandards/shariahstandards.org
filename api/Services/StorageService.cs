@@ -47,6 +47,10 @@ namespace Services
                 });
                 throw;
             }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ using WebApiResources;
 
 namespace WebApi.Controllers
 {
-    [RoutePrefix("api")]
+    //[RoutePrefix("api")]
 
     public class UserProfileController : ApiController
     {

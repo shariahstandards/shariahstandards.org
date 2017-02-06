@@ -78,6 +78,8 @@ namespace Services
             MembershipRuleSection ruleSection, Auth0User user, int sectionIndex, IEnumerable<MembershipRuleTermDefinition> terms)
         {
             var resource = new MembershipRuleSectionResource();
+            resource.Title = ruleSection.Title;
+            resource.UniqueName = ruleSection.UniqueInOrganisationName;
             var orderedRules = _dependencies.LinqService.OrderBy(ruleSection.MembershipRules, r => r.Sequence);
             var prefix = sectionPrefix + (sectionIndex + 1).ToString() + ".";
             resource.Rules =
@@ -97,7 +99,7 @@ namespace Services
             resource.Id = rule.Id;
             resource.Number = rulePrefix + "." + (ruleIndex+1);
             resource.RuleFragments = ParseRuleStatement(rule.RuleStatement, terms);
-            resource.ExplanationUrl = rule.Explanation?.ExplanationUrl;
+        //    resource.ExplanationUrl = rule.Explanation?.ExplanationUrl;
             resource.ComprehensionScore = GetComprehensionScore(rule, user);
             resource.MaxComprehensionScore =
                 _dependencies.LinqService.EnumerableCount(rule.MembershipRuleComprehensionQuestions);
@@ -112,7 +114,7 @@ namespace Services
                 return null;
             }
             var member= _dependencies.LinqService.SingleOrDefault(members,m => m.MemberAuth0Users.Any(x => x.Auth0UserId == user.Id));
-            if (member == null)
+            if (member == null || member.Removed)
             {
                 return null;
             }

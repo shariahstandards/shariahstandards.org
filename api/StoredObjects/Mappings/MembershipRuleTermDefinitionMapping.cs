@@ -13,7 +13,8 @@ namespace StoredObjects.Mappings
         {
             _modelBuilder = modelBuilder;
             E.HasKey(x => x.Id);
-            E.Property(x => x.Term).IsRequired().HasMaxLength(50);
+            E.Property(x => x.Term).IsRequired().HasMaxLength(100);
+            E.Property(x => x.Definition).IsRequired().HasMaxLength(5000);
             E.HasRequired(x => x.Organisation).WithMany(x => x.Terms).HasForeignKey(x => x.OrganisationId);
         }
     }

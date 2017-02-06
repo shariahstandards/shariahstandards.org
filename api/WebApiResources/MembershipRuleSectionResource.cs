@@ -10,6 +10,8 @@ namespace WebApiResources
     {
         public List<MembershipRuleResource> Rules { get; set; }
         public List<MembershipRuleSectionResource> SubSections { get; set; }
+        public string Title { get; set; }
+        public string UniqueName { get; set; }
     }
     public class MembershipRuleResource
     {

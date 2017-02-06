@@ -16,6 +16,7 @@ namespace StoredObjects
         public virtual IList<ContactDetail> ContactDetails { get; set; }
         public virtual IList<MembershipRuleSectionAcceptance> MembershipRuleSectionAcceptances { get; set; }
         public virtual IList<MembershipRuleComprehensionTestResult> MembershipRuleComprehensionTestResults { get; set; }
+        public virtual IList<QuranComment> QuranComments { get; set; }
     }
 
 }

@@ -16,7 +16,7 @@ namespace StoredObjects.Mappings
             E.Property(x => x.Email).IsRequired().HasMaxLength(250);
             E.Property(x => x.Auth0UserId).IsRequired().HasMaxLength(200);
             E.Property(x => x.SupportingStatement).IsOptional().HasMaxLength(2000);
-            E.HasRequired(x => x.Organisaion).WithMany(x=>x.MembershipApplications).HasForeignKey(x=>x.OrganisationId);
+            E.HasRequired(x => x.Organisation).WithMany(x=>x.MembershipApplications).HasForeignKey(x=>x.OrganisationId);
             E.HasRequired(x => x.Auth0User).WithMany(x => x.MembershipApplications).HasForeignKey(x => x.Auth0UserId);
         }
     }

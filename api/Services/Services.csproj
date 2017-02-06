@@ -67,6 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LinqService.cs" />
+    <Compile Include="MembershipApplicationService.cs" />
+    <Compile Include="MembershipCancellationService.cs" />
     <Compile Include="OrganisationService.cs" />
     <Compile Include="StorageService.cs" />
     <Compile Include="UnityRegistrationConfig.cs" />

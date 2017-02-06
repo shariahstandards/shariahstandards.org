@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateMembershipRuleRequesResource.cs" />
+    <Compile Include="MembershipCancellationResponseResource.cs" />
+    <Compile Include="MembershipApplicationResponseResource.cs" />
     <Compile Include="MembershipRuleSectionResource.cs" />
     <Compile Include="OrganisationResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

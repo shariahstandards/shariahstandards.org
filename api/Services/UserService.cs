@@ -13,7 +13,6 @@ namespace Services
     {
         IStorageService StorageService { get; set; }
         ILinqService LinqService { get; set; }
-
     }
     public class UserServiceDependencies : IUserServiceDependencies
     {
@@ -50,6 +49,11 @@ namespace Services
             {
                 user = BuildAuth0User(auth0UserProfile);
                 _dependencies.StorageService.SetOf<Auth0User>().Add(user);
+                _dependencies.StorageService.SaveChanges();
+            }
+            else
+            {
+                user.PictureUrl = auth0UserProfile.Picture;
                 _dependencies.StorageService.SaveChanges();
             }
             return BuildUserProfileResource(user);

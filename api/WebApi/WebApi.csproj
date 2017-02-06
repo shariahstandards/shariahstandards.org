@@ -177,6 +177,8 @@
   <ItemGroup>
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\MembershipCancellationController.cs" />
+    <Compile Include="Controllers\MembershipApplicationController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

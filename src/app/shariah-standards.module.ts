@@ -23,7 +23,8 @@ import { AuthService,getAuthenticationFactory} from './auth.service'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 // import {NgBootstrapModule} from './ng-bootstrap-module'
 import {UserProfileRegistrationService} from './user-profile-registration.service'
-import {AuthenticatedHttpService} from './authenticated-http.service'
+import {AuthenticatedHttpService} from './authenticated-http.service';
+import { ShurahComponent } from './shurah/shurah.component'
 @NgModule({
   declarations: [
     ShariahStandardsAppComponent,
@@ -35,7 +36,8 @@ import {AuthenticatedHttpService} from './authenticated-http.service'
     QuranSearchComponent,
     PrayerTimesComponent,
     AboutUsComponent,
-    ArabicKeyboardComponent
+    ArabicKeyboardComponent,
+    ShurahComponent
       ],
   imports: [
     BrowserModule,

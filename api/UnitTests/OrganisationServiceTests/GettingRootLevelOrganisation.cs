@@ -395,7 +395,7 @@ namespace UnitTests.OrganisationServiceTests
                         {
                             RuleStatement = "some statement",
                             Id = 67,
-                            Explanation = new MembershipRuleExplanation { ExplanationUrl = "someurl"},
+                     //       Explanation = new MembershipRuleExplanation { ExplanationUrl = "someurl"},
                             MembershipRuleComprehensionQuestions = new List<MembershipRuleComprehensionQuestion>(),
                             PublishedDateTimeUtc = DateTime.UtcNow
                         };
@@ -412,7 +412,7 @@ namespace UnitTests.OrganisationServiceTests
                         Assert.AreEqual(prefix+"."+(index+1),result.Number);
                         Assert.AreEqual(rule.Id,result.Id);
                         Assert.AreSame(fragments,result.RuleFragments);
-                        Assert.AreEqual(rule.Explanation.ExplanationUrl,result.ExplanationUrl);
+                 //       Assert.AreEqual(rule.Explanation.ExplanationUrl,result.ExplanationUrl);
                         Assert.AreEqual(15,result.ComprehensionScore);
                         Assert.AreEqual(20,result.MaxComprehensionScore);
                         Assert.AreEqual(rule.PublishedDateTimeUtc.ToString("s"),result.PublishedUtcDateTimeText);

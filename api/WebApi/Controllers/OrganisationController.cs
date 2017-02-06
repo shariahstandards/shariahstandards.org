@@ -8,7 +8,7 @@ using Services;
 
 namespace WebApi.Controllers
 {
-    [RoutePrefix("api")]
+   // [RoutePrefix("api")]
     public class OrganisationController : ApiController
     {
         private readonly IOrganisationService _service;

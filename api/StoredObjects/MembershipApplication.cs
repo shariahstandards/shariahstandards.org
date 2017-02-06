@@ -4,7 +4,7 @@ namespace StoredObjects
 {
     public class MembershipApplication
     {
-        public virtual ShurahBasedOrganisation Organisaion { get; set; }
+        public virtual ShurahBasedOrganisation Organisation { get; set; }
         public int OrganisationId { get; set; }
         public int Id { get; set; }
         public virtual Auth0User Auth0User { get; set; }
