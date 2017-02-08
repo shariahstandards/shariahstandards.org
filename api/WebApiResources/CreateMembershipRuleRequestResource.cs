@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApiResources
 {
-    public class CreateMembershipRuleRequesResource
+    public class CreateMembershipRuleRequestResource
     {
     }
 }

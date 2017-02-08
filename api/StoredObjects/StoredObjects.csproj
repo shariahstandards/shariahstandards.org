@@ -64,6 +64,7 @@
     <Compile Include="Mappings\ActionUpdateMapping.cs" />
     <Compile Include="Mappings\ActionMapping.cs" />
     <Compile Include="Mappings\ContactDetailMapping.cs" />
+    <Compile Include="Mappings\DelegatedPermissionMapping.cs" />
     <Compile Include="Mappings\QuranCommentMapping.cs" />
     <Compile Include="Mappings\MembershipRuleExplanationMapping.cs" />
     <Compile Include="Mappings\MembershipRuleComprehensionTestResultMapping.cs" />

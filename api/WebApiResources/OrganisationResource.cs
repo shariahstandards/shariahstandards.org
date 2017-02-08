@@ -13,5 +13,6 @@ namespace WebApiResources
         public string JoiningPolicy { get; set; }
         public MemberResource Member { get; set; }
         public List<MembershipRuleSectionResource> RuleSections { get; set; }
+        public List<string> Permissions { get; set; }
     }
 }

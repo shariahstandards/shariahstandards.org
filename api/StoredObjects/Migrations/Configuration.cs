@@ -57,6 +57,16 @@ namespace StoredObjects.Migrations
             };
             context.Set<MemberAuth0User>().AddOrUpdate(x=> new{x.Auth0UserId,x.MemberId},memberAuthUser);
             context.SaveChanges();
+
+            context.Set<OrganisationLeader>().AddOrUpdate(x=>x.OrganisationId,new OrganisationLeader
+            {
+                LastUpdateDateTimeUtc = DateTime.UtcNow,
+                Leader = member,
+                Organisation = mainOrganisation,
+                OrganisationId = mainOrganisation.Id,
+                LeaderMemberId = member.Id
+            });
+            context.SaveChanges();
         }
     }
 }

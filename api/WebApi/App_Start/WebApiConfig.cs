@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Owin;
 using Unity.WebApi;
+using WebApi.App_Start;
 
 namespace WebApi
 {
@@ -22,7 +23,7 @@ namespace WebApi
 
             var cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
-            config.DependencyResolver=new UnityDependencyResolver(UnityConfig.GetConfiguredContainer());
+            config.DependencyResolver=new Microsoft.Practices.Unity.WebApi.UnityHierarchicalDependencyResolver(UnityConfig.GetConfiguredContainer());
             // Web API routes
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute(

@@ -23,6 +23,6 @@ namespace StoredObjects
         public virtual IList<MembershipRuleTermDefinition> Terms { get; set; }
         public virtual OrganisationRelationship ParentOrganisationRelationship { get; set; }
         public virtual IList<OrganisationRelationship> ChildOrganisationRelationships { get; set; }
-
+        public virtual IList<DelegatedPermission> DelegatedPermissions { get; set; }
     }
 }

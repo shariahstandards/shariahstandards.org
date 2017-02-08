@@ -16,7 +16,7 @@ namespace StoredObjects
         public DateTime PublishedDateTimeUtc { get; set; }
         public virtual IList<MembershipRule> MembershipRules { get; set; }
         public virtual IList<MembershipRuleSectionAcceptance> MembershipRuleSectionAcceptances { get; set; }
-        public bool MustBeAcceptedToBeAMember { get; set; }
+        //public bool MustBeAcceptedToBeAMember { get; set; }
     }
 
     public class MembershipRuleSectionAcceptance

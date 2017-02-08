@@ -34,6 +34,8 @@ namespace Services
     public interface IOrganisationService
     {
         OrganisationResource GetRootOrganisation(IPrincipal principal);
+        ShurahBasedOrganisation GetOrganisation(int organisationId);
+        List<string> GetMemberPermissions(Auth0User user, ShurahBasedOrganisation organisation);
     }
     public class OrganisationService: IOrganisationService
     {
@@ -53,6 +55,11 @@ namespace Services
             return BuildOrganisationResource(org, user);
         }
 
+        public ShurahBasedOrganisation GetOrganisation(int organisationId)
+        {
+            return _dependencies.StorageService.SetOf<ShurahBasedOrganisation>().Single(x => x.Id == organisationId);
+        }
+
         public virtual OrganisationResource BuildOrganisationResource(ShurahBasedOrganisation organisation, Auth0User user)
         {
             var resource = new OrganisationResource();
@@ -61,7 +68,29 @@ namespace Services
             resource.Description = organisation.Description;
             resource.Member= GetMember(user, organisation.Members);
             resource.RuleSections = BuildMembershipRuleSectionResources(string.Empty,organisation.MembershipRuleSections,SortTerms(organisation.Terms),user);
+            resource.Permissions = GetMemberPermissions(user, organisation);
             return resource;
+        }
+
+        public virtual List<string> GetMemberPermissions(Auth0User user, ShurahBasedOrganisation organisation)
+        {
+            if (user == null)
+            {
+                return new List<string>();
+            }
+            var memberAuthUser = user.MemberAuth0Users.Where(m => m.Member.OrganisationId == organisation.Id).FirstOrDefault();
+            if (memberAuthUser == null)
+            {
+                return new List<string>();
+            }
+            var permissions = memberAuthUser.Member.DelegatedPermissions.Select(x => x.ShurahOrganisationPermission).Distinct();
+
+            if (organisation.OrganisationLeader != null &&
+                organisation.OrganisationLeader.LeaderMemberId == memberAuthUser.MemberId)
+            {
+                permissions = Enum.GetValues(typeof (ShurahOrganisationPermission)).OfType<ShurahOrganisationPermission>().ToList();
+            }
+            return permissions.Select(p => p.ToString()).ToList();
         }
 
 

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebApiResources
 {
-    public class MembershipApplicationResponseResource
+    public class MembershipApplicationResponseResource:ResponseResource
     {
         public bool NowAMember { get; set; }
-        public bool HasError { get; set; }
-        public string Error { get; set; }
+        
     }
 }

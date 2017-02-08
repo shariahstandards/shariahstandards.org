@@ -14,11 +14,27 @@
   <div *ngIf="rootOrganisation.ruleSections.length==0">
   	<p>No rules have been set for this organisation</p>
   </div>
-  <p *ngIf="rootOrganisation.member==null && auth.authenticated()">
+  <p *ngIf="rootOrganisation.member==null && auth.authenticated() && !hideButtons">
   	I agree to hold to the rules of this organisation and to become a member.
   	<button (click)="join()"> Join </button>
   </p>
-   <p *ngIf="rootOrganisation.member!=null && auth.authenticated()">
+   <div *ngIf="allow('EditMembershipRules')">
+    <form>
+      <label for="sectionName">Section Name</label>
+      <input type="text" [(ngModel)]="addSectionModel.name" required maxlength="100" id="name" name="name">
+      <div>
+        Url Id: {{addSectionModel.urlSlug()}}
+      </div>
+      <button type="submit" (click)="beginAddRuleSection()">Add</button>
+    </form>
+    <ul>
+      <li class="error" *ngFor="let error of errors">
+        {{error}}
+      </li>
+    </ul>
+   </div>
+   <p *ngIf="rootOrganisation.member!=null && auth.authenticated() && !hideButtons">
+
   	I no longer agree to hold to the rules of this organisation and want to stop being a member.
   	<button (click)="leave()"> Leave </button>
   </p>

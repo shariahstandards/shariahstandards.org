@@ -16,7 +16,7 @@ namespace Services
     }
     public interface IMembershipRuleService
     {
-        CreateMembershipRuleRequesResource GetCreateRuleRequestResource(IPrincipal user,int? parentOrganisationId);
+        CreateMembershipRuleRequestResource GetCreateRuleRequestResource(IPrincipal user,int? parentOrganisationId);
     }
     public class MembershipRuleService: IMembershipRuleService
     {
@@ -27,7 +27,7 @@ namespace Services
             _dependencies = dependencies;
         }
 
-        public virtual CreateMembershipRuleRequesResource GetCreateRuleRequestResource(IPrincipal user, int? parentOrganisationId)
+        public virtual CreateMembershipRuleRequestResource GetCreateRuleRequestResource(IPrincipal user, int? parentOrganisationId)
         {
             throw new NotImplementedException();
         }

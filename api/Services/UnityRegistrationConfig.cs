@@ -37,7 +37,7 @@ namespace Services
         public static void RegisterAllServicesForWebsites(this IUnityContainer container)
         {
             RegisterAllUniqueServices(container);
-            container.RegisterType<IStorageService, StorageService>(new PerThreadLifetimeManager());
+            container.RegisterType<IStorageService, StorageService>(new PerRequestLifetimeManager());
 
         }
     }
