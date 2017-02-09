@@ -68,7 +68,19 @@ namespace UnitTests.OrganisationServiceTests
                 var memberResource = new MemberResource();
                 A.CallTo(() => service.GetMember(user, org.Members)).Returns(memberResource);
                 var ruleSectionResources = new List<MembershipRuleSectionResource>();
-                A.CallTo(() => service.BuildMembershipRuleSectionResources(String.Empty,org.MembershipRuleSections,sortedTerms,user)).Returns(ruleSectionResources);
+                var filteredSections = new List<MembershipRuleSection>();
+                A.CallTo(() => dependencies.LinqService.Where(org.MembershipRuleSections,
+                    A<Func<MembershipRuleSection, bool>>.That.Matches(x =>
+                        x.Invoke(new MembershipRuleSection())
+                        &&
+                        !x.Invoke(new MembershipRuleSection
+                        {
+                            ParentMembershipRuleSection = new MembershipRuleSectionRelationship()
+                        })
+                        ))).Returns(filteredSections);
+
+                A.CallTo(() => service.BuildMembershipRuleSectionResources(String.Empty,filteredSections,sortedTerms,user))
+                    .Returns(ruleSectionResources);
 
                 var result = service.BuildOrganisationResource(org, user);
 

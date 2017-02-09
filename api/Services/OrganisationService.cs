@@ -67,7 +67,9 @@ namespace Services
             resource.JoiningPolicy = organisation.JoiningPolicy.ToString();
             resource.Description = organisation.Description;
             resource.Member= GetMember(user, organisation.Members);
-            resource.RuleSections = BuildMembershipRuleSectionResources(string.Empty,organisation.MembershipRuleSections,SortTerms(organisation.Terms),user);
+            resource.RuleSections = BuildMembershipRuleSectionResources(string.Empty
+                ,_dependencies.LinqService.Where(organisation.MembershipRuleSections,r=>r.ParentMembershipRuleSection==null)
+                ,SortTerms(organisation.Terms),user);
             resource.Permissions = GetMemberPermissions(user, organisation);
             return resource;
         }
@@ -108,6 +110,7 @@ namespace Services
         {
             var resource = new MembershipRuleSectionResource();
             resource.Title = ruleSection.Title;
+            resource.Id = ruleSection.Id;
             resource.UniqueName = ruleSection.UniqueInOrganisationName;
             var orderedRules = _dependencies.LinqService.OrderBy(ruleSection.MembershipRules, r => r.Sequence);
             var prefix = sectionPrefix + (sectionIndex + 1).ToString() + ".";

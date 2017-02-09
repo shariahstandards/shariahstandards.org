@@ -1,16 +1,33 @@
-import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef ,Input,Output,EventEmitter} from '@angular/core';
 import { ShurahService } from '../shurah.service';
 import { AuthService } from '../auth.service'
+import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 
 export interface organisation{
   permissions:string[]
 }
+@Component({
+  selector:'sub-section',
+  templateUrl:'./shurah.component.sub-section.html'
+})
+export class subSection{
+  @Input('section') section:any
+  @Input('sub-sections') subSections:any[]
+  @Input('allow-edit') allowEdit:boolean
+  @Output() addSection:EventEmitter<any>=new EventEmitter<any>();
+  onClickAdd(section){
+    this.addSection.emit(section);
+  }
+}
+
+
 export class addSectionModel{
   constructor(
   public name:string
     ){
     this.errors=[]
   }
+  parentSection:any
   urlSlug(){
   var cleanedText = this.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
       cleanedText = cleanedText.replace(/--/g, '-');
@@ -32,11 +49,33 @@ export class ShurahComponent implements OnInit {
     //private router:Router,
     private changeDetectorRef:ChangeDetectorRef,
     private shurahService:ShurahService,
-    private auth: AuthService
+    private auth: AuthService,
+    private modalService: NgbModal,
 ) { 
-    this.addSectionModel= new addSectionModel("");
+
+  }
+  private activeModal:NgbModalRef
+  closeResult: string;
+  open(content, section) {
+   this.addSectionModel= new addSectionModel("");
+   this.addSectionModel.parentSection=section;
+   this.activeModal= this.modalService.open(content);
+   this.activeModal.result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
   }
 
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
+  }
   ngOnInit() {
     this.refresh();
   }
@@ -53,13 +92,14 @@ export class ShurahComponent implements OnInit {
   }
   beginAddRuleSection(){
     this.addSectionModel.errors=[];
-    this.shurahService.createRuleSection(this.addSectionModel,1).subscribe(result=>{
+    this.shurahService.createRuleSection(this.addSectionModel,1,this.addSectionModel.parentSection.id).subscribe(result=>{
       var response = result.json();
       if(response.hasError){
         this.addSectionModel.errors=[response.error];
       }
       else{
         this.addSectionModel=new addSectionModel("");
+        this.activeModal.close('section added');
         this.refresh();
       }
     })

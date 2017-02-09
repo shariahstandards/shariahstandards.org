@@ -1,0 +1,10 @@
+<h3>{{section.title}}</h3>
+<span *ngIf="allowEdit">
+	 <button (click)="onClickAdd(section)">+ Section</button>
+</span> 
+<div *ngIf="section.subSections.length>0" >
+   <ol *ngFor="let subSection of section.subSections" [id]="subSection.uniqueName">
+      <sub-section (addSection)="onClickAdd($event)" [section]="subSection" [sub-sections]="subSection.subSections" [allow-edit]="allowEdit"></sub-section>
+  </ol>
+  
+</div>

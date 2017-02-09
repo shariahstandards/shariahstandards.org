@@ -12,6 +12,7 @@ namespace WebApiResources
         public List<MembershipRuleSectionResource> SubSections { get; set; }
         public string Title { get; set; }
         public string UniqueName { get; set; }
+        public int Id { get; set; }
     }
     public class MembershipRuleResource
     {

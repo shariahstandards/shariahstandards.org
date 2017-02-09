@@ -36,6 +36,7 @@ namespace Services
         List<TSource> EnumerableToList<TSource>(IEnumerable<TSource> source);
         TAccumulate Aggregate<TSource, TAccumulate>(IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func);
         IEnumerable<TResult> SelectMany<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector);
+        IEnumerable<TSource> Where<TSource>(IEnumerable<TSource> source, Func<TSource, bool> predicate);
 
     }
     public class LinqService: ILinqService
@@ -50,6 +51,7 @@ namespace Services
         public TSource SingleOrDefault<TSource>(IQueryable<TSource> source)
         {
             return source.SingleOrDefault();
+
         }
 
         public TSource SingleOrDefault<TSource>(IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
@@ -59,6 +61,7 @@ namespace Services
 
         public TSource SingleOrDefault<TSource>(IEnumerable<TSource> source)
         {
+            
             return source.SingleOrDefault();
         }
 
@@ -126,6 +129,11 @@ namespace Services
         public IEnumerable<TResult> SelectMany<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
         {
             return source.SelectMany(selector);
+        }
+
+        public IEnumerable<TSource> Where<TSource>(IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            return source.Where(predicate);
         }
     }
 }
