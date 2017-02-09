@@ -93,7 +93,11 @@ export class ShurahComponent implements OnInit {
   }
   beginAddRuleSection(){
     this.addSectionModel.errors=[];
-    this.shurahService.createRuleSection(this.addSectionModel,1,this.addSectionModel.parentSection.id).subscribe(result=>{
+    var parentSectionId=null;
+    if(this.addSectionModel.parentSection){
+      parentSectionId=this.addSectionModel.parentSection.id;
+    }
+    this.shurahService.createRuleSection(this.addSectionModel,1,parentSectionId).subscribe(result=>{
       var response = result.json();
       if(response.hasError){
         this.addSectionModel.errors=[response.error];
