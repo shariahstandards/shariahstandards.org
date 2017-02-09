@@ -9,11 +9,11 @@
   <span *ngIf=" auth.authenticated() && allow('EditMembershipRules')">
       <button (click)="open(addSectionModal)">+ Section</button>
    </span>
-  <ol>
-  <li *ngFor="let section of rootOrganisation.ruleSections" [id]="section.uniqueName">
-    <sub-section (addSection)="open(addSectionModal,$event)" [section]="section" [sub-sections]="section.subSections" [allow-edit]=" auth.authenticated() && allow('EditMembershipRules')"></sub-section>
-  </li>
-  </ol>
+  <div>
+    <div class="section" *ngFor="let section of rootOrganisation.ruleSections" [id]="section.uniqueName">
+      <sub-section (addSection)="open(addSectionModal,$event)" [section]="section" [sub-sections]="section.subSections" [allow-edit]=" auth.authenticated() && allow('EditMembershipRules')"></sub-section>
+    </div>
+  </div>
   <div *ngIf="rootOrganisation.ruleSections.length==0">
   	<p>No rules have been set for this organisation</p>
   </div>

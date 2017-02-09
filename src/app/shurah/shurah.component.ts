@@ -8,7 +8,8 @@ export interface organisation{
 }
 @Component({
   selector:'sub-section',
-  templateUrl:'./shurah.component.sub-section.html'
+  templateUrl:'./shurah.component.sub-section.html',
+  styleUrls: ['./shurah.component.sub-section.css'],
 })
 export class subSection{
   @Input('section') section:any

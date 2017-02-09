@@ -80,7 +80,7 @@ namespace Services
             {
                 return new List<string>();
             }
-            var memberAuthUser = user.MemberAuth0Users.Where(m => m.Member.OrganisationId == organisation.Id).FirstOrDefault();
+            var memberAuthUser = user.MemberAuth0Users.FirstOrDefault(m => m.Member.OrganisationId == organisation.Id && !m.Member.Removed);
             if (memberAuthUser == null)
             {
                 return new List<string>();
@@ -111,6 +111,7 @@ namespace Services
             var resource = new MembershipRuleSectionResource();
             resource.Title = ruleSection.Title;
             resource.Id = ruleSection.Id;
+            resource.SectionNumber = sectionPrefix + (sectionIndex + 1);
             resource.UniqueName = ruleSection.UniqueInOrganisationName;
             var orderedRules = _dependencies.LinqService.OrderBy(ruleSection.MembershipRules, r => r.Sequence);
             var prefix = sectionPrefix + (sectionIndex + 1).ToString() + ".";

@@ -13,6 +13,7 @@ namespace WebApiResources
         public string Title { get; set; }
         public string UniqueName { get; set; }
         public int Id { get; set; }
+        public string SectionNumber { get; set; }
     }
     public class MembershipRuleResource
     {
