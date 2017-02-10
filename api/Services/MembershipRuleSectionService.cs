@@ -33,6 +33,8 @@ namespace Services
     public interface IMembershipRuleSectionService
     {
         ResponseResource CreateRuleSection(IPrincipal principal, CreateMembershipRuleSectionRequest request);
+        ResponseResource DragDropRuleSection(IPrincipal user, DragDropMembershipRuleSectionRequest request);
+        ResponseResource DeleteRuleSection(IPrincipal user, DeleteMembershipRuleSectionRequest request);
     }
     public class MembershipRuleSectionService: IMembershipRuleSectionService
     {
@@ -78,6 +80,74 @@ namespace Services
             ruleSection.Title = request.Title;
             _dependencies.StorageService.SaveChanges();
             return new ResponseResource();
+        }
+
+        public ResponseResource DragDropRuleSection(IPrincipal principal, DragDropMembershipRuleSectionRequest request)
+        {
+            var user = _dependencies.UserService.GetAuthenticatedUser(principal);
+            var draggedSection = GetMembershipRuleSection(request.DraggedMembershipRuleSectionId);
+            var permissions = _dependencies.OrganisationService.GetMemberPermissions(user, draggedSection);
+            if (!permissions.Contains(ShurahOrganisationPermission.EditMembershipRules.ToString()))
+            {
+                return new ResponseResource { HasError = true, Error = "Access Denied!" };
+            }
+            var droppedOnSection = GetMembershipRuleSection(request.DroppedOnMembershipRuleSectionId);
+            var dropPermissions = _dependencies.OrganisationService.GetMemberPermissions(user, droppedOnSection);
+            if (!dropPermissions.Contains(ShurahOrganisationPermission.EditMembershipRules.ToString()))
+            {
+                return new ResponseResource { HasError = true, Error = "Access Denied!" };
+            }
+            var siblingSections = droppedOnSection.ShurahBasedOrganisation.MembershipRuleSections.Where(s =>
+                (s.ParentMembershipRuleSection == null && droppedOnSection.ParentMembershipRuleSection == null)
+                || (s.ParentMembershipRuleSection!=null && droppedOnSection.ParentMembershipRuleSection!=null &&
+                s.ParentMembershipRuleSection.ParentMembershipRuleSectionId ==
+                    droppedOnSection.ParentMembershipRuleSection.ParentMembershipRuleSectionId)
+                ).OrderBy(x=>x.Sequence).ToList();
+            Enumerable.Range(0,siblingSections.Count()).ToList().ForEach(i =>
+            {
+                siblingSections[i].Sequence = i*2;
+            });
+
+            if (draggedSection.ParentMembershipRuleSection == null &&
+                droppedOnSection.ParentMembershipRuleSection != null)
+            {
+                draggedSection.ParentMembershipRuleSection = new MembershipRuleSectionRelationship();
+            }
+            if (draggedSection.ParentMembershipRuleSection!=null && droppedOnSection.ParentMembershipRuleSection != null)
+            {
+                draggedSection.ParentMembershipRuleSection.ParentMembershipRuleSectionId
+                    = droppedOnSection.ParentMembershipRuleSection.ParentMembershipRuleSectionId;
+            }
+            if (draggedSection.ParentMembershipRuleSection != null && droppedOnSection.ParentMembershipRuleSection == null)
+            {
+                _dependencies.StorageService.SetOf<MembershipRuleSectionRelationship>().Remove(draggedSection.ParentMembershipRuleSection);
+            }
+            draggedSection.Sequence = droppedOnSection.Sequence + 1;
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
+        }
+
+        public virtual ResponseResource DeleteRuleSection(IPrincipal principal, DeleteMembershipRuleSectionRequest request)
+        {
+            var user = _dependencies.UserService.GetAuthenticatedUser(principal);
+            var sectionToDelete= GetMembershipRuleSection(request.MembershipRuleSectionId);
+            var permissions = _dependencies.OrganisationService.GetMemberPermissions(user, sectionToDelete);
+            if (!permissions.Contains(ShurahOrganisationPermission.EditMembershipRules.ToString()))
+            {
+                return new ResponseResource { HasError = true, Error = "Access Denied!" };
+            }
+            if (sectionToDelete.ParentMembershipRuleSection != null)
+            {
+                _dependencies.StorageService.SetOf<MembershipRuleSectionRelationship>().Remove(sectionToDelete.ParentMembershipRuleSection);
+            }
+            _dependencies.StorageService.SetOf<MembershipRuleSection>().Remove(sectionToDelete);
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
+        }
+
+        public virtual MembershipRuleSection GetMembershipRuleSection(int membershipRuleSectionId)
+        {
+            return _dependencies.StorageService.SetOf<MembershipRuleSection>().SingleOrDefault(s=>s.Id==membershipRuleSectionId);
         }
     }
 }

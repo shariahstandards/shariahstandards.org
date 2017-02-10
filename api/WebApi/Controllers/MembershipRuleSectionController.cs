@@ -23,5 +23,15 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.CreateRuleSection(User,request));
         }
+        [Route("DragDropRuleSection")]
+        public HttpResponseMessage Post(DragDropMembershipRuleSectionRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.DragDropRuleSection(User, request));
+        }
+        [Route("DeleteRuleSection")]
+        public HttpResponseMessage Post(DeleteMembershipRuleSectionRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.DeleteRuleSection(User, request));
+        }
     }
 }

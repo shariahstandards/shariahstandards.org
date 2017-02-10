@@ -36,6 +36,7 @@ namespace Services
         OrganisationResource GetRootOrganisation(IPrincipal principal);
         ShurahBasedOrganisation GetOrganisation(int organisationId);
         List<string> GetMemberPermissions(Auth0User user, ShurahBasedOrganisation organisation);
+        List<string> GetMemberPermissions(Auth0User user, MembershipRuleSection section);
     }
     public class OrganisationService: IOrganisationService
     {
@@ -76,7 +77,7 @@ namespace Services
 
         public virtual List<string> GetMemberPermissions(Auth0User user, ShurahBasedOrganisation organisation)
         {
-            if (user == null)
+            if (user == null || organisation==null)
             {
                 return new List<string>();
             }
@@ -93,6 +94,15 @@ namespace Services
                 permissions = Enum.GetValues(typeof (ShurahOrganisationPermission)).OfType<ShurahOrganisationPermission>().ToList();
             }
             return permissions.Select(p => p.ToString()).ToList();
+        }
+
+        public virtual List<string> GetMemberPermissions(Auth0User user, MembershipRuleSection section)
+        {
+            if (section == null)
+            {
+                return new List<string>();
+            }
+            return GetMemberPermissions(user,section.ShurahBasedOrganisation);
         }
 
 

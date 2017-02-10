@@ -6,3 +6,8 @@
 .ng-invalid:not(form)  {
   border-left: 5px solid #a94442; /* red */
 }
+.modal-title{
+	font-size: 14pt;
+	font-weight: bold;
+	float: left;
+}

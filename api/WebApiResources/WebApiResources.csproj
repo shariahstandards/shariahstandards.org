@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="CreateMembershipRuleRequestResource.cs" />
     <Compile Include="CreateMembershipRuleSectionRequest.cs" />
+    <Compile Include="DragDropMembershipRuleSectionRequest.cs" />
     <Compile Include="MembershipCancellationResponseResource.cs" />
     <Compile Include="MembershipApplicationResponseResource.cs" />
     <Compile Include="MembershipRuleSectionResource.cs" />

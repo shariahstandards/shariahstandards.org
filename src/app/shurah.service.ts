@@ -3,6 +3,15 @@ import {Http, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 declare var shariahStandardsApiUrlBase:string;
 import {addSectionModel} from './shurah/shurah.component'
+
+
+export interface membershipRuleSection{
+  id:number,
+  uniqueName:string,
+  sectionNumber:string,
+  subSections:membershipRuleSection[]
+}
+
 @Injectable()
 export class ShurahService {
 
@@ -24,6 +33,17 @@ export class ShurahService {
 			parentSectionId:parentSectionId,
 			title:model.name,
 			uniqueUrlSlug:model.urlSlug()
+		})
+	}
+	dragDropRuleSection(draggedSection:membershipRuleSection,droppedSection:membershipRuleSection){
+		return this.http.post(shariahStandardsApiUrlBase+"DragDropRuleSection",{
+			draggedMembershipRuleSectionId:draggedSection.id,
+			droppedOnMembershipRuleSectionId:droppedSection.id
+		})
+	}
+	deleteRuleSection(sectionToDelete:membershipRuleSection){
+		return this.http.post(shariahStandardsApiUrlBase+"DeleteRuleSection",{
+			membershipRuleSectionId:sectionToDelete.id
 		})
 	}
 

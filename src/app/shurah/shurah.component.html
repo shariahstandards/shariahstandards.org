@@ -5,13 +5,24 @@
   <p *ngIf="rootOrganisation.member==null && auth.authenticated()">
   	To use the shurah tools, please agree to the following rules:
   </p>
-  <h3> {{rootOrganisation.name}} rules</h3>
+  <h3> {{rootOrganisation.name}} rules
   <span *ngIf=" auth.authenticated() && allow('EditMembershipRules')">
-      <button (click)="open(addSectionModal)">+ Section</button>
+      <button (click)="open(addSectionModal)" title="add top level membership rule section">&sect;*</button>
    </span>
+   </h3>
   <div>
     <div class="section" *ngFor="let section of rootOrganisation.ruleSections" [id]="section.uniqueName">
-      <sub-section (addSection)="open(addSectionModal,$event)" [section]="section" [sub-sections]="section.subSections" [allow-edit]=" auth.authenticated() && allow('EditMembershipRules')"></sub-section>
+      <sub-section 
+      (cutSection)="cutSection($event)"
+      (deleteSection)="deleteSection($event)"
+      (addSection)="open(addSectionModal,$event)" 
+      (pasteInto)="pasteIntoSection($event)"
+      [section]="section" 
+      [sub-sections]="section.subSections" 
+      [allow-edit]="auth.authenticated() && allow('EditMembershipRules')"
+      [enable-paste]="sectionToDrop!=null">
+        
+      </sub-section>
     </div>
   </div>
   <div *ngIf="rootOrganisation.ruleSections.length==0">
@@ -31,18 +42,18 @@
 <template #addSectionModal let-c="close" let-d="dismiss">
    <form>
   <div class="modal-header">
-    <h4 class="modal-title">Add Membership Rules Section
+    <div class="modal-title">Add Membership Rules Section
     <span *ngIf="addSectionModel.parentSection!=null">
       within "{{addSectionModel.parentSection.title}}"
     </span>
-    </h4>
+    </div>
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
       <label for="sectionName">Section Name</label>
-      <input type="text" [(ngModel)]="addSectionModel.name" required maxlength="100" id="name" name="name">
+      <input type="text" [(ngModel)]="addSectionModel.name" required maxlength="100" id="sectionName" name="name">
       <div>
         Url Id: {{addSectionModel.urlSlug()}}
       </div>

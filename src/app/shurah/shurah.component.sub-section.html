@@ -1,10 +1,21 @@
-<div class="section">{{section.sectionNumber}} {{section.title}}
+<div class="section">&sect;{{section.sectionNumber}} {{section.title}}
 	<span *ngIf="allowEdit">
-		 <button (click)="onClickAdd(section)">+ Section</button>
+		 <button (click)="onClickAdd(section)" title="Add new child membership rule section">&sect;*</button>
+		 <button (click)="cut(section)" title="cut section">&#9986;</button>
+		 <button *ngIf="enablePaste" (click)="paste(section)" title="paste after this section"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+		 <button title="delete section" *ngIf="deleteEnabled()" (click)="delete(section)">x</button>
 	</span> 
 	<!-- <div *ngIf="section.subSections.length>0" > -->
 	    <div class *ngFor="let subSection of section.subSections" [id]="subSection.uniqueName">
-	        <sub-section (addSection)="onClickAdd($event)" [section]="subSection" [sub-sections]="subSection.subSections" [allow-edit]="allowEdit"></sub-section>
+	        <sub-section 
+	        (addSection)="onClickAdd($event)" 
+	        (cutSection)="cut($event)"
+	        (deleteSection)="delete($event)"
+	        (pasteInto)="paste($event)"
+	        [section]="subSection" 
+	        [enable-paste]="enablePaste"
+	        [sub-sections]="subSection.subSections" 
+	        [allow-edit]="allowEdit"></sub-section>
 	    </div>
 	<!-- </div> -->
 </div>

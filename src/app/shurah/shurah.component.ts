@@ -1,5 +1,5 @@
 import { Component, OnInit,ChangeDetectorRef ,Input,Output,EventEmitter} from '@angular/core';
-import { ShurahService } from '../shurah.service';
+import { ShurahService,membershipRuleSection} from '../shurah.service';
 import { AuthService } from '../auth.service'
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,15 +12,30 @@ export interface organisation{
   styleUrls: ['./shurah.component.sub-section.css'],
 })
 export class subSection{
-  @Input('section') section:any
-  @Input('sub-sections') subSections:any[]
+  @Input('section') section:membershipRuleSection
+  @Input('sub-sections') subSections:membershipRuleSection[]
   @Input('allow-edit') allowEdit:boolean
-  @Output() addSection:EventEmitter<any>=new EventEmitter<any>();
-  onClickAdd(section){
+  @Input('enable-paste') enablePaste:boolean
+  @Output() addSection:EventEmitter<membershipRuleSection>=new EventEmitter<membershipRuleSection>();
+  onClickAdd(section:membershipRuleSection){
     this.addSection.emit(section);
   }
+  @Output() cutSection:EventEmitter<membershipRuleSection>=new EventEmitter<membershipRuleSection>();
+  cut(section:membershipRuleSection){
+    this.cutSection.emit(section);
+  }
+  @Output() pasteInto:EventEmitter<membershipRuleSection>=new EventEmitter<membershipRuleSection>();
+  paste(section:membershipRuleSection){
+    this.pasteInto.emit(section);
+  }
+  deleteEnabled(){
+    return this.subSections==null || this.subSections.length==0;
+  }
+ @Output() deleteSection:EventEmitter<membershipRuleSection>=new EventEmitter<membershipRuleSection>();
+  delete(section:membershipRuleSection){
+    this.deleteSection.emit(section);
+  }
 }
-
 
 export class addSectionModel{
   constructor(
@@ -28,7 +43,7 @@ export class addSectionModel{
     ){
     this.errors=[]
   }
-  parentSection:any
+  parentSection:membershipRuleSection
   urlSlug(){
   var cleanedText = this.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
       cleanedText = cleanedText.replace(/--/g, '-');
@@ -57,17 +72,47 @@ export class ShurahComponent implements OnInit {
   }
   private activeModal:NgbModalRef
   closeResult: string;
-  open(content, section) {
+  open(content, section:membershipRuleSection) {
    this.addSectionModel= new addSectionModel("");
    this.addSectionModel.parentSection=section;
    this.activeModal= this.modalService.open(content);
+   document.getElementById('sectionName').focus();
    this.activeModal.result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+  sectionToDrop:membershipRuleSection
+  cutSection(section:membershipRuleSection){
+    this.sectionToDrop = section;
+  }
+  deleteSection(section:membershipRuleSection){
+    this.shurahService.deleteRuleSection(section).subscribe(result=>{
+      var response = result.json();
+      if(this.sectionToDrop!=null && this.sectionToDrop.id==section.id){
+        this.sectionToDrop=null;
+      }
+      if(response.hasError){
+        alert(response.error);
+      }else{
+          this.refresh();
+        }
 
+    })
+  }
+  pasteIntoSection(section:membershipRuleSection){
+    this.shurahService.dragDropRuleSection(this.sectionToDrop,section).subscribe(result=>{
+      var response = result.json();
+      this.sectionToDrop=null;
+      if(response.hasError){
+        alert(response.error);
+      }else{
+          this.refresh();
+        }
+
+    })
+  }
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
