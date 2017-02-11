@@ -401,7 +401,7 @@ namespace UnitTests.OrganisationServiceTests
                         MethodToTest(()=>service.BuildMembershipRuleResource(A<string>.Ignored,
                             A<Auth0User>.Ignored,A<MembershipRule>.Ignored,A<int>.Ignored,A<IEnumerable<MembershipRuleTermDefinition>>.Ignored));
 
-                        var prefix = "1.2.3";
+                        var prefix = "1.2.3.";
                         var index = 7;
                         var rule = new MembershipRule
                         {
@@ -421,13 +421,14 @@ namespace UnitTests.OrganisationServiceTests
 
                         var result = service.BuildMembershipRuleResource(prefix, user, rule, index, terms);
 
-                        Assert.AreEqual(prefix+"."+(index+1),result.Number);
+                        Assert.AreEqual(prefix+(index+1),result.Number);
                         Assert.AreEqual(rule.Id,result.Id);
                         Assert.AreSame(fragments,result.RuleFragments);
                  //       Assert.AreEqual(rule.Explanation.ExplanationUrl,result.ExplanationUrl);
                         Assert.AreEqual(15,result.ComprehensionScore);
                         Assert.AreEqual(20,result.MaxComprehensionScore);
                         Assert.AreEqual(rule.PublishedDateTimeUtc.ToString("s"),result.PublishedUtcDateTimeText);
+                        Assert.AreEqual(rule.RuleStatement,result.RuleStatement);
 
                     }
                 }

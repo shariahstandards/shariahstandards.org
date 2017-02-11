@@ -32,6 +32,7 @@ namespace Services
     }
     public interface IMembershipRuleSectionService
     {
+        MembershipRuleSection GetMembershipRuleSection(int membershipRuleSectionId);
         ResponseResource CreateRuleSection(IPrincipal principal, CreateMembershipRuleSectionRequest request);
         ResponseResource DragDropRuleSection(IPrincipal principal, DragDropMembershipRuleSectionRequest request);
         ResponseResource DeleteRuleSection(IPrincipal principal, DeleteMembershipRuleSectionRequest request);

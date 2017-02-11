@@ -15,20 +15,24 @@ namespace Services
         IUserService UserService { get; set; }
         IStorageService StorageService { get; set; }
         ILinqService LinqService { get; set; }
+        IUrlSlugService UrlSlugService { get; set; }
     }
     public class OrganisationServiceDependencies : IOrganisationServiceDependencies
     {
         public IUserService UserService { get; set; }
         public IStorageService StorageService { get; set; }
         public ILinqService LinqService { get; set; }
+        public IUrlSlugService UrlSlugService { get; set; }
 
         public OrganisationServiceDependencies(IUserService userService,
             IStorageService storageService,
-            ILinqService linqService)
+            ILinqService linqService,
+            IUrlSlugService urlSlugService)
         {
             UserService = userService;
             StorageService = storageService;
             LinqService = linqService;
+            UrlSlugService = urlSlugService;
         }
     }
     public interface IOrganisationService
@@ -37,6 +41,7 @@ namespace Services
         ShurahBasedOrganisation GetOrganisation(int organisationId);
         List<string> GetMemberPermissions(Auth0User user, ShurahBasedOrganisation organisation);
         List<string> GetMemberPermissions(Auth0User user, MembershipRuleSection section);
+        List<string> GetMemberPermissions(Auth0User user, MembershipRule rule);
     }
     public class OrganisationService: IOrganisationService
     {
@@ -105,6 +110,15 @@ namespace Services
             return GetMemberPermissions(user,section.ShurahBasedOrganisation);
         }
 
+        public List<string> GetMemberPermissions(Auth0User user, MembershipRule rule)
+        {
+            if (rule == null)
+            {
+                return new List<string>();
+            }
+            return GetMemberPermissions(user,rule.MembershipRuleSection);
+        }
+
 
         public virtual List<MembershipRuleSectionResource> BuildMembershipRuleSectionResources(string sectionPrefix,
             IEnumerable<MembershipRuleSection> ruleSections, IEnumerable<MembershipRuleTermDefinition> terms, Auth0User user)
@@ -140,13 +154,13 @@ namespace Services
         {
             var resource = new MembershipRuleResource();
             resource.Id = rule.Id;
-            resource.Number = rulePrefix + "." + (ruleIndex+1);
+            resource.Number = rulePrefix + (ruleIndex+1);
             resource.RuleFragments = ParseRuleStatement(rule.RuleStatement, terms);
-        //    resource.ExplanationUrl = rule.Explanation?.ExplanationUrl;
             resource.ComprehensionScore = GetComprehensionScore(rule, user);
             resource.MaxComprehensionScore =
                 _dependencies.LinqService.EnumerableCount(rule.MembershipRuleComprehensionQuestions);
             resource.PublishedUtcDateTimeText = rule.PublishedDateTimeUtc.ToString("s");
+            resource.RuleStatement = rule.RuleStatement;
             return resource;
         }
 
@@ -259,6 +273,7 @@ namespace Services
                 IsPlainText = false,
                 IsTerm = true,
                 Text = term.Term,
+                TermSlug = _dependencies.UrlSlugService.GetSlug(term.Term),
                 TermId = term.Id
             });
             var textAfter = fragment.Text.Substring(indexOfMatch + term.Term.Length);

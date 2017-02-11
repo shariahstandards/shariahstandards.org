@@ -91,4 +91,39 @@ namespace Services
 
         }
     }
+    public interface IUrlSlugServiceDependencies
+    {
+    }
+    public class UrlSlugServiceDependencies : IUrlSlugServiceDependencies
+    {
+    }
+
+    public interface IUrlSlugService
+    {
+        string GetSlug(string text);
+    }
+    public class UrlSlugService : IUrlSlugService
+    {
+        private readonly IUrlSlugServiceDependencies _dependencies;
+
+        public UrlSlugService(IUrlSlugServiceDependencies dependencies)
+        {
+            _dependencies = dependencies;
+        }
+
+        public virtual string GetSlug(string text)
+        {
+            var result = text.Replace("'", "");
+            result = result.Replace(" ", "-");
+            result = result.Replace("&", "-and-");
+            result = result.Replace("--", "-");
+            result = result.ToLower();
+            result = Uri.EscapeUriString(result);
+            var parts = result.Split('%').ToList();
+            result = parts.First() + string.Concat(parts.Skip(1).Select(p => p.Substring(2)));
+            result = result.Trim('-');
+            return result;
+
+        }
+    }
 }

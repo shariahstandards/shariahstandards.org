@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Services;
+using WebApiResources;
 
 namespace WebApi.Controllers
 {
@@ -18,9 +19,24 @@ namespace WebApi.Controllers
         }
 
         [Route("CreateRule")]
-        public HttpResponseMessage Get(int? id)
+        public HttpResponseMessage Post(CreateMembershipRuleRequest request)
         {
-            throw new NotImplementedException();
+            return Request.CreateResponse(HttpStatusCode.OK, _service.CreateRule(User, request));
+        }
+        [Route("UpdateRule")]
+        public HttpResponseMessage Post(UpdateMembershipRuleRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.UpdateRule(User, request));
+        }
+        [Route("DeleteRule")]
+        public HttpResponseMessage Post(DeleteMembershipRuleRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.DeleteRule(User, request));
+        }
+        [Route("DragAndDropRule")]
+        public HttpResponseMessage Post(DragAndDropMembershipRuleRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.DragAndDropRule(User, request));
         }
     }
 }

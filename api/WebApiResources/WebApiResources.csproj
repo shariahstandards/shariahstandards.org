@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateMembershipRuleRequest.cs" />
     <Compile Include="CreateMembershipRuleSectionRequest.cs" />
     <Compile Include="DragDropMembershipRuleSectionRequest.cs" />
     <Compile Include="MembershipCancellationResponseResource.cs" />

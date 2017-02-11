@@ -9,17 +9,57 @@
 		 <button title="update section" (click)="update(section)">
 		 	<i class="fa fa-pencil" aria-hidden="true"></i>
 		 </button>
+		 <button title="create new rule" (click)="createRule(section)">*</button>
 	</span> 
+		<div class="rule" *ngFor="let rule of section.rules">
+			<div>{{rule.number}}</div> 
+			<div *ngIf="allowEdit" class="buttons">
+				<button (click)="deleteRule(rule)" title="delete rule">x</button>
+				<button (click)="cutRule(rule)" title="cut rule">&#9986;</button>
+		 		<button *ngIf="enablePasteRule" (click)="pasteRule(rule)" title="paste after this rule">
+			 		<i class="fa fa-clipboard" aria-hidden="true"></i>
+			 	</button>
+			 	<button (click)="updateRule(rule)" title="update rule">
+			 		<i class="fa fa-pencil" aria-hidden="true"></i>
+			 	</button>
+		 		
+		 	</div>
+			<div>
+				<span *ngFor="let fragment of rule.ruleFragments">
+					<span *ngIf="fragment.isPlainText">{{fragment.text}}</span>
+					<span *ngIf="fragment.isTerm">
+						<a routerLinkActive="active-route" [routerLink]="'/term/'+fragment.termId+'/'+fragment.termSlug">
+							{{fragment.text}}
+						</a>
+						</span>
+					<span *ngIf="fragment.quranReference!=null">
+						<a routerLinkActive="active-route" [routerLink]="'/quran/surah/'+fragment.quranReference.surah+'/verse/'+fragment.quranReference.verse">
+							{{fragment.quranReference.surah}}:{{fragment.quranReference.verse}}
+						</a>
+					</span>
+				</span>
+			</div>
+			
+		</div>
+	    
 	    <div class *ngFor="let subSection of section.subSections" [id]="subSection.uniqueName">
 	        <membership-rule-section 
 	        (addSection)="onClickAdd($event)" 
 	        (cutSection)="cut($event)"
 	        (deleteSection)="delete($event)"
+	        (createRuleInSection)="createRule($event)"
 	        (updateSection)="update($event)"
 	        (pasteInto)="paste($event)"
+	        (pasteRuleIn)="pasteRule($event)"
+	        (cutRuleOut)="cutRule($event)"
+	        (onDeleteRule)="deleteRule($event)"
+	        (onUpdateRule)="updateRule($event)"
 	        [section]="subSection" 
 	        [enable-paste]="enablePaste"
+	        [enable-paste-rule]="enablePasteRule"
 	        [sub-sections]="subSection.subSections" 
-	        [allow-edit]="allowEdit"></membership-rule-section>
+	        [allow-edit]="allowEdit">
+	        	
+	        </membership-rule-section>
 	    </div>
 </div>

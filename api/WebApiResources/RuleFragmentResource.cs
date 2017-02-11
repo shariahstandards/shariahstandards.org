@@ -13,6 +13,7 @@ namespace WebApiResources
         public bool IsTerm { get; set; }
         public QuranReferenceResource QuranReference { get; set; }
         public int TermId { get; set; }
+        public string TermSlug { get; set; }
     }
 
     public class QuranReferenceResource

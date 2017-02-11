@@ -3,9 +3,12 @@ import { ShurahService} from '../shurah.service';
 import { AuthService } from '../auth.service'
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {membershipRuleSectionModel} from './membership-rule-section.model'
+import {membershipRuleModel} from './membership-rule.model'
 import {addMembershipRuleSectionModel} from './add-membership-rule-section.model'
 import {updateMembershipRuleSectionModel} from './update-membership-rule-section.model'
+import {updateMembershipRuleModel} from './update-membership-rule.model'
 import {organisation} from './organisation.model'
+import {addMembershipRuleModel} from './add-membership-rule.model'
 @Component({
   selector: 'app-shurah',
   templateUrl: './shurah.component.html',
@@ -27,8 +30,6 @@ export class ShurahComponent implements OnInit {
   private activeModal:NgbModalRef
   closeResult: string;
   addMembershipRuleSectionModel:addMembershipRuleSectionModel
-  updateMembershipRuleSectionModel:updateMembershipRuleSectionModel
-
   openModalToAddMembershipRuleSection(content, section:membershipRuleSectionModel) {
    this.addMembershipRuleSectionModel= new addMembershipRuleSectionModel("");
    this.addMembershipRuleSectionModel.parentSection=section;
@@ -38,6 +39,7 @@ export class ShurahComponent implements OnInit {
      this.refresh();
    })
   }
+  updateMembershipRuleSectionModel:updateMembershipRuleSectionModel
   openModalToUpdateMembershipRuleSection(content, section:membershipRuleSectionModel) {
    this.updateMembershipRuleSectionModel= new updateMembershipRuleSectionModel(section);
    this.activeModal= this.modalService.open(content);
@@ -46,9 +48,52 @@ export class ShurahComponent implements OnInit {
      this.refresh();
    })
   }
+  updateMembershipRuleModel:updateMembershipRuleModel
+  openModalToUpdateMembershipRule(content, rule:membershipRuleModel) {
+   this.updateMembershipRuleModel= new updateMembershipRuleModel(rule);
+   this.activeModal= this.modalService.open(content);
+   document.getElementById('ruleStatement').focus();
+   this.activeModal.result.then(()=>{
+     this.refresh();
+   })
+  }
   sectionToDrop:membershipRuleSectionModel
   cutSection(section:membershipRuleSectionModel){
     this.sectionToDrop = section;
+    this.ruleToDrop = null
+  }
+  ruleToDrop:membershipRuleModel
+  cutRule(rule:membershipRuleModel){
+   this.sectionToDrop=null;
+    this.ruleToDrop = rule
+  }
+
+  deleteRule(rule:membershipRuleModel){
+     this.shurahService.deleteRule(rule).subscribe(result=>{
+      var response = result.json();
+       if(this.ruleToDrop!=null && this.ruleToDrop.id==rule.id){
+        this.ruleToDrop=null;
+      }
+      if(response.hasError){
+        alert(response.error);
+      }else{
+          this.refresh();
+        }
+
+    })
+  }
+  updateRule(){
+    this.shurahService.updateMembershipRule(this.updateMembershipRuleModel).subscribe(result=>{
+      var response = result.json();
+      if(response.hasError){
+        this.updateMembershipRuleModel.errors=[response.error];
+      }
+      else{
+        this.updateMembershipRuleModel=null;
+        this.activeModal.close('rule updated');
+        this.refresh();
+      }
+    })
   }
   deleteSection(section:membershipRuleSectionModel){
     this.shurahService.deleteRuleSection(section).subscribe(result=>{
@@ -68,6 +113,18 @@ export class ShurahComponent implements OnInit {
     this.shurahService.dragDropRuleSection(this.sectionToDrop,section).subscribe(result=>{
       var response = result.json();
       this.sectionToDrop=null;
+      if(response.hasError){
+        alert(response.error);
+      }else{
+          this.refresh();
+        }
+
+    })
+  }
+  pasteRule(rule:membershipRuleModel){
+     this.shurahService.dragDropRule(this.ruleToDrop,rule).subscribe(result=>{
+      var response = result.json();
+      this.ruleToDrop=null;
       if(response.hasError){
         alert(response.error);
       }else{
@@ -98,6 +155,31 @@ export class ShurahComponent implements OnInit {
     }
     return false;
   }
+  addMembershipRuleModel:addMembershipRuleModel
+  openModalToCreateRuleInSection(content,section:membershipRuleSectionModel){
+     this.addMembershipRuleModel= new addMembershipRuleModel(section);
+     this.activeModal= this.modalService.open(content);
+     document.getElementById('ruleStatement').focus();
+     this.activeModal.result.then(()=>{
+       this.refresh();
+     })
+  }
+  addRule(){
+     this.addMembershipRuleModel.errors=[];
+   
+    this.shurahService.createRule(this.addMembershipRuleModel).subscribe(result=>{
+      var response = result.json();
+      if(response.hasError){
+        this.addMembershipRuleModel.errors=[response.error];
+      }
+      else{
+        this.addMembershipRuleModel=new addMembershipRuleModel(this.addMembershipRuleModel.section);
+        this.activeModal.close('rule added');
+        this.refresh();
+      }
+    })
+  }
+
   beginAddRuleSection(){
     this.addMembershipRuleSectionModel.errors=[];
     var parentSectionId=null;

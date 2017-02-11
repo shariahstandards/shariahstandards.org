@@ -20,10 +20,10 @@ namespace WebApiResources
         public string Number { get; set; }
         public int Id { get; set; }
         public List<RuleFragmentResource> RuleFragments { get; set; }
-        public string ExplanationUrl { get; set; }
         public int ComprehensionScore { get; set; }
         public int MaxComprehensionScore { get; set; }
         public string PublishedUtcDateTimeText { get; set; }
+        public string RuleStatement { get; set; }
     }
 
     public class MemberResource
