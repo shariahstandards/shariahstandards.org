@@ -1,57 +1,11 @@
 import { Component, OnInit,ChangeDetectorRef ,Input,Output,EventEmitter} from '@angular/core';
-import { ShurahService,membershipRuleSection} from '../shurah.service';
+import { ShurahService} from '../shurah.service';
 import { AuthService } from '../auth.service'
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-
-export interface organisation{
-  permissions:string[]
-}
-@Component({
-  selector:'sub-section',
-  templateUrl:'./shurah.component.sub-section.html',
-  styleUrls: ['./shurah.component.sub-section.css'],
-})
-export class subSection{
-  @Input('section') section:membershipRuleSection
-  @Input('sub-sections') subSections:membershipRuleSection[]
-  @Input('allow-edit') allowEdit:boolean
-  @Input('enable-paste') enablePaste:boolean
-  @Output() addSection:EventEmitter<membershipRuleSection>=new EventEmitter<membershipRuleSection>();
-  onClickAdd(section:membershipRuleSection){
-    this.addSection.emit(section);
-  }
-  @Output() cutSection:EventEmitter<membershipRuleSection>=new EventEmitter<membershipRuleSection>();
-  cut(section:membershipRuleSection){
-    this.cutSection.emit(section);
-  }
-  @Output() pasteInto:EventEmitter<membershipRuleSection>=new EventEmitter<membershipRuleSection>();
-  paste(section:membershipRuleSection){
-    this.pasteInto.emit(section);
-  }
-  deleteEnabled(){
-    return this.subSections==null || this.subSections.length==0;
-  }
- @Output() deleteSection:EventEmitter<membershipRuleSection>=new EventEmitter<membershipRuleSection>();
-  delete(section:membershipRuleSection){
-    this.deleteSection.emit(section);
-  }
-}
-
-export class addSectionModel{
-  constructor(
-  public name:string
-    ){
-    this.errors=[]
-  }
-  parentSection:membershipRuleSection
-  urlSlug(){
-  var cleanedText = this.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-');
-      cleanedText = cleanedText.replace(/--/g, '-');
-      return cleanedText;
-  }
-  public errors:string[]
-}
-
+import {membershipRuleSectionModel} from './membership-rule-section.model'
+import {addMembershipRuleSectionModel} from './add-membership-rule-section.model'
+import {updateMembershipRuleSectionModel} from './update-membership-rule-section.model'
+import {organisation} from './organisation.model'
 @Component({
   selector: 'app-shurah',
   templateUrl: './shurah.component.html',
@@ -72,22 +26,31 @@ export class ShurahComponent implements OnInit {
   }
   private activeModal:NgbModalRef
   closeResult: string;
-  open(content, section:membershipRuleSection) {
-   this.addSectionModel= new addSectionModel("");
-   this.addSectionModel.parentSection=section;
+  addMembershipRuleSectionModel:addMembershipRuleSectionModel
+  updateMembershipRuleSectionModel:updateMembershipRuleSectionModel
+
+  openModalToAddMembershipRuleSection(content, section:membershipRuleSectionModel) {
+   this.addMembershipRuleSectionModel= new addMembershipRuleSectionModel("");
+   this.addMembershipRuleSectionModel.parentSection=section;
    this.activeModal= this.modalService.open(content);
    document.getElementById('sectionName').focus();
-   this.activeModal.result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+   this.activeModal.result.then(()=>{
+     this.refresh();
+   })
   }
-  sectionToDrop:membershipRuleSection
-  cutSection(section:membershipRuleSection){
+  openModalToUpdateMembershipRuleSection(content, section:membershipRuleSectionModel) {
+   this.updateMembershipRuleSectionModel= new updateMembershipRuleSectionModel(section);
+   this.activeModal= this.modalService.open(content);
+   document.getElementById('sectionName').focus();
+   this.activeModal.result.then(()=>{
+     this.refresh();
+   })
+  }
+  sectionToDrop:membershipRuleSectionModel
+  cutSection(section:membershipRuleSectionModel){
     this.sectionToDrop = section;
   }
-  deleteSection(section:membershipRuleSection){
+  deleteSection(section:membershipRuleSectionModel){
     this.shurahService.deleteRuleSection(section).subscribe(result=>{
       var response = result.json();
       if(this.sectionToDrop!=null && this.sectionToDrop.id==section.id){
@@ -101,7 +64,7 @@ export class ShurahComponent implements OnInit {
 
     })
   }
-  pasteIntoSection(section:membershipRuleSection){
+  pasteIntoSection(section:membershipRuleSectionModel){
     this.shurahService.dragDropRuleSection(this.sectionToDrop,section).subscribe(result=>{
       var response = result.json();
       this.sectionToDrop=null;
@@ -126,7 +89,6 @@ export class ShurahComponent implements OnInit {
     this.refresh();
   }
 
-  addSectionModel:addSectionModel
   allow(action:string)
   {
     if(this.rootOrganisation.permissions.some(p=>{
@@ -137,22 +99,36 @@ export class ShurahComponent implements OnInit {
     return false;
   }
   beginAddRuleSection(){
-    this.addSectionModel.errors=[];
+    this.addMembershipRuleSectionModel.errors=[];
     var parentSectionId=null;
-    if(this.addSectionModel.parentSection){
-      parentSectionId=this.addSectionModel.parentSection.id;
+    if(this.addMembershipRuleSectionModel.parentSection){
+      parentSectionId=this.addMembershipRuleSectionModel.parentSection.id;
     }
-    this.shurahService.createRuleSection(this.addSectionModel,1,parentSectionId).subscribe(result=>{
+    this.shurahService.createRuleSection(this.addMembershipRuleSectionModel,1,parentSectionId).subscribe(result=>{
       var response = result.json();
       if(response.hasError){
-        this.addSectionModel.errors=[response.error];
+        this.addMembershipRuleSectionModel.errors=[response.error];
       }
       else{
-        this.addSectionModel=new addSectionModel("");
+        this.addMembershipRuleSectionModel=new addMembershipRuleSectionModel("");
         this.activeModal.close('section added');
         this.refresh();
       }
     })
+  }
+  beginUpdateMembershipRuleSection(){
+    this.updateMembershipRuleSectionModel.errors=[];
+    this.shurahService.updateMembershipRuleSection(this.updateMembershipRuleSectionModel).subscribe(result=>{
+      var response = result.json();
+      if(response.hasError){
+        this.updateMembershipRuleSectionModel.errors=[response.error];
+      }
+      else{
+        this.updateMembershipRuleSectionModel=null;
+        this.activeModal.close('section updated');
+        this.refresh();
+      }
+    }) 
   }
   refresh(){
     this.rootOrganisation=null;

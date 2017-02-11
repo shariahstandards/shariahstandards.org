@@ -33,8 +33,9 @@ namespace Services
     public interface IMembershipRuleSectionService
     {
         ResponseResource CreateRuleSection(IPrincipal principal, CreateMembershipRuleSectionRequest request);
-        ResponseResource DragDropRuleSection(IPrincipal user, DragDropMembershipRuleSectionRequest request);
-        ResponseResource DeleteRuleSection(IPrincipal user, DeleteMembershipRuleSectionRequest request);
+        ResponseResource DragDropRuleSection(IPrincipal principal, DragDropMembershipRuleSectionRequest request);
+        ResponseResource DeleteRuleSection(IPrincipal principal, DeleteMembershipRuleSectionRequest request);
+        ResponseResource UpdateRuleSection(IPrincipal principal, UpdateMembershipRuleSectionRequest request);
     }
     public class MembershipRuleSectionService: IMembershipRuleSectionService
     {
@@ -141,6 +142,27 @@ namespace Services
                 _dependencies.StorageService.SetOf<MembershipRuleSectionRelationship>().Remove(sectionToDelete.ParentMembershipRuleSection);
             }
             _dependencies.StorageService.SetOf<MembershipRuleSection>().Remove(sectionToDelete);
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
+        }
+
+        public ResponseResource UpdateRuleSection(IPrincipal principal, UpdateMembershipRuleSectionRequest request)
+        {
+            var user = _dependencies.UserService.GetAuthenticatedUser(principal);
+            var sectionToUpdate = GetMembershipRuleSection(request.MembershipRuleSectionId);
+            var permissions = _dependencies.OrganisationService.GetMemberPermissions(user, sectionToUpdate);
+            if (!permissions.Contains(ShurahOrganisationPermission.EditMembershipRules.ToString()))
+            {
+                return new ResponseResource { HasError = true, Error = "Access Denied!" };
+            }
+            if (sectionToUpdate.ShurahBasedOrganisation.MembershipRuleSections.Any(s => 
+            s.Id!=sectionToUpdate.Id &&
+            s.UniqueInOrganisationName == request.UniqueUrlSlug))
+            {
+                return new ResponseResource { HasError = true, Error = "Url id not unique!" };
+            }
+            sectionToUpdate.Title = request.Title;
+            sectionToUpdate.UniqueInOrganisationName = request.UniqueUrlSlug;
             _dependencies.StorageService.SaveChanges();
             return new ResponseResource();
         }

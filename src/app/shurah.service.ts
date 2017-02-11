@@ -2,15 +2,9 @@ import { Injectable } from '@angular/core';
 import {Http, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 declare var shariahStandardsApiUrlBase:string;
-import {addSectionModel} from './shurah/shurah.component'
-
-
-export interface membershipRuleSection{
-  id:number,
-  uniqueName:string,
-  sectionNumber:string,
-  subSections:membershipRuleSection[]
-}
+import {membershipRuleSectionModel} from './shurah/membership-rule-section.model'
+import {addMembershipRuleSectionModel} from './shurah/add-membership-rule-section.model'
+import {updateMembershipRuleSectionModel} from './shurah/update-membership-rule-section.model'
 
 @Injectable()
 export class ShurahService {
@@ -27,7 +21,7 @@ export class ShurahService {
 	leave(){
 		return this.http.get(shariahStandardsApiUrlBase+"Leave");
 	}
-	createRuleSection(model:addSectionModel,organisationId:number,parentSectionId?:number){
+	createRuleSection(model:addMembershipRuleSectionModel,organisationId:number,parentSectionId?:number){
 		return this.http.post(shariahStandardsApiUrlBase+"CreateRuleSection",{
 			organisationId:organisationId,
 			parentSectionId:parentSectionId,
@@ -35,15 +29,22 @@ export class ShurahService {
 			uniqueUrlSlug:model.urlSlug()
 		})
 	}
-	dragDropRuleSection(draggedSection:membershipRuleSection,droppedSection:membershipRuleSection){
+	dragDropRuleSection(draggedSection:membershipRuleSectionModel,droppedSection:membershipRuleSectionModel){
 		return this.http.post(shariahStandardsApiUrlBase+"DragDropRuleSection",{
 			draggedMembershipRuleSectionId:draggedSection.id,
 			droppedOnMembershipRuleSectionId:droppedSection.id
 		})
 	}
-	deleteRuleSection(sectionToDelete:membershipRuleSection){
+	deleteRuleSection(sectionToDelete:membershipRuleSectionModel){
 		return this.http.post(shariahStandardsApiUrlBase+"DeleteRuleSection",{
 			membershipRuleSectionId:sectionToDelete.id
+		})
+	}
+	updateMembershipRuleSection(model:updateMembershipRuleSectionModel){
+		return this.http.post(shariahStandardsApiUrlBase+"UpdateRuleSection",{
+			membershipRuleSectionId:model.membershipRuleSectionModel.id,
+			title:model.membershipRuleSectionModel.title,
+			uniqueUrlSlug:model.urlSlug()
 		})
 	}
 

@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreateMembershipRuleRequestResource.cs" />
     <Compile Include="CreateMembershipRuleSectionRequest.cs" />
     <Compile Include="DragDropMembershipRuleSectionRequest.cs" />
     <Compile Include="MembershipCancellationResponseResource.cs" />
@@ -52,6 +51,7 @@
     <Compile Include="Auth0UserProfile.cs" />
     <Compile Include="ResponseResource.cs" />
     <Compile Include="RuleFragmentResource.cs" />
+    <Compile Include="UpdateMembershipRuleSectionRequest.cs" />
     <Compile Include="UserProfileResource.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         [Route("CreateRule")]
         public HttpResponseMessage Get(int? id)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _service.GetCreateRuleRequestResource(User,id));
+            throw new NotImplementedException();
         }
     }
 }

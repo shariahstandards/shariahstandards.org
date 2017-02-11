@@ -24,7 +24,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 // import {NgBootstrapModule} from './ng-bootstrap-module'
 import {UserProfileRegistrationService} from './user-profile-registration.service'
 import {AuthenticatedHttpService} from './authenticated-http.service';
-import { ShurahComponent,subSection } from './shurah/shurah.component'
+import { ShurahComponent } from './shurah/shurah.component'
+import { MembershipRuleSectionComponent } from './shurah/membership-rule-section.component'
 @NgModule({
   declarations: [
     ShariahStandardsAppComponent,
@@ -38,7 +39,7 @@ import { ShurahComponent,subSection } from './shurah/shurah.component'
     AboutUsComponent,
     ArabicKeyboardComponent,
     ShurahComponent,
-    subSection
+    MembershipRuleSectionComponent
       ],
   imports: [
     BrowserModule,

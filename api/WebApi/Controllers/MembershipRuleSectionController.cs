@@ -23,6 +23,11 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.CreateRuleSection(User,request));
         }
+        [Route("UpdateRuleSection")]
+        public HttpResponseMessage Post(UpdateMembershipRuleSectionRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.UpdateRuleSection(User, request));
+        }
         [Route("DragDropRuleSection")]
         public HttpResponseMessage Post(DragDropMembershipRuleSectionRequest request)
         {
