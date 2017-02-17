@@ -2,5 +2,6 @@ import { Routes }          from '@angular/router';
 import { ShurahComponent }   from './shurah.component';
 
 export const shurahRoutes: Routes = [
-  { path: 'shurah', component: ShurahComponent }
+  { path: 'standards', component: ShurahComponent },
+  { path: 'standards/:section', component: ShurahComponent }
 ];

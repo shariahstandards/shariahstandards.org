@@ -1,4 +1,4 @@
-import { Component, OnInit,ChangeDetectorRef ,Input,Output,EventEmitter} from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef ,Input,Output,EventEmitter, OnDestroy} from '@angular/core';
 import { ShurahService} from '../shurah.service';
 import { AuthService } from '../auth.service'
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,8 @@ import {updateMembershipRuleSectionModel} from './update-membership-rule-section
 import {updateMembershipRuleModel} from './update-membership-rule.model'
 import {organisation} from './organisation.model'
 import {addMembershipRuleModel} from './add-membership-rule.model'
+import { Router, ActivatedRoute }       from '@angular/router';
+
 @Component({
   selector: 'app-shurah',
   templateUrl: './shurah.component.html',
@@ -18,8 +20,8 @@ import {addMembershipRuleModel} from './add-membership-rule.model'
 export class ShurahComponent implements OnInit {
 
   constructor(
-	//private route:ActivatedRoute,
-    //private router:Router,
+	  private route:ActivatedRoute,
+    private router:Router,
     private changeDetectorRef:ChangeDetectorRef,
     private shurahService:ShurahService,
     private auth: AuthService,
@@ -142,10 +144,23 @@ export class ShurahComponent implements OnInit {
       return  `with: ${reason}`;
     }
   }
+  private getRouteParamsSubscribe:any;
+  expandedSections:string[]=[]
+  routedSection:string
   ngOnInit() {
-    this.refresh();
-  }
+     this.refresh();
+     this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
+        if(params['section']){
+          this.routedSection=params['section'];
 
+          this.expandedSections=[].concat([params['section']]);
+        }
+        this.changeDetectorRef.detectChanges();
+     });       
+  }
+ ngOnDestroy() {
+    this.getRouteParamsSubscribe.unsubscribe();
+  }
   allow(action:string)
   {
     if(this.rootOrganisation.permissions.some(p=>{
@@ -218,7 +233,6 @@ export class ShurahComponent implements OnInit {
     this.shurahService.getRootOrganisation().subscribe(result=>{
       this.rootOrganisation=result.json();
       this.hideButtons=false;
-
       this.changeDetectorRef.detectChanges();
       // this.changeDetectorRef.detectChanges();
       // console.log(JSON.stringify(this.rootOrganisation));

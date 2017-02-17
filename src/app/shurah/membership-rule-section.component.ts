@@ -10,6 +10,40 @@ import {membershipRuleModel} from './membership-rule.model'
 export class MembershipRuleSectionComponent{
   @Input('section') section:membershipRuleSectionModel
   @Input('sub-sections') subSections:membershipRuleSectionModel[]
+  @Input('routed-section') routedSection:string
+  @Input('expanded-sections') expandedSections:string[]
+  isSectionExpanded(){
+    return this.expandedSections.some(sectionName=>{
+      return this.section.uniqueName==sectionName;
+    })
+  }
+  @Output() routingExpanded:EventEmitter<string>=new EventEmitter<string>();
+  expandParents(val:string){
+    console.log(this.section.uniqueName +" expanding parents ");
+    if(!this.isSectionExpanded()){
+      this.expand();
+    }
+    console.log(this.section.uniqueName +" expanded");
+    this.routingExpanded.emit(val);
+    console.log(this.section.uniqueName +" emitted event");
+  }
+
+  ngOnInit() {
+    if(this.routedSection==this.section.uniqueName){
+      this.expandParents("x");
+    }else{
+    }
+   }
+  expand(){
+    console.log("expanding "+this.section.uniqueName);
+    this.expandedSections.push(this.section.uniqueName)
+  }
+  collapse(){
+    var sectionToRemove=this.expandedSections.filter(sectionName=>{
+      return sectionName==this.section.uniqueName;
+    })[0];
+    this.expandedSections.splice(this.expandedSections.indexOf(sectionToRemove),1)
+  }
   @Input('allow-edit') allowEdit:boolean
   @Input('enable-paste') enablePaste:boolean
   @Input('enable-paste-rule') enablePasteRule:boolean

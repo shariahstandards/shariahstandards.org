@@ -1,16 +1,22 @@
-<div class="section">&sect;{{section.sectionNumber}} {{section.title}}
+
+<div class="section" [id]="section.uniqueName">
+	<i *ngIf="!isSectionExpanded()" class="fa fa-plus-square-o" aria-hidden="true" (click)="expand()"></i>
+	<i *ngIf="isSectionExpanded()" class="fa fa-minus-square-o" aria-hidden="true" (click)="collapse()"></i>
+	&sect;{{section.sectionNumber}} {{section.title}}
 	<span *ngIf="allowEdit">
-		 <button (click)="onClickAdd(section)" title="Add new child membership rule section">&sect;*</button>
-		 <button (click)="cut(section)" title="cut section">&#9986;</button>
-		 <button *ngIf="enablePaste" (click)="paste(section)" title="paste after this section">
-		 	<i class="fa fa-clipboard" aria-hidden="true"></i>
-		 </button>
-		 <button title="delete section" *ngIf="deleteEnabled()" (click)="delete(section)">x</button>
-		 <button title="update section" (click)="update(section)">
-		 	<i class="fa fa-pencil" aria-hidden="true"></i>
-		 </button>
-		 <button title="create new rule" (click)="createRule(section)">*</button>
+		<button (click)="onClickAdd(section)" title="Add new child membership rule section">&sect;*</button>
+		<button (click)="cut(section)" title="cut section">&#9986;</button>
+		<button *ngIf="enablePaste" (click)="paste(section)" title="paste after this section">
+			<i class="fa fa-clipboard" aria-hidden="true"></i>
+		</button>
+		<button title="delete section" *ngIf="deleteEnabled()" (click)="delete(section)">x</button>
+		<button title="update section" (click)="update(section)">
+			<i class="fa fa-pencil" aria-hidden="true"></i>
+		</button>
+		<button title="create new rule" (click)="createRule(section)">*</button>
 	</span> 
+	<div [hidden]="!isSectionExpanded()">
+		
 		<div class="rule" *ngFor="let rule of section.rules">
 			<div>{{rule.number}}</div> 
 			<div *ngIf="allowEdit" class="buttons">
@@ -41,7 +47,7 @@
 			</div>
 			
 		</div>
-	    
+		    
 	    <div class *ngFor="let subSection of section.subSections" [id]="subSection.uniqueName">
 	        <membership-rule-section 
 	        (addSection)="onClickAdd($event)" 
@@ -58,8 +64,11 @@
 	        [enable-paste]="enablePaste"
 	        [enable-paste-rule]="enablePasteRule"
 	        [sub-sections]="subSection.subSections" 
+	        [routed-section]="routedSection" 
+	        [expanded-sections]="expandedSections" 
+	        (routingExpanded)="expandParents($event)"	
 	        [allow-edit]="allowEdit">
-	        	
 	        </membership-rule-section>
 	    </div>
+    </div>
 </div>
