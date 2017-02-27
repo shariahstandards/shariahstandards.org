@@ -69,7 +69,6 @@ export class QuranSearchComponent implements OnInit {
   	  		}
   	  		
   	  		self.changeDetectorRef.detectChanges(); 
-  	  		console.log("initialising-"+surahNumber+":"+verseNumber);
 	  	});
 	}
 	toggleKeyboard(arabicKeyboard){

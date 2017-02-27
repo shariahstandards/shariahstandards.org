@@ -224,6 +224,8 @@
     <Compile Include="Controllers\MembershipRuleSectionController.cs" />
     <Compile Include="Controllers\MembershipRuleController.cs" />
     <Compile Include="Controllers\OrganisationController.cs" />
+    <Compile Include="Controllers\SuggestionController.cs" />
+    <Compile Include="Controllers\TermDefinitionController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

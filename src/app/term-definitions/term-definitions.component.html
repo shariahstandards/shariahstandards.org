@@ -1,32 +1,59 @@
 
 <h2>Terminology</h2>
 
-<h4>
-	Type a term to see our standard definition and related terms
-</h4>
-<div class="row">
-	<div class="col-md-6">
-		<div class="input-group">
-		<input class="form-control" type="text" [(ngModel)]="term" (ngModelChange)="termChanged()"
-			placeholder="lookup a term definition"/>
-		</div>
-	</div>
-</div>	
-<h4>Definition</h4>
-<div>
-	<span *ngFor="let part of definition.contents">
-		<span *ngIf="part && part.isADefinedTerm">
-			<span (click)="goToTerm(part.text)" class="defined-term">{{part.text}}</span>
-		</span>
-		<span *ngIf="part && !part.isADefinedTerm">
-			{{part.text}}
-		</span>
-	</span>
+<div *ngIf="termDefinitionModel!=null">
+	<dl>
+		<dt>
+		{{termDefinitionModel.term}}
+		</dt>
+		<dd>
+			<span *ngFor="let fragment of termDefinitionModel.definition">
+				<span *ngIf="fragment.isPlainText">{{fragment.text}}</span>
+				<span *ngIf="fragment.isTerm">
+					<term term-id="{{fragment.termId}}" term="{{fragment.text}}">{{fragment.text}}</term>
+				</span>
+				<span *ngIf="fragment.quranReference!=null">
+					<a routerLinkActive="active-route" [routerLink]="'/quran/surah/'+fragment.quranReference.surah+'/verse/'+fragment.quranReference.verse">
+						{{fragment.quranReference.surah}}:{{fragment.quranReference.verse}}
+					</a>
+				</span>
+			</span>
+		</dd>
+	</dl>
 </div>
-<h4>Key terms</h4>
-<ul>
-	<li term="Allah"></li>
-	<li term="Islam"></li>
-	<li term="Muslim"></li>
-	<li term="Shahada"></li>
-</ul>
+<span *ngIf=" auth.authenticated() && allow('EditMembershipRules')">
+	<button (click)="openModalToAddTermDefinition(addTermDefinitionModal)" title="add top level membership rule section">Add new term</button>
+</span>
+<template #addTermDefinitionModal let-c="close" let-d="dismiss">
+   <form>
+      <div class="modal-header">
+        <div class="modal-title">Add Term Definition</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+        	<label for="term">Term</label>
+          	<input class="form-control" required maxlength="100" id="term" name="term" type="text" [(ngModel)]="addTermDefinitionModel.term"/>
+		</div>
+		<div class="form-group">
+        	<label for="definition">Definition</label>
+	        <textarea class="form-control" rows="2" required maxlength="1000"  id="definition" name="definition"
+	           col="100" [(ngModel)]="addTermDefinitionModel.definition">
+	        </textarea>
+	    </div>
+        <ul>
+          <li class="error" *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="addTermDefinition()">Add Term Definition</button>
+
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</template>

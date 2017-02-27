@@ -412,7 +412,7 @@ namespace UnitTests.OrganisationServiceTests
                             PublishedDateTimeUtc = DateTime.UtcNow
                         };
                         var user = new Auth0User();
-                        var fragments = new List<RuleFragmentResource>();
+                        var fragments = new List<TextFragmentResource>();
                         var terms = new List<MembershipRuleTermDefinition>();
                         A.CallTo(() => service.ParseRuleStatement(rule.RuleStatement,terms)).Returns(fragments);
                         A.CallTo(() => service.GetComprehensionScore(rule, user)).Returns(15);
@@ -443,15 +443,15 @@ namespace UnitTests.OrganisationServiceTests
                         var terms = new List<MembershipRuleTermDefinition>();
                         var statement = "some rule";
 
-                        var initialFragmentList = new List<RuleFragmentResource>();
+                        var initialFragmentList = new List<TextFragmentResource>();
                         A.CallTo(() => service.CreateNewFragmentList(statement)).Returns(initialFragmentList);
                        
-                        var fragments = new List<RuleFragmentResource>();
+                        var fragments = new List<TextFragmentResource>();
                         A.CallTo(() => dependencies.LinqService.Aggregate(terms,
                            initialFragmentList, service.ApplyTerm)).Returns(fragments);
                      //   var exampleParsedFragments = new List<RuleFragmentResource>();
                       //  var exampleFragment = new RuleFragmentResource {Text = "some text"};
-                        var parsedFragments = new List<RuleFragmentResource>();
+                        var parsedFragments = new List<TextFragmentResource>();
                         //A.CallTo(() => service.ParseForQuranReferences(exampleFragment.Text))
                         //    .Returns(exampleParsedFragments);
                       //  A.CallTo(() => dependencies.LinqService.SelectMany(fragments,
@@ -459,7 +459,7 @@ namespace UnitTests.OrganisationServiceTests
                             //    x.Invoke(exampleFragment) == exampleParsedFragments))).Returns(parsedFragments);
                         A.CallTo(() => dependencies.LinqService.SelectMany(fragments, service.AddQuranReferences))
                             .Returns(parsedFragments);
-                        var parsedFragmentsList = new List<RuleFragmentResource>();
+                        var parsedFragmentsList = new List<TextFragmentResource>();
                         A.CallTo(() => dependencies.LinqService.EnumerableToList(parsedFragments))
                             .Returns(parsedFragmentsList);
 
@@ -492,21 +492,21 @@ namespace UnitTests.OrganisationServiceTests
                         [Test]
                         public void BuildsAFragmentListBySplittingWithTheTerm()
                         {
-                            MethodToTest(()=>service.ApplyTerm(A<List<RuleFragmentResource>>.Ignored,A<MembershipRuleTermDefinition>.Ignored));
+                            MethodToTest(()=>service.ApplyTerm(A<List<TextFragmentResource>>.Ignored,A<MembershipRuleTermDefinition>.Ignored));
 
-                            var fragments = new List<RuleFragmentResource>();
+                            var fragments = new List<TextFragmentResource>();
                             var term = new MembershipRuleTermDefinition();
 
-                            var exampleFragment=new RuleFragmentResource();
-                            var exampleReturnedFragmentList = new List<RuleFragmentResource>();
+                            var exampleFragment=new TextFragmentResource();
+                            var exampleReturnedFragmentList = new List<TextFragmentResource>();
                             A.CallTo(() => service.Split(exampleFragment, term)).Returns(exampleReturnedFragmentList);
 
-                            var fragmentsAfterSplit = new List<RuleFragmentResource>();
+                            var fragmentsAfterSplit = new List<TextFragmentResource>();
                             A.CallTo(() => dependencies.LinqService.SelectMany(fragments,
-                                A<Func<RuleFragmentResource, IEnumerable<RuleFragmentResource>>>.That.Matches(x =>
+                                A<Func<TextFragmentResource, IEnumerable<TextFragmentResource>>>.That.Matches(x =>
                                     x.Invoke(exampleFragment) == exampleReturnedFragmentList
                                     ))).Returns(fragmentsAfterSplit);
-                            var fragmentsAfterSplitList = new List<RuleFragmentResource>();
+                            var fragmentsAfterSplitList = new List<TextFragmentResource>();
                             A.CallTo(() => dependencies.LinqService.EnumerableToList(fragmentsAfterSplit))
                                 .Returns(fragmentsAfterSplitList);
 
@@ -523,9 +523,9 @@ namespace UnitTests.OrganisationServiceTests
                             [Test]
                             public void ListContainsTheOriginalFragmentOnly()
                             {
-                                MethodToTest(()=>service.Split(A<RuleFragmentResource>.Ignored,A<MembershipRuleTermDefinition>.Ignored));
+                                MethodToTest(()=>service.Split(A<TextFragmentResource>.Ignored,A<MembershipRuleTermDefinition>.Ignored));
 
-                                var fragment = new RuleFragmentResource
+                                var fragment = new TextFragmentResource
                                 {
                                     IsPlainText = false
                                 };
@@ -545,9 +545,9 @@ namespace UnitTests.OrganisationServiceTests
                                 [Test]
                                 public void ListContainsTheOriginalFragmentOnly()
                                 {
-                                    MethodToTest(() => service.Split(A<RuleFragmentResource>.Ignored, A<MembershipRuleTermDefinition>.Ignored));
+                                    MethodToTest(() => service.Split(A<TextFragmentResource>.Ignored, A<MembershipRuleTermDefinition>.Ignored));
 
-                                    var fragment = new RuleFragmentResource
+                                    var fragment = new TextFragmentResource
                                     {
                                         Text = "some rule or other",
                                         IsPlainText = true
@@ -569,9 +569,9 @@ namespace UnitTests.OrganisationServiceTests
                                 [Test]
                                 public void ListContainsThreeFragments()
                                 {
-                                    MethodToTest(() => service.Split(A<RuleFragmentResource>.Ignored, A<MembershipRuleTermDefinition>.Ignored));
+                                    MethodToTest(() => service.Split(A<TextFragmentResource>.Ignored, A<MembershipRuleTermDefinition>.Ignored));
 
-                                    var fragment = new RuleFragmentResource
+                                    var fragment = new TextFragmentResource
                                     {
                                         Text = "some rule or other for a term and another one",
                                         IsPlainText = true
@@ -600,9 +600,9 @@ namespace UnitTests.OrganisationServiceTests
                                 [Test]
                                 public void ListContainsTwoFragments()
                                 {
-                                    MethodToTest(() => service.Split(A<RuleFragmentResource>.Ignored, A<MembershipRuleTermDefinition>.Ignored));
+                                    MethodToTest(() => service.Split(A<TextFragmentResource>.Ignored, A<MembershipRuleTermDefinition>.Ignored));
 
-                                    var fragment = new RuleFragmentResource
+                                    var fragment = new TextFragmentResource
                                     {
                                         Text = "some rule or other for a term",
                                         IsPlainText = true
@@ -629,9 +629,9 @@ namespace UnitTests.OrganisationServiceTests
                                 [Test]
                                 public void ListContainsThreeFragments()
                                 {
-                                    MethodToTest(() => service.Split(A<RuleFragmentResource>.Ignored, A<MembershipRuleTermDefinition>.Ignored));
+                                    MethodToTest(() => service.Split(A<TextFragmentResource>.Ignored, A<MembershipRuleTermDefinition>.Ignored));
 
-                                    var fragment = new RuleFragmentResource
+                                    var fragment = new TextFragmentResource
                                     {
                                         Text = "a term and another one",
                                         IsPlainText = true

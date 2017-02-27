@@ -137,6 +137,8 @@
     <Compile Include="MembershipRuleService.cs" />
     <Compile Include="OrganisationService.cs" />
     <Compile Include="StorageService.cs" />
+    <Compile Include="SuggestionService.cs" />
+    <Compile Include="TermDefinitionService.cs" />
     <Compile Include="UnityRegistrationConfig.cs" />
     <Compile Include="UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,14 +5,44 @@ declare var shariahStandardsApiUrlBase:string;
 import {membershipRuleSectionModel} from './shurah/membership-rule-section.model'
 import {membershipRuleModel} from './shurah/membership-rule.model'
 import {addMembershipRuleSectionModel} from './shurah/add-membership-rule-section.model'
+import {addTermDefinitionModel} from './term-definitions/add-term-definition.model'
 import {updateMembershipRuleSectionModel} from './shurah/update-membership-rule-section.model'
 import {updateMembershipRuleModel} from './shurah/update-membership-rule.model'
 import {addMembershipRuleModel} from './shurah/add-membership-rule.model'
+import {addSuggestionModel} from './suggestion/add-suggestion-model'
 @Injectable()
 export class ShurahService {
 
 	constructor(private http: Http) { 
 		
+	}
+	searchSuggestions(organisationId:number,page?:number){
+		return this.http.post(shariahStandardsApiUrlBase+"SearchSuggestions",{
+			organisationId:organisationId,
+			page:page
+		});
+	}
+	addSuggestion(organisationId:number,addSuggestionModel:addSuggestionModel){
+		return this.http.post(shariahStandardsApiUrlBase+"CreateSuggestion",{
+			organisationId:organisationId,
+			subject:addSuggestionModel.subject,
+			suggestion:addSuggestionModel.suggestion
+		});
+
+	}
+
+	getPermissionsForOrganisation(organisationId:number){
+		return this.http.get(shariahStandardsApiUrlBase+"GetPermissionsForOrganisation/"+organisationId);
+	}
+	getTermDefinition(termId:number,organisationId:number){
+		return this.http.get(shariahStandardsApiUrlBase+"getTermDefinition/"+termId+'/'+organisationId);
+	}
+	createTermDefinition(model:addTermDefinitionModel,organisationId:number){
+		return this.http.post(shariahStandardsApiUrlBase+"CreateTermDefinition",{
+			organisationId:organisationId,
+			term:model.term,
+			definition:model.definition
+		})
 	}
   	getRootOrganisation(){
   		return this.http.get(shariahStandardsApiUrlBase+"RootOrganisation");

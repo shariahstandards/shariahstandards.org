@@ -25,7 +25,7 @@ export class ShurahComponent implements OnInit {
     private changeDetectorRef:ChangeDetectorRef,
     private shurahService:ShurahService,
     private auth: AuthService,
-    private modalService: NgbModal,
+    private modalService: NgbModal
 ) { 
 
   }
@@ -36,7 +36,7 @@ export class ShurahComponent implements OnInit {
    this.addMembershipRuleSectionModel= new addMembershipRuleSectionModel("");
    this.addMembershipRuleSectionModel.parentSection=section;
    this.activeModal= this.modalService.open(content);
-   document.getElementById('sectionName').focus();
+   document.getElementById('subject').focus();
    this.activeModal.result.then(()=>{
      this.refresh();
    })
@@ -153,10 +153,14 @@ export class ShurahComponent implements OnInit {
         if(params['section']){
           this.routedSection=params['section'];
 
-          this.expandedSections=[].concat([params['section']]);
+          this.expandedSections=this.routedSection.split('_');
+          //[].concat([params['section']]);
         }
         this.changeDetectorRef.detectChanges();
      });       
+  }
+  setActiveSection(section:membershipRuleSectionModel){
+    this.router.navigate(["standards",this.expandedSections.join('_')])
   }
  ngOnDestroy() {
     this.getRouteParamsSubscribe.unsubscribe();

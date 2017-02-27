@@ -42,6 +42,12 @@ namespace Services
         List<string> GetMemberPermissions(Auth0User user, ShurahBasedOrganisation organisation);
         List<string> GetMemberPermissions(Auth0User user, MembershipRuleSection section);
         List<string> GetMemberPermissions(Auth0User user, MembershipRule rule);
+
+        List<string> GetPermission(IPrincipal principal, int organisationId);
+        void GuaranteeUserHasPermission(Auth0User user, ShurahBasedOrganisation organisation,
+            ShurahOrganisationPermission permission);
+
+        TermDefinitionResource GetTermDefinition(int termId,int organisationId);
     }
     public class OrganisationService: IOrganisationService
     {
@@ -119,6 +125,54 @@ namespace Services
             return GetMemberPermissions(user,rule.MembershipRuleSection);
         }
 
+        public List<string> GetPermission(IPrincipal principal, int organisationId)
+        {
+            var user = _dependencies.UserService.GetAuthenticatedUser(principal);
+            return GetMemberPermissions(user,_dependencies.StorageService.SetOf<ShurahBasedOrganisation>().FirstOrDefault(
+                x=>x.Id==organisationId));
+        }
+
+        public void GuaranteeUserHasPermission(Auth0User user, ShurahBasedOrganisation organisation,
+            ShurahOrganisationPermission permission)
+        {
+            var permissions = GetMemberPermissions(user, organisation);
+            if (!permissions.Contains(permission.ToString()))
+            {
+                throw new Exception("Access Denied");
+            }
+        }
+
+        public TermDefinitionResource GetTermDefinition(int termId,int organisationId)
+        {
+            var organisation =
+                _dependencies.StorageService.SetOf<ShurahBasedOrganisation>()
+                    .FirstOrDefault(x => x.Id == organisationId);
+            if (organisation == null)
+            {
+                return new TermDefinitionResource
+                {
+                    HasError = true,
+                    Error = "Organisation not Found"
+                };
+            }
+            var term =
+                organisation.Terms.FirstOrDefault(x => x.Id == termId);
+            if (term == null)
+            {
+                return new TermDefinitionResource
+                {
+                    HasError = true,
+                    Error = "Term not Found"
+                };
+            }
+            return new TermDefinitionResource
+            {
+                Term = term.Term,
+                Id=term.Id,
+                Definition= ParseRuleStatement(term.Definition, organisation.Terms)
+            };
+        }
+
 
         public virtual List<MembershipRuleSectionResource> BuildMembershipRuleSectionResources(string sectionPrefix,
             IEnumerable<MembershipRuleSection> ruleSections, IEnumerable<MembershipRuleTermDefinition> terms, Auth0User user)
@@ -190,7 +244,7 @@ namespace Services
             return resource;
         }
 
-        public virtual List<RuleFragmentResource> ParseRuleStatement(string ruleStatement, IEnumerable<MembershipRuleTermDefinition> terms)
+        public virtual List<TextFragmentResource> ParseRuleStatement(string ruleStatement, IEnumerable<MembershipRuleTermDefinition> terms)
         {
             var fragments = CreateNewFragmentList(ruleStatement);
             fragments=_dependencies.LinqService.Aggregate(terms,fragments, ApplyTerm);
@@ -199,27 +253,27 @@ namespace Services
 
         }
         public static Regex QuranRefRegex=new Regex("Q([1-9]{1,3}):([0-9]{1,3})");
-        public virtual IEnumerable<RuleFragmentResource> AddQuranReferences(RuleFragmentResource ruleFragmentResource)
+        public virtual IEnumerable<TextFragmentResource> AddQuranReferences(TextFragmentResource textFragmentResource)
         {
-            if (!ruleFragmentResource.IsPlainText)
+            if (!textFragmentResource.IsPlainText)
             {
-                return new List<RuleFragmentResource>() {ruleFragmentResource};
+                return new List<TextFragmentResource>() {textFragmentResource};
             }
-            return ParseForQuranReferences(ruleFragmentResource.Text);
+            return ParseForQuranReferences(textFragmentResource.Text);
         }
 
-        public virtual IEnumerable<RuleFragmentResource> ParseForQuranReferences(string text)
+        public virtual IEnumerable<TextFragmentResource> ParseForQuranReferences(string text)
         {
             var matches = QuranRefRegex.Matches(text);
-            var fragments = new List<RuleFragmentResource>();
+            var fragments = new List<TextFragmentResource>();
             var currentTextIndex = 0;
             for(var i=0;i<matches.Count;i++)
             {
                 var match = matches[i];
                 if (match.Groups.Count == 3)
                 {
-                    fragments.Add(new RuleFragmentResource { IsPlainText = true, Text = text.Substring(currentTextIndex, match.Index - currentTextIndex) });
-                    fragments.Add(new RuleFragmentResource
+                    fragments.Add(new TextFragmentResource { IsPlainText = true, Text = text.Substring(currentTextIndex, match.Index - currentTextIndex) });
+                    fragments.Add(new TextFragmentResource
                     {
 
                         QuranReference = new QuranReferenceResource
@@ -233,7 +287,7 @@ namespace Services
                 }
 
             }
-            var lastFragment = new RuleFragmentResource {IsPlainText = true, Text = text.Substring(currentTextIndex)};
+            var lastFragment = new TextFragmentResource {IsPlainText = true, Text = text.Substring(currentTextIndex)};
             if (!string.IsNullOrEmpty(lastFragment.Text))
             {
                 fragments.Add(lastFragment);
@@ -241,34 +295,34 @@ namespace Services
             return fragments;
         }
 
-        public virtual List<RuleFragmentResource> ApplyTerm(List<RuleFragmentResource> fragments, MembershipRuleTermDefinition term)
+        public virtual List<TextFragmentResource> ApplyTerm(List<TextFragmentResource> fragments, MembershipRuleTermDefinition term)
         {
             return _dependencies.LinqService.EnumerableToList(
                 _dependencies.LinqService.SelectMany(fragments,f => Split(f, term)));
         }
-        public virtual List<RuleFragmentResource> Split(RuleFragmentResource fragment, MembershipRuleTermDefinition term)
+        public virtual List<TextFragmentResource> Split(TextFragmentResource fragment, MembershipRuleTermDefinition term)
         {
             if (!fragment.IsPlainText)
             {
-                return new List<RuleFragmentResource> {fragment};
+                return new List<TextFragmentResource> {fragment};
             }
             var indexOfMatch = fragment.Text.ToLower().IndexOf(term.Term.ToLower(), StringComparison.Ordinal);
             if (indexOfMatch == -1)
             {
-                return new List<RuleFragmentResource> {fragment};
+                return new List<TextFragmentResource> {fragment};
             }
    
-            var results = new List<RuleFragmentResource>();
+            var results = new List<TextFragmentResource>();
             var textBefore = fragment.Text.Substring(0, indexOfMatch);
             if (textBefore != string.Empty)
             {
-                results.Add(new RuleFragmentResource
+                results.Add(new TextFragmentResource
                 {
                     IsPlainText = true,
                     Text = textBefore
                 });
             }
-            results.Add(new RuleFragmentResource
+            results.Add(new TextFragmentResource
             {
                 IsPlainText = false,
                 IsTerm = true,
@@ -279,7 +333,7 @@ namespace Services
             var textAfter = fragment.Text.Substring(indexOfMatch + term.Term.Length);
             if (textAfter != string.Empty)
             {
-                results.Add(new RuleFragmentResource
+                results.Add(new TextFragmentResource
                 {
                     IsPlainText = true,
                     Text = textAfter
@@ -331,9 +385,9 @@ namespace Services
             return _dependencies.LinqService.EnumerableToList(sort2);
         }
 
-        public virtual List<RuleFragmentResource> CreateNewFragmentList(string statement)
+        public virtual List<TextFragmentResource> CreateNewFragmentList(string statement)
         {
-            return new List<RuleFragmentResource> {new RuleFragmentResource {IsPlainText = true,Text = statement} };
+            return new List<TextFragmentResource> {new TextFragmentResource {IsPlainText = true,Text = statement} };
         }
     }
 }

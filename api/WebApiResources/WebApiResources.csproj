@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="CreateMembershipRuleRequest.cs" />
     <Compile Include="CreateMembershipRuleSectionRequest.cs" />
+    <Compile Include="CreateSugestionRequest.cs" />
+    <Compile Include="CreateTermDefinitionRequest.cs" />
     <Compile Include="DragDropMembershipRuleSectionRequest.cs" />
     <Compile Include="MembershipCancellationResponseResource.cs" />
     <Compile Include="MembershipApplicationResponseResource.cs" />
@@ -52,6 +54,8 @@
     <Compile Include="Auth0UserProfile.cs" />
     <Compile Include="ResponseResource.cs" />
     <Compile Include="RuleFragmentResource.cs" />
+    <Compile Include="SearchSugestionsRequest.cs" />
+    <Compile Include="TermDefinitionResource.cs" />
     <Compile Include="UpdateMembershipRuleSectionRequest.cs" />
     <Compile Include="UserProfileResource.cs" />
   </ItemGroup>

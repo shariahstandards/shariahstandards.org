@@ -2,6 +2,10 @@
   <h2>
     Standards 
   </h2>
+ <!--  <pre>
+    {{expandedSections|json}}
+
+  </pre> -->
   <p *ngIf="rootOrganisation.member==null && auth.authenticated()">
   	To use the shurah tools, please agree to the following rules:
   </p>
@@ -13,9 +17,9 @@
     <button (click)="join()"> Join </button>
   </p>
 
-  <span *ngIf=" auth.authenticated() && allow('EditMembershipRules')">
+  <span *ngIf="auth.authenticated() && allow('EditMembershipRules')">
       <button (click)="openModalToAddMembershipRuleSection(addSectionModal)" title="add top level membership rule section">&sect;*</button>
-   </span>
+  </span>
   <div>
     <div class="section" *ngFor="let section of rootOrganisation.ruleSections" [id]="section.uniqueName">
       <membership-rule-section 
@@ -35,6 +39,7 @@
       [expanded-sections]="expandedSections" 
       [allow-edit]="auth.authenticated() && allow('EditMembershipRules')"
       [enable-paste]="sectionToDrop!=null"
+      (onSectionExpanded)="setActiveSection($event)"
       [enable-paste-rule]="ruleToDrop!=null">
       </membership-rule-section>
     </div>
@@ -45,6 +50,10 @@
     <button (click)="leave()"> Leave </button>
   </p>
 </div>
+<div *ngIf="auth.authenticated() && rootOrganisation && rootOrganisation.member!=null">
+  <a [routerLink]="'/suggestions'">Add and View Suggestions</a>
+</div>
+
 
 <template #addSectionModal let-c="close" let-d="dismiss">
    <form>

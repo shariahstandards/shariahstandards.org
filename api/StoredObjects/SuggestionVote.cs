@@ -11,5 +11,6 @@ namespace StoredObjects
         public virtual Member VoterMember { get; set; }
         public bool? MemberIsSupportingSuggestion { get; set; }
         public DateTime LastUpdateDateTimeUtc { get; set; }
+        public int DelegatedVoteCount { get; set; }
     }
 }

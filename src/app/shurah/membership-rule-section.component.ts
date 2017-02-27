@@ -8,20 +8,31 @@ import {membershipRuleModel} from './membership-rule.model'
   styleUrls: ['./membership-rule-section.component.css'],
 })
 export class MembershipRuleSectionComponent{
-  @Input('section') section:membershipRuleSectionModel
-  @Input('sub-sections') subSections:membershipRuleSectionModel[]
-  @Input('routed-section') routedSection:string
-  @Input('expanded-sections') expandedSections:string[]
+  
+  constructor(private changeDetectorRef:ChangeDetectorRef){
+      
+
+ 
+  }
+  @Input('section') 
+  section:membershipRuleSectionModel
+  @Input('sub-sections') 
+  subSections:membershipRuleSectionModel[]
+  @Input('routed-section') 
+  routedSection:string
+  @Input('expanded-sections') 
+  expandedSections:string[]
   isSectionExpanded(){
     return this.expandedSections.some(sectionName=>{
       return this.section.uniqueName==sectionName;
     })
   }
+
   @Output() routingExpanded:EventEmitter<string>=new EventEmitter<string>();
   expandParents(val:string){
     console.log(this.section.uniqueName +" expanding parents ");
     if(!this.isSectionExpanded()){
-      this.expand();
+      this.expand(true);
     }
     console.log(this.section.uniqueName +" expanded");
     this.routingExpanded.emit(val);
@@ -34,15 +45,21 @@ export class MembershipRuleSectionComponent{
     }else{
     }
    }
-  expand(){
+  expand(doNotSetActiveRoute?:boolean){
     console.log("expanding "+this.section.uniqueName);
     this.expandedSections.push(this.section.uniqueName)
+    if(!doNotSetActiveRoute){
+      this.setActiveSection(this.section);
+    }
+ //   this.expandParents("x");
   }
   collapse(){
     var sectionToRemove=this.expandedSections.filter(sectionName=>{
       return sectionName==this.section.uniqueName;
     })[0];
-    this.expandedSections.splice(this.expandedSections.indexOf(sectionToRemove),1)
+    this.expandedSections.splice(this.expandedSections.indexOf(sectionToRemove),1);
+    this.setActiveSection(this.section);
+
   }
   @Input('allow-edit') allowEdit:boolean
   @Input('enable-paste') enablePaste:boolean
@@ -74,6 +91,10 @@ export class MembershipRuleSectionComponent{
   @Output() onDeleteRule:EventEmitter<membershipRuleModel>=new EventEmitter<membershipRuleModel>();
   deleteRule(rule:membershipRuleModel){
     this.onDeleteRule.emit(rule);
+  }
+  @Output() onSectionExpanded:EventEmitter<membershipRuleSectionModel>=new EventEmitter<membershipRuleSectionModel>();
+  setActiveSection(section:membershipRuleSectionModel){
+    this.onSectionExpanded.emit(section);
   }
   @Output() createRuleInSection:EventEmitter<membershipRuleSectionModel>=new EventEmitter<membershipRuleSectionModel>();
   createRule(section:membershipRuleSectionModel){

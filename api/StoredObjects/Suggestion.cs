@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace StoredObjects
@@ -13,5 +14,6 @@ namespace StoredObjects
         bool Removed { get; set; }
         bool VotingAllowed { get; set; }
         bool PendingModeration { get; set; }
+        public DateTime CreatedDateUtc { get; set; }
     }
 }

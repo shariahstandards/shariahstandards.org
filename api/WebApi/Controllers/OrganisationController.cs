@@ -22,5 +22,16 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.GetRootOrganisation(User));
         }
+
+        [Route("GetPermissionsForOrganisation/{organisationId}")]
+        public HttpResponseMessage Get(int organisationId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.GetPermission(User, organisationId));
+        }
+        [Route("GetTermDefinition/{termId}/{organisationId}")]
+        public HttpResponseMessage GetTermDefinition(int termId,int organisationId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.GetTermDefinition(termId,organisationId));
+        }
     }
 }

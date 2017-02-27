@@ -97,7 +97,7 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 		return output;
 	}
 
-	arabicIndex:any[]
+	arabicIndex:{}
 	arabicWords:any[]
 	buildArabicIndex(){
 		this.arabicIndex=[];

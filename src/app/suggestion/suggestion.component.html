@@ -1,0 +1,54 @@
+<h2>Suggestions for ShariahStandards.org</h2>
+<p *ngIf="searchResults==null">
+  unexpected error
+</p>
+<span *ngIf="auth.authenticated()">
+    <button (click)="openModalToAddSuggestion(addSuggestionModal)" title="Add suggestion">Add new suggestion*</button>
+</span>
+<div *ngIf="searchResults">
+	<span *ngIf="searchResults.suggestions.length==0">
+		No suggestions found.
+	</span>
+	<ul *ngIf="searchResults.suggestions.length>0">
+  	<li *ngFor="let suggestion of searchResults.suggestions">
+      From: <img [src]="suggestion.authorPictureUrl" title="author picture" width="50"/> {{suggestion.authorPublicName}}       On: {{formatDate(suggestion.dateTimeText)}} {{suggestion.netSupportPercent}}% ({{suggestion.votingPercent}}% voting)
+      <a [routerLink]="'/suggestion/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a> 
+  	</li>
+	</ul>
+</div>
+
+<template #addSuggestionModal let-c="close" let-d="dismiss">
+   <form>
+      <div class="modal-header">
+        <div class="modal-title">Add Suggestion</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" [(ngModel)]="addSuggestionModel.subject" required maxlength="100" id="subject" name="subject" class="form-control">
+        </div>
+      	<div class="form-group">
+          <label for="suggestion">Suggestion</label>
+          <textarea rows="2" required maxlength="1000"  id="suggestion" name="suggestion"
+           class="form-control"
+           col="100" [(ngModel)]="addSuggestionModel.suggestion">
+          </textarea>
+    	</div>
+        <ul>
+          <li class="error" *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="AddSuggestion()">Add</button>
+
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</template>
+

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApiResources
 {
-    public class RuleFragmentResource
+    public class TextFragmentResource
     {
         public string Text { get; set; }
         public bool IsPlainText { get; set; }

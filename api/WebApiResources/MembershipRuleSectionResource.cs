@@ -19,7 +19,7 @@ namespace WebApiResources
     {
         public string Number { get; set; }
         public int Id { get; set; }
-        public List<RuleFragmentResource> RuleFragments { get; set; }
+        public List<TextFragmentResource> RuleFragments { get; set; }
         public int ComprehensionScore { get; set; }
         public int MaxComprehensionScore { get; set; }
         public string PublishedUtcDateTimeText { get; set; }

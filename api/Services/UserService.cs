@@ -29,6 +29,7 @@ namespace Services
     {
         UserProfileResource GetUserProfile(Auth0UserProfile auth0UserProfile, IPrincipal principal);
         Auth0User GetAuthenticatedUser(IPrincipal principal);
+        Auth0User GetGuaranteedAuthenticatedUser(IPrincipal principal);
     }
     public class UserService:IUserService
     {
@@ -64,6 +65,16 @@ namespace Services
             var userId = GetLoggedInUserId(principal.Identity as ClaimsIdentity);
             return _dependencies.LinqService.SingleOrDefault(
                 _dependencies.StorageService.SetOf<Auth0User>(), u => u.Id == userId);
+        }
+
+        public virtual Auth0User GetGuaranteedAuthenticatedUser(IPrincipal principal)
+        {
+            var user = GetAuthenticatedUser(principal);
+            if (user == null)
+            {
+                throw new Exception("Access Denied");
+            }
+            return user;
         }
 
         public virtual Auth0User BuildAuth0User(Auth0UserProfile auth0Profile)
