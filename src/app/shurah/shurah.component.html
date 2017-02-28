@@ -44,16 +44,18 @@
       </membership-rule-section>
     </div>
   </div>
-   <p *ngIf="rootOrganisation.member!=null && auth.authenticated() && !hideButtons">
-
-    I no longer agree to hold to the rules of this organisation and want to stop being a member.
-    <button (click)="leave()"> Leave </button>
-  </p>
+ 
 </div>
 <div *ngIf="auth.authenticated() && rootOrganisation && rootOrganisation.member!=null">
   <a [routerLink]="'/suggestions'">Add and View Suggestions</a>
 </div>
+<div class="card">
+  <p *ngIf="rootOrganisation && rootOrganisation.member!=null && auth.authenticated() && !hideButtons">
 
+    I no longer agree to hold to the rules of this organisation and want to stop being a member.
+    <button (click)="leave()"> Leave </button>
+  </p>
+  </div>
 
 <template #addSectionModal let-c="close" let-d="dismiss">
    <form>

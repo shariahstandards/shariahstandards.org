@@ -35,5 +35,7 @@ namespace WebApiResources
         public int? UserVoteId { get; set; }
         public bool? UserVoteIsSupporting { get; set; }
         public int AbstentionCount { get; set; }
+        public List<string> MemberPermissions { get; set; }
+        public bool UsersOwnSuggestion { get; set; }
     }
 }

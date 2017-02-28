@@ -38,6 +38,16 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.Search(User, request));
         }
+        [Route("Vote")]
+        public HttpResponseMessage Post(VoteOnSuggestionsRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.Vote(User, request));
+        }
+        [Route("RemoveVote")]
+        public HttpResponseMessage Post(RemoveVoteOnSuggestionsRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.RemoveVote(User, request));
+        }
         //[Route("UnhideSuggestion")]
         //public HttpResponseMessage Post(HideSuggestionsRequest request)
         //{

@@ -20,4 +20,16 @@ namespace WebApiResources
     {
         public int SuggestionId { get; set; }
     }
+
+    public class VoteOnSuggestionsRequest
+    {
+        public int SuggestionId { get; set; }
+        public bool? VotingInSupport { get; set; }
+    }
+
+    public class RemoveVoteOnSuggestionsRequest
+    {
+        public int VoteId { get; set; }
+    }
+
 }

@@ -16,10 +16,21 @@ export class ShurahService {
 	constructor(private http: Http) { 
 		
 	}
+
 	searchSuggestions(organisationId:number,page?:number){
 		return this.http.post(shariahStandardsApiUrlBase+"SearchSuggestions",{
 			organisationId:organisationId,
 			page:page
+		});
+	}
+	suggestionDetails(suggestionId:number){
+		return this.http.post(shariahStandardsApiUrlBase+"ViewSuggestion",{
+			suggestionId:suggestionId
+		});
+	}
+	deleteSuggestion(suggestionId:number){
+		return this.http.post(shariahStandardsApiUrlBase+"DeleteSuggestion",{
+			suggestionId:suggestionId
 		});
 	}
 	addSuggestion(organisationId:number,addSuggestionModel:addSuggestionModel){
@@ -30,7 +41,17 @@ export class ShurahService {
 		});
 
 	}
-
+	voteOnSuggestion(suggestionId:number, inFavour?:boolean){
+		return this.http.post(shariahStandardsApiUrlBase+"Vote",{
+			suggestionId:suggestionId,
+			votingInSupport:inFavour
+		});
+	}
+	removeVoteOnSuggestion(voteId:number,){
+		return this.http.post(shariahStandardsApiUrlBase+"RemoveVote",{
+			voteId:voteId
+		});
+	}
 	getPermissionsForOrganisation(organisationId:number){
 		return this.http.get(shariahStandardsApiUrlBase+"GetPermissionsForOrganisation/"+organisationId);
 	}

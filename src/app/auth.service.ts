@@ -3,6 +3,8 @@ import { tokenNotExpired } from 'angular2-jwt';
 import { UserProfileRegistrationService } from './user-profile-registration.service'
 import { HttpModule, XHRBackend,RequestOptions,Http }       from '@angular/http'
 import { AuthenticatedHttpService } from './authenticated-http.service';
+import { Router, ActivatedRoute }       from '@angular/router';
+
 declare var Auth0Lock: any;
 
 @Injectable()
@@ -17,7 +19,11 @@ export class AuthService {
 	});
 	userProfile: Object;
 
-	constructor(private userProfileService:UserProfileRegistrationService) {
+	constructor(private userProfileService:UserProfileRegistrationService,
+	    private route:ActivatedRoute,
+	    private router:Router,
+ 
+		) {
 		var self=this;
 		//self.userProfile = JSON.parse(localStorage.getItem('profile'));
 
@@ -65,6 +71,7 @@ export class AuthService {
     	localStorage.removeItem('id_token');
 		//localStorage.removeItem('profile');
     	this.userProfile = undefined;
+    	this.router.navigateByUrl("/");
   	};
 
 }

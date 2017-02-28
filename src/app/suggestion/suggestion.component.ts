@@ -33,7 +33,7 @@ export class SuggestionComponent implements OnInit {
      });       
   }
   formatDate(dateText:string){
-    return moment(dateText,"YYYYMMDDTHH:mm:ss").format("HH:mm:ss ddd Do MMM YYYY");
+    return moment(dateText,"YYYYMMDDTHH:mm:ss").format("ddd Do MMM YYYY");
   }
   refresh(){
 	 	this.shurahService.searchSuggestions(1,this.currentPage).subscribe(response=>{
@@ -52,6 +52,7 @@ export class SuggestionComponent implements OnInit {
     		this.addSuggestionModel.errors=[data.error];
     	}
     	else{
+        this.activeModal.close('suggestion added');
     		this.refresh();
     	}
     })

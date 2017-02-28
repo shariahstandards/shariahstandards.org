@@ -1,3 +1,47 @@
-<h3>
-  <!-- {{suggestion.subject}} -->
-</h3>
+<p *ngIf="suggestion==null">
+	loading...
+</p>
+<div class="container">
+	<div *ngIf="suggestion!=null">
+		<h3>Suggestion</h3>
+		<div>From: <img [src]="suggestion.suggestionSummary.authorPictureUrl" title="author picture" width="50"/> 
+				{{suggestion.suggestionSummary.authorPublicName}}   
+			<br/>
+			    {{formatDate(suggestion.suggestionSummary.dateTimeText)}}
+			<br/>
+			<div class="card">
+				<div class="card-header">
+					Subject: {{suggestion.suggestionSummary.subject}}
+				</div>
+				<div class="card-block">
+					{{suggestion.suggestion}}
+					
+				</div>
+			</div>
+			<span *ngIf="suggestion.usersOwnSuggestion || (suggestion.memberPermissions.indexOf('RemoveSuggestion')>=0)">
+				<button class="btn btn-danger" (click)="deleteSuggestion()">Delete Suggestion</button>
+			</span>
+		</div>
+		<h4>Votes</h4>
+		<p>    For: {{suggestion.votesFor}}
+		<br/>  Against: {{suggestion.votesAgainst}}
+		<br/>  Abstentions: {{suggestion.abstentionCount}}
+		<br/>  Net Support: {{suggestion.suggestionSummary.netSupportPercent}}% 
+		<br/>  {{suggestion.suggestionSummary.votingPercent}}% of members' votes cast</p>
+		<div *ngIf="suggestion.userVoteId==null">
+			Add your vote:
+			<button class="btn btn-success" (click)="vote(true)">Agree</button>
+			<button class="btn btn-danger" (click)="vote(false)">Oppose</button>
+			<button class="btn btn-default" (click)="vote(null)">Abstain</button>
+		</div>
+		<div *ngIf="suggestion.userVoteId!=null">
+			You currently are 
+			<span *ngIf="suggestion.userVoteIsSupporting===true">agreeing to</span>
+			<span *ngIf="suggestion.userVoteIsSupporting===false">opposing</span> 
+			<span *ngIf="suggestion.userVoteIsSupporting===null">abstaining on</span> 
+			this suggestion
+			<button class="btn btn-default" (click)="removeVote(suggestion.userVoteId)">Remove</button>
+		</div>
+		<a [routerLink]="'/suggestions'">back to suggestion list</a> 
+	</div>
+</div>

@@ -37,6 +37,8 @@ namespace Services
         ResponseResource DeleteSuggestion(IPrincipal principal, DeleteSugestionRequest request);
         SearchSugestionsResponse Search(IPrincipal principal, SearchSuggestionsRequest request);
         SuggestionDetailResource ViewSuggestion(IPrincipal user, ViewSugestionRequest request);
+        ResponseResource Vote(IPrincipal user, VoteOnSuggestionsRequest request);
+        ResponseResource RemoveVote(IPrincipal user, RemoveVoteOnSuggestionsRequest request);
     }
     public class SuggestionService: ISuggestionService
     {
@@ -124,19 +126,17 @@ namespace Services
         {
             var support = GetVoteCount(suggestion, true);
             var opposition = GetVoteCount(suggestion, false);
-            if ((support + opposition) == 0) { return 0; }
-            return Math.Round( (100.0 * (support-opposition)) / (support + opposition),1);
+            var abstentions = GetAbstentionCount(suggestion);
+
+            if ((support + opposition+ abstentions) == 0) { return 0; }
+            return Math.Round( (100.0 * (support-opposition)) / (support + opposition+ abstentions),1);
             throw new NotImplementedException();
         }
 
         public ResponseResource DeleteSuggestion(IPrincipal principal, DeleteSugestionRequest request)
         {
             var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
-            var suggestion = _dependencies.StorageService.SetOf<Suggestion>().SingleOrDefault(s => s.Id == request.SuggestionId);
-            if (suggestion == null)
-            {
-                throw new Exception("Suggestion not found");
-            }
+            var suggestion = GetGuaranteedSuggestion(request.SuggestionId);
             var member = GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
             if(suggestion.AuthorMemberId != member.Id)
             {
@@ -145,6 +145,16 @@ namespace Services
             _dependencies.StorageService.SetOf<Suggestion>().Remove(suggestion);
             _dependencies.StorageService.SaveChanges();
             return new ResponseResource();
+        }
+
+        private Suggestion GetGuaranteedSuggestion(int suggestionId)
+        {
+            var suggestion = _dependencies.StorageService.SetOf<Suggestion>().SingleOrDefault(s => s.Id == suggestionId);
+            if (suggestion == null)
+            {
+                throw new Exception("Suggestion not found");
+            }
+            return suggestion;
         }
 
         public virtual SuggestionDetailResource ViewSuggestion(IPrincipal principal, ViewSugestionRequest request)
@@ -165,6 +175,8 @@ namespace Services
                 SuggestionSummary = BuildSummarySuggestion(suggestion),
                 UserVoteId = vote?.Id,
                 UserVoteIsSupporting = vote?.MemberIsSupportingSuggestion,
+                MemberPermissions = _dependencies.OrganisationService.GetMemberPermissions(user,member.Organisation),
+                UsersOwnSuggestion = suggestion.AuthorMemberId==member.Id,
                 VotesFor = GetVoteCount(suggestion,true),
                 VotesAgainst = GetVoteCount(suggestion,false),
                 AbstentionCount = GetAbstentionCount(suggestion)
@@ -172,6 +184,45 @@ namespace Services
 
             throw new NotImplementedException();
         }
+
+        public virtual ResponseResource Vote(IPrincipal principal, VoteOnSuggestionsRequest request)
+        {
+            var suggestion = GetGuaranteedSuggestion(request.SuggestionId);
+            var member = GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
+            var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
+            if (vote == null)
+            {
+                vote = _dependencies.StorageService.SetOf<SuggestionVote>().Create();
+                vote.SuggestionId = request.SuggestionId;
+                vote.Suggestion = suggestion;
+                vote.VoterMemberId = member.Id;
+                vote.VoterMember = member;
+                _dependencies.StorageService.SetOf<SuggestionVote>().Add(vote);
+            }
+            vote.MemberIsSupportingSuggestion = request.VotingInSupport;
+            vote.LastUpdateDateTimeUtc=DateTime.UtcNow;
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
+        }
+
+        public ResponseResource RemoveVote(IPrincipal principal, RemoveVoteOnSuggestionsRequest request)
+        {
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
+            var vote =
+                user.MemberAuth0Users.SelectMany(m => m.Member.SuggestionVotes)
+                    .SingleOrDefault(x => x.Id == request.VoteId);
+            if (vote != null)
+            {
+                _dependencies.StorageService.SetOf<SuggestionVote>().Remove(vote);
+                _dependencies.StorageService.SaveChanges();
+            }
+            else
+            {
+                return new ResponseResource {HasError = true,Error = "vote not found"};
+            }
+            return new ResponseResource();
+        }
+
         public virtual int GetVoteCount(Suggestion suggestion,bool inFavour)
         {
             return suggestion.SuggestionVotes.Where(v => 

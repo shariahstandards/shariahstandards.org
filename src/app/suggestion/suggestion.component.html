@@ -11,7 +11,7 @@
 	</span>
 	<ul *ngIf="searchResults.suggestions.length>0">
   	<li *ngFor="let suggestion of searchResults.suggestions">
-      From: <img [src]="suggestion.authorPictureUrl" title="author picture" width="50"/> {{suggestion.authorPublicName}}       On: {{formatDate(suggestion.dateTimeText)}} {{suggestion.netSupportPercent}}% ({{suggestion.votingPercent}}% voting)
+      From: <img [src]="suggestion.authorPictureUrl" title="author picture" width="50"/> {{suggestion.authorPublicName}}       On: {{formatDate(suggestion.dateTimeText)}} {{suggestion.netSupportPercent}}% Agreeing ({{suggestion.votingPercent}}% Voting)
       <a [routerLink]="'/suggestion/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a> 
   	</li>
 	</ul>
