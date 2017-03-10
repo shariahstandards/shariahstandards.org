@@ -13,26 +13,33 @@ namespace Services
     {
         IStorageService StorageService { get; set; }
         IUserService UserService { get; set; }
+        IOrganisationService OrganisationService { get; set; }
 
     }
     public class MembershipApplicationServiceDependencies : IMembershipApplicationServiceDependencies
     {
         public IStorageService StorageService { get; set; }
         public IUserService UserService { get; set; }
+        public IOrganisationService OrganisationService { get; set; }
 
         public MembershipApplicationServiceDependencies(IStorageService storageService,
-            IUserService userService)
+            IUserService userService,IOrganisationService organisationService
+            )
         {
             StorageService = storageService;
             UserService = userService;
+            OrganisationService = organisationService;
         }
     }
     public interface IMembershipApplicationService
     {
-        MembershipApplicationResponseResource SubmitApplication(IPrincipal principal);
-
+        ResponseResource ApplyToJoin(IPrincipal principal, MembershipApplicationrequest request);
+        MembershipApplicationSearchResultsResource SearchMembershipApplications(IPrincipal principle, MembershipApplicationSearchRequest request);
+        ResponseResource AcceptMembershipApplication(IPrincipal principal, MembershipApplicationAcceptanceRequest request);
+        ResponseResource RejectMembershipApplication(IPrincipal principal, MembershipApplicationRejectionRequest request);
     }
-    public class MembershipApplicationService: IMembershipApplicationService
+
+    public class MembershipApplicationService : IMembershipApplicationService
     {
         private readonly IMembershipApplicationServiceDependencies _dependencies;
 
@@ -41,56 +48,162 @@ namespace Services
             _dependencies = dependencies;
         }
 
-        public virtual MembershipApplicationResponseResource SubmitApplication(IPrincipal principal)
+        public virtual ResponseResource ApplyToJoin(IPrincipal principal, MembershipApplicationrequest request)
         {
-            var user = _dependencies.UserService.GetAuthenticatedUser(principal);
-            if (user == null)
-            {
-                return new MembershipApplicationResponseResource
-                {
-                    HasError = true,
-                    Error = "unable to find user"
-                };
-            }
-            var membership =
-                user.MemberAuth0Users.FirstOrDefault(x => x.Member.Organisation.ParentOrganisationRelationship == null);
-            if (membership!=null)
-            {
-                membership.Member.Removed = false;
-                membership.Member.LastDateAndTimeUtcAgreedToMembershipRules=DateTime.UtcNow;
-                _dependencies.StorageService.SaveChanges();
-                return new MembershipApplicationResponseResource
-                {
-                    HasError = false,
-                };
-            }
-            var rootOrganisation =
-                _dependencies.StorageService.SetOf<ShurahBasedOrganisation>()
-                    .FirstOrDefault(x => x.ParentOrganisationRelationship == null);
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
 
-            var member = _dependencies.StorageService.SetOf<Member>().Create();
-            member.JoinedOnDateAndTimeUtc = DateTime.Now;
-            member.PublicName = user.Name;
-            member.Introduction = "My name is " + user.Name;
-            member.Organisation = rootOrganisation;
-            member.LastDateAndTimeUtcAgreedToMembershipRules=DateTime.UtcNow;
-            _dependencies.StorageService.SetOf<Member>().Add(member);
+            var existingMemberWithSameEmailAddress = _dependencies.StorageService.SetOf<Member>()
+                .FirstOrDefault(m => m.OrganisationId == request.OrganisationId
+                                     && m.MemberAuth0Users.Any(a => a.Auth0UserId != user.Id)
+                                     && m.EmailAddress == request.EmailAddress);
+
+            if (existingMemberWithSameEmailAddress != null)
+            {
+                return new ResponseResource {HasError = true, Error = "Email Address already used by another member"};
+            }
+
+            var existingMemberWithSamePublicName = _dependencies.StorageService.SetOf<Member>()
+                .FirstOrDefault(x => x.OrganisationId == request.OrganisationId
+                                     && x.MemberAuth0Users.Any(m => m.Auth0UserId != user.Id)
+                                     && x.PublicName == request.PublicName);
+
+            if (existingMemberWithSamePublicName != null)
+            {
+                return new ResponseResource {HasError = true, Error = "Public name already used by another member"};
+            }
+
+            var existingApplication =
+                user.MembershipApplications.SingleOrDefault(a => a.OrganisationId == request.OrganisationId);
+            if (existingApplication == null)
+            {
+                existingApplication = _dependencies.StorageService.SetOf<MembershipApplication>().Create();
+                existingApplication.Auth0User = user;
+                existingApplication.Auth0UserId = user.Id;
+                existingApplication.OrganisationId = request.OrganisationId;
+                _dependencies.StorageService.SetOf<MembershipApplication>().Add(existingApplication);
+
+            }
+            existingApplication.Email = request.EmailAddress;
+            existingApplication.SupportingStatement = request.PublicProfileStatement;
+            existingApplication.PhoneNumber = request.PhoneNumber;
+            existingApplication.PublicName = request.PublicName;
+            existingApplication.DateAppliedUtc=DateTime.UtcNow;
             _dependencies.StorageService.SaveChanges();
 
-            var memberAuthUser = _dependencies.StorageService.SetOf<MemberAuth0User>().Create();
-            memberAuthUser.Member = member;
-            memberAuthUser.Auth0User = user;
-            _dependencies.StorageService.SetOf<MemberAuth0User>().Add(memberAuthUser);
+            //TODO send email / sms to organisation leader / members with application approval rights
 
-            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
 
-            return new MembershipApplicationResponseResource
+        }
+
+        public MembershipApplicationSearchResultsResource SearchMembershipApplications(IPrincipal principle,
+            MembershipApplicationSearchRequest request)
+        {
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principle);
+            var organisation = _dependencies.OrganisationService.GetOrganisation(request.OrganisationId);
+            _dependencies.OrganisationService.GuaranteeUserHasPermission(user, organisation,
+                ShurahOrganisationPermission.AcceptMembershipApplication);
+
+            return new MembershipApplicationSearchResultsResource
             {
-                NowAMember = true
+                OrganisationId = request.OrganisationId,
+                Results = organisation.MembershipApplications.Where(
+                    x => x.Acceptances.Count(a => !a.AcceptingMember.Removed)
+                         < organisation.RequiredNumbersOfAcceptingMembers)
+                    .OrderBy(x=>x.DateAppliedUtc)
+                    .Skip((request.Page-1)*10).Take(10).ToList()
+                    .Select(BuildMembershipApplicationResource)
+                    .ToList()
             };
 
         }
+
+        public virtual ResponseResource AcceptMembershipApplication(IPrincipal principal, MembershipApplicationAcceptanceRequest request)
+        {
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
+            var application =
+                _dependencies.StorageService.SetOf<MembershipApplication>().SingleOrDefault(x => x.Id == request.Id);
+            if (application == null)
+            {
+                return new ResponseResource {HasError = true,Error = "Application not found."};
+            }
+            _dependencies.OrganisationService.GuaranteeUserHasPermission(user,application.Organisation,ShurahOrganisationPermission.AcceptMembershipApplication);
+            var currentMember = _dependencies.OrganisationService.GetGuaranteedMember(principal, application.OrganisationId);
+            var existingAcceptance = application.Acceptances.SingleOrDefault(x => x.AcceptingMemberId == currentMember.Id);
+            if (existingAcceptance != null)
+            {
+                return new ResponseResource {HasError = true,Error = "You have already accepted this application."};
+            }
+            var acceptance = _dependencies.StorageService.SetOf<MembershipApplicationAcceptance>().Create();
+            acceptance.AcceptingMemberId = currentMember.Id;
+            acceptance.AcceptanceDateTimeUtc=DateTime.UtcNow;
+            acceptance.AcceptingMember = currentMember;
+            acceptance.MembershipApplication = application;
+            acceptance.MembershipApplicationId = application.Id;
+            _dependencies.StorageService.SetOf<MembershipApplicationAcceptance>().Add(acceptance);
+            _dependencies.StorageService.SaveChanges();
+
+            var acceptancesCount = application.Acceptances.Count(x => !x.AcceptingMember.Removed);
+            if (acceptancesCount >= application.Organisation.RequiredNumbersOfAcceptingMembers)
+            {
+                var existingMembership = application.Organisation.Members.FirstOrDefault(
+                    m => m.MemberAuth0Users.Any(a => a.Auth0UserId == application.Auth0UserId));
+                if (existingMembership == null)
+                {
+                    existingMembership = _dependencies.StorageService.SetOf<Member>().Create();
+                    _dependencies.StorageService.SetOf<Member>().Add(existingMembership);
+
+                }
+                existingMembership.OrganisationId = application.OrganisationId;
+                existingMembership.PublicName = application.PublicName;
+                existingMembership.EmailAddress = application.Email;
+                existingMembership.Introduction = "";
+                existingMembership.JoinedOnDateAndTimeUtc = DateTime.UtcNow;
+                existingMembership.LastDateAndTimeUtcAgreedToMembershipRules = DateTime.UtcNow;
+                existingMembership.Organisation = application.Organisation;
+                existingMembership.Removed = false;
+                _dependencies.StorageService.SaveChanges();
+            }
+
+            return new ResponseResource();
+        }
+
+        public virtual ResponseResource RejectMembershipApplication(IPrincipal principal, MembershipApplicationRejectionRequest request)
+        {
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
+            var application =
+                _dependencies.StorageService.SetOf<MembershipApplication>().SingleOrDefault(x => x.Id == request.Id);
+            if (application == null)
+            {
+                return new ResponseResource { HasError = true, Error = "Application not found." };
+            }
+            _dependencies.OrganisationService.GuaranteeUserHasPermission(user, application.Organisation, ShurahOrganisationPermission.AcceptMembershipApplication);
+            var currentMember = _dependencies.OrganisationService.GetGuaranteedMember(principal, application.OrganisationId);
+            var existingAcceptance = application.Acceptances.SingleOrDefault(x => x.AcceptingMemberId == currentMember.Id);
+            if (existingAcceptance != null)
+            {
+                return new ResponseResource { HasError = true, Error = "You have already accepted this application." };
+            }
+            //TODO send email with rejection reason
+            _dependencies.StorageService.SetOf<MembershipApplication>().Remove(application);
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
+        }
+
+        public virtual MembershipApplicationResource BuildMembershipApplicationResource(MembershipApplication application)
+        {
+            return new MembershipApplicationResource
+            {
+                Id=application.Id,
+                PublicName = application.PublicName,
+                EmailAddress = application.Email,
+                PhoneNumber=application.PhoneNumber,
+                SupportingStatement = application.SupportingStatement,
+                PictureUrl = application.Auth0User.PictureUrl,
+            };
+        }
     }
+
     public interface IUrlSlugServiceDependencies
     {
     }

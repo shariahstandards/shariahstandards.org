@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LinqService.cs" />
+    <Compile Include="MemberService.cs" />
     <Compile Include="MembershipApplicationService.cs" />
     <Compile Include="MembershipCancellationService.cs" />
     <Compile Include="MembershipRuleSectionService.cs" />

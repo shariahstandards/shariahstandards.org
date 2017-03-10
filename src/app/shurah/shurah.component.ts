@@ -7,8 +7,9 @@ import {membershipRuleModel} from './membership-rule.model'
 import {addMembershipRuleSectionModel} from './add-membership-rule-section.model'
 import {updateMembershipRuleSectionModel} from './update-membership-rule-section.model'
 import {updateMembershipRuleModel} from './update-membership-rule.model'
-import {organisation} from './organisation.model'
+import {organisationModel} from './organisation.model'
 import {addMembershipRuleModel} from './add-membership-rule.model'
+import {applyToJoinOrganisationModel} from './apply-to-join-organisation.model'
 import { Router, ActivatedRoute }       from '@angular/router';
 
 @Component({
@@ -31,6 +32,39 @@ export class ShurahComponent implements OnInit {
   }
   private activeModal:NgbModalRef
   closeResult: string;
+  showViewApplicationsLink()
+  {
+    return(this.rootOrganisation
+     && this.rootOrganisation.pendingMembershipApplicationsCount>0
+     && this.rootOrganisation.member
+     && this.rootOrganisation.leaderMember
+     && this.rootOrganisation.member.id && this.rootOrganisation.leaderMember.id
+     && this.rootOrganisation.permissions.indexOf("AcceptMembershipApplication")>=0);
+  }
+
+  applyToJoinOrganisationModel:applyToJoinOrganisationModel
+  openModalToJoinOrganisation(content){
+    this.applyToJoinOrganisationModel=new applyToJoinOrganisationModel(this.rootOrganisation.name,this.rootOrganisation.id);
+    this.activeModal= this.modalService.open(content);
+    document.getElementById('publicName').focus();
+    this.activeModal.result.then(()=>{
+    this.refresh();
+   })
+    
+  }
+  applyToJoin(){
+     this.shurahService.applyToJoinOrganisation(this.applyToJoinOrganisationModel).subscribe(result=>{
+      var response = result.json();
+      if(response.hasError){
+        this.applyToJoinOrganisationModel.errors=[response.error];
+      }
+      else{
+        this.applyToJoinOrganisationModel=null;
+        this.activeModal.close('member joined');
+        this.refresh();
+      }
+    })
+  }
   addMembershipRuleSectionModel:addMembershipRuleSectionModel
   openModalToAddMembershipRuleSection(content, section:membershipRuleSectionModel) {
    this.addMembershipRuleSectionModel= new addMembershipRuleSectionModel("");
@@ -242,18 +276,7 @@ export class ShurahComponent implements OnInit {
       // console.log(JSON.stringify(this.rootOrganisation));
      })
   }
-  join(){
-      this.hideButtons=true;
-
-      this.shurahService.join().subscribe(result=>{
-        var response = result.json();
-        if(response.hasError){
-          alert(response.error);
-        }else{
-          this.refresh();
-        }
-      });
-    }
+ 
   hideButtons:boolean=false;
   leave(){
       this.hideButtons=true;
@@ -266,5 +289,5 @@ export class ShurahComponent implements OnInit {
         }
       });
     }
-  rootOrganisation:organisation
+  rootOrganisation:organisationModel
 }

@@ -7,6 +7,7 @@ namespace WebApiResources
         public int OrganisationId { get; set; }
         public int? Page { get; set; }
     }
+
     public class SearchSugestionsResponse:ResponseResource
     {
         public int OrganisationId { get; set; }

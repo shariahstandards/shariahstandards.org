@@ -233,6 +233,7 @@ namespace UnitTests.OrganisationServiceTests
                             Followers = new List<LeaderRecognition>(),
                             ActionUpdates = new List<ActionUpdate>(),
                             PublicName = "some name",
+                            MemberAuth0Users = new List<MemberAuth0User> { new MemberAuth0User {Auth0User = new Auth0User { PictureUrl = "pic"} } }
                             
                         };
                         A.CallTo(() => dependencies.LinqService.EnumerableCount(member.Followers)).Returns(12);
@@ -251,6 +252,7 @@ namespace UnitTests.OrganisationServiceTests
                         Assert.AreEqual(2,result.ToDoCount);
                         Assert.AreEqual(member.LeaderRecognition.RecognisedLeaderMember.PublicName,result.LeaderPublicName);
                         Assert.AreEqual(member.PublicName,result.PublicName);
+                        Assert.AreEqual("pic",result.PictureUrl);
                     }
 
                     public class MemberRecognisesAnotherMemberAsARepresentative : OrganisationServiceTestContext
@@ -265,7 +267,7 @@ namespace UnitTests.OrganisationServiceTests
                                 Followers = new List<LeaderRecognition>(),
                                 ActionUpdates = new List<ActionUpdate>(),
                                 PublicName = "some name",
-
+                                MemberAuth0Users = new List<MemberAuth0User> { new MemberAuth0User { Auth0User = new Auth0User { PictureUrl = "pic" } } }
                             };
                             A.CallTo(() => dependencies.LinqService.EnumerableCount(member.Followers)).Returns(12);
                             A.CallTo(() => dependencies.LinqService.EnumerableSum(member.Followers,

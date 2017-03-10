@@ -41,11 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllOrganisationPermissionsResource.cs" />
     <Compile Include="CreateMembershipRuleRequest.cs" />
     <Compile Include="CreateMembershipRuleSectionRequest.cs" />
     <Compile Include="CreateSugestionRequest.cs" />
     <Compile Include="CreateTermDefinitionRequest.cs" />
     <Compile Include="DragDropMembershipRuleSectionRequest.cs" />
+    <Compile Include="MembershipApplicationrequest.cs" />
     <Compile Include="MembershipCancellationResponseResource.cs" />
     <Compile Include="MembershipApplicationResponseResource.cs" />
     <Compile Include="MembershipRuleSectionResource.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="Auth0UserProfile.cs" />
     <Compile Include="ResponseResource.cs" />
     <Compile Include="RuleFragmentResource.cs" />
+    <Compile Include="SearchMemberRequest.cs" />
     <Compile Include="SearchSugestionsRequest.cs" />
     <Compile Include="TermDefinitionResource.cs" />
     <Compile Include="UpdateMembershipRuleSectionRequest.cs" />

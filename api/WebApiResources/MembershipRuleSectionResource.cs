@@ -34,5 +34,6 @@ namespace WebApiResources
         public int ToDoCount { get; set; }
         public string LeaderPublicName { get; set; }
         public string PublicName { get; set; }
+        public string PictureUrl { get; set; }
     }
 }

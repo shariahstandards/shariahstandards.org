@@ -10,6 +10,7 @@ import {quranSearchRoutes} from './quran-search/quran-search.component.routes'
 import {zakatRoutes} from './zakat-calculator/zakat-calculator.component.routes'
 import {inheritanceRoutes} from './inheritance-calculator/inheritance-calculator.component.routes'
 import {suggestionRoutes} from './suggestion/suggestion.component.routes'
+import {membershipApplicationRoutes} from './membership-application/membership-application.component.routes'
 const appRoutes: Routes = [
   ...termDefinitionsRoutes,
   // ...standardsRoutes,
@@ -18,6 +19,7 @@ const appRoutes: Routes = [
   ...inheritanceRoutes,
   ...quranSearchRoutes,
   ...suggestionRoutes,
+  ...membershipApplicationRoutes,
   { path: '', component: PrayerTimesComponent },
   { path: 'about-us', component: AboutUsComponent }
 ];

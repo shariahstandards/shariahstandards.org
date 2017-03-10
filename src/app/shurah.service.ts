@@ -10,13 +10,34 @@ import {updateMembershipRuleSectionModel} from './shurah/update-membership-rule-
 import {updateMembershipRuleModel} from './shurah/update-membership-rule.model'
 import {addMembershipRuleModel} from './shurah/add-membership-rule.model'
 import {addSuggestionModel} from './suggestion/add-suggestion-model'
+import {applyToJoinOrganisationModel} from './shurah/apply-to-join-organisation.model'
 @Injectable()
 export class ShurahService {
 
 	constructor(private http: Http) { 
 		
 	}
+	acceptMembershipApplication(applicationId:number){
+		return this.http.post(shariahStandardsApiUrlBase+"AcceptMembershipApplication",{
+			id:applicationId
+		});
+	}
+	viewApplications(organisationId:number,page:number){
+		return this.http.post(shariahStandardsApiUrlBase+"ViewApplications",{
+			organisationId:organisationId,
+			page:page
+		});
+	}
 
+	applyToJoinOrganisation(model:applyToJoinOrganisationModel){
+		return this.http.post(shariahStandardsApiUrlBase+"ApplyToJoin",{
+			organisationId:model.organisationId,
+			emailAddress:model.emailAddress,
+			phoneNumber:model.phoneNumber,
+			publicName:model.publicName,
+			publicProfileStatement:model.publicProfileStatement
+		});
+	}
 	searchSuggestions(organisationId:number,page?:number){
 		return this.http.post(shariahStandardsApiUrlBase+"SearchSuggestions",{
 			organisationId:organisationId,
@@ -68,9 +89,7 @@ export class ShurahService {
   	getRootOrganisation(){
   		return this.http.get(shariahStandardsApiUrlBase+"RootOrganisation");
   	}
-	join(){
-		return this.http.get(shariahStandardsApiUrlBase+"Join");
-	}
+	
 	leave(){
 		return this.http.get(shariahStandardsApiUrlBase+"Leave");
 	}

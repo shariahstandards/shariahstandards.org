@@ -47,7 +47,11 @@ namespace Services
         void GuaranteeUserHasPermission(Auth0User user, ShurahBasedOrganisation organisation,
             ShurahOrganisationPermission permission);
 
+        Member GetGuaranteedMember(IPrincipal principal, int organisationId);
         TermDefinitionResource GetTermDefinition(int termId,int organisationId);
+        AllOrganisationPermissionsResource GetAllPermissions(IPrincipal principal, int organisationId);
+        ResponseResource DelegatePermission(IPrincipal principal, AddDelegatedPermissionRequest request);
+        ResponseResource RemoveDelegatedPermission(IPrincipal principal, RemoveDelegatedPermissionRequest request);
     }
     public class OrganisationService: IOrganisationService
     {
@@ -56,6 +60,17 @@ namespace Services
         public OrganisationService(IOrganisationServiceDependencies dependencies)
         {
             _dependencies = dependencies;
+        }
+
+        public virtual Member GetGuaranteedMember(IPrincipal principal, int organisationId)
+        {
+            var user = _dependencies.UserService.GetAuthenticatedUser(principal);
+            if (user == null || user.MemberAuth0Users.All(m => m.Member.OrganisationId != organisationId))
+            {
+                throw new Exception("Access Denied");
+            }
+            var member = user.MemberAuth0Users.First(m => m.Member.OrganisationId == organisationId && !m.Member.Removed).Member;
+            return member;
         }
 
         public virtual OrganisationResource GetRootOrganisation(IPrincipal principal)
@@ -76,14 +91,46 @@ namespace Services
         {
             var resource = new OrganisationResource();
             resource.Name = organisation.Name;
+            resource.Id = organisation.Id;
             resource.JoiningPolicy = organisation.JoiningPolicy.ToString();
             resource.Description = organisation.Description;
             resource.Member= GetMember(user, organisation.Members);
+            resource.HasPendingApplication = HasAPendingApplication(resource.Member,user,organisation);
             resource.RuleSections = BuildMembershipRuleSectionResources(string.Empty
                 ,_dependencies.LinqService.Where(organisation.MembershipRuleSections,r=>r.ParentMembershipRuleSection==null)
                 ,SortTerms(organisation.Terms),user);
             resource.Permissions = GetMemberPermissions(user, organisation);
+            resource.LeaderMember = GetLeaderMember(organisation);
+            resource.PendingMembershipApplicationsCount = GetPendingMembershipApplicationsCount(organisation);
             return resource;
+        }
+
+        public virtual int GetPendingMembershipApplicationsCount(ShurahBasedOrganisation organisation)
+        {
+            return
+                organisation.MembershipApplications.Count(
+                    a => a.Auth0User.MemberAuth0Users.All(m => m.Member.OrganisationId != organisation.Id ||    
+                    (m.Member.OrganisationId==organisation.Id && m.Member.Removed)));
+        }
+
+        public virtual bool HasAPendingApplication(MemberResource member, Auth0User user, ShurahBasedOrganisation organisation)
+        {
+            if (member != null)
+            {
+                return false;
+            }
+            var existingApplication =
+                user?.MembershipApplications.FirstOrDefault(a => a.OrganisationId == organisation.Id);
+            return existingApplication != null;
+        }
+
+        public virtual MemberResource GetLeaderMember(ShurahBasedOrganisation organisation)
+        {
+            if (organisation.OrganisationLeader != null)
+            {
+                return BuildMemberResource(organisation.OrganisationLeader.Leader);
+            }
+            return null;
         }
 
         public virtual List<string> GetMemberPermissions(Auth0User user, ShurahBasedOrganisation organisation)
@@ -174,6 +221,100 @@ namespace Services
         }
 
 
+
+        public AllOrganisationPermissionsResource GetAllPermissions(IPrincipal principal, int organisationId)
+        {
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
+            var member = GetGuaranteedMember(principal, organisationId);
+            var permissionsForCurrrentUser = GetMemberPermissions(user, member.Organisation);
+            var resource = new AllOrganisationPermissionsResource();
+            resource.CurrentUserPermissions = permissionsForCurrrentUser.Select(permission => ParsePermissionDisplayName(permission)).ToList();
+            resource.AllPermissionResources =
+                Enum.GetValues(typeof (ShurahOrganisationPermission)).Cast<ShurahOrganisationPermission>()
+                    .Select(p => ParsePermissionDisplayName(p.ToString())).ToList();
+            resource.DelegatedPermissions =
+                member.Organisation.Members.Select(BuildDelegatedPermissionResource).ToList();
+            resource.Leader = GetLeaderMember(member.Organisation);
+            resource.CanManagePermissions = resource.Leader.Id == member.Id;
+            return resource;
+        }
+
+        public virtual ResponseResource DelegatePermission(IPrincipal principal, AddDelegatedPermissionRequest request)
+        {
+            var member = GetGuaranteedMember(principal, request.OrganisationId);
+
+            if (member.Organisation.OrganisationLeader.LeaderMemberId != member.Id)
+            {
+                throw new Exception("Access denied - you are not the leader of this organisation.");
+            }
+            var existingDelegatedPermission =
+                member.DelegatedPermissions.FirstOrDefault(
+                    p => p.ShurahOrganisationPermission.ToString() == request.PermissionValue);
+            if (existingDelegatedPermission == null)
+            {
+                return new ResponseResource();
+            }
+            var delegatedPermission = _dependencies.StorageService.SetOf<DelegatedPermission>().Create();
+            delegatedPermission.ShurahOrganisationPermission =
+                (ShurahOrganisationPermission)
+                    Enum.Parse(typeof (ShurahOrganisationPermission), request.PermissionValue);
+            delegatedPermission.Member = member;
+            delegatedPermission.MemberId = member.Id;
+            _dependencies.StorageService.SetOf<DelegatedPermission>().Add(delegatedPermission);
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
+        }
+
+        public virtual ResponseResource RemoveDelegatedPermission(IPrincipal principal, RemoveDelegatedPermissionRequest request)
+        {
+            var delegatedPermission =
+                _dependencies.StorageService.SetOf<DelegatedPermission>()
+                    .SingleOrDefault(x => x.Id == request.DelegatedPermissionId);
+            if (delegatedPermission == null)
+            {
+                throw new Exception("Access Denied");
+            }
+            var member = GetGuaranteedMember(principal, delegatedPermission.Member.OrganisationId);
+            if (member.Organisation.OrganisationLeader.LeaderMemberId != member.Id)
+            {
+                throw new Exception("Access Denied");
+            }
+            _dependencies.StorageService.SetOf<DelegatedPermission>().Remove(delegatedPermission);
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
+        }
+
+        public virtual MemberPermissionListResource BuildDelegatedPermissionResource(Member member)
+        {
+            return new MemberPermissionListResource
+            {
+                PublicName = member.PublicName,
+                MemberId = member.Id,
+                Permissions = member.DelegatedPermissions.Select(p=>
+                ParsePermissionDisplayName(p.ShurahOrganisationPermission.ToString(),p.Id)).ToList()
+            };
+        }
+
+        public virtual PermissionResource ParsePermissionDisplayName(string permission)
+        {
+            return ParsePermissionDisplayName(permission, null);
+        }
+        public virtual PermissionResource ParsePermissionDisplayName(string permission, int? delegaedPermissionId)
+        {
+            return new PermissionResource
+            {
+                DelegatedPermissionId = delegaedPermissionId,
+                IsDelegatedPermission = delegaedPermissionId.HasValue,
+                Value = permission,
+                DisplayName = ToSentenceCase(permission)
+            };
+        }
+
+        public virtual string ToSentenceCase(string str)
+        {
+            return Regex.Replace(str, "[a-z][A-Z]", m => $"{m.Value[0]} {char.ToLower(m.Value[1])}");
+        }
+
         public virtual List<MembershipRuleSectionResource> BuildMembershipRuleSectionResources(string sectionPrefix,
             IEnumerable<MembershipRuleSection> ruleSections, IEnumerable<MembershipRuleTermDefinition> terms, Auth0User user)
         {
@@ -241,6 +382,7 @@ namespace Services
             resource.ToDoCount = GetPendingActionsCount(member.ActionUpdates);
             resource.LeaderPublicName = member?.LeaderRecognition?.RecognisedLeaderMember?.PublicName;
             resource.PublicName = member.PublicName;
+            resource.PictureUrl = member.MemberAuth0Users.First().Auth0User.PictureUrl;
             return resource;
         }
 

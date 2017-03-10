@@ -27,7 +27,8 @@ import {AuthenticatedHttpService} from './authenticated-http.service';
 import { ShurahComponent } from './shurah/shurah.component'
 import { MembershipRuleSectionComponent } from './shurah/membership-rule-section.component';
 import { SuggestionComponent } from './suggestion/suggestion.component';
-import { SuggestionDetailsComponent } from './suggestion-details/suggestion-details.component'
+import { SuggestionDetailsComponent } from './suggestion-details/suggestion-details.component';
+import { MembershipApplicationComponent } from './membership-application/membership-application.component'
 @NgModule({
   declarations: [
     ShariahStandardsAppComponent,
@@ -43,7 +44,8 @@ import { SuggestionDetailsComponent } from './suggestion-details/suggestion-deta
     ShurahComponent,
     MembershipRuleSectionComponent,
     SuggestionComponent,
-    SuggestionDetailsComponent
+    SuggestionDetailsComponent,
+    MembershipApplicationComponent
       ],
   imports: [
     BrowserModule,

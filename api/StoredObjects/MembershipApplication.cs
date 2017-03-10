@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StoredObjects
 {
@@ -11,6 +12,9 @@ namespace StoredObjects
         public string Auth0UserId { get; set; }
         public string SupportingStatement { get; set; }
         public string Email { get; set; }
-        public virtual IList<MembershipApplicationAcceptance> Acceptances { get; set; } 
+        public virtual IList<MembershipApplicationAcceptance> Acceptances { get; set; }
+        public string PhoneNumber { get; set; }
+        public string PublicName { get; set; }
+        public DateTime DateAppliedUtc { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Services;
+using WebApiResources;
 
 namespace WebApi.Controllers
 {
@@ -27,6 +28,23 @@ namespace WebApi.Controllers
         public HttpResponseMessage Get(int organisationId)
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.GetPermission(User, organisationId));
+        }
+        [Route("ViewAllPermissionsForOrganisation/{organisationId}")]
+        public HttpResponseMessage GetAllPermissions(int organisationId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.GetAllPermissions(User, organisationId));
+        }
+        [HttpPost]
+        [Route("DelegatePermission")]
+        public HttpResponseMessage PostDelegatePermission(AddDelegatedPermissionRequest request) 
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.DelegatePermission(User, request));
+        }
+        [HttpPost]
+        [Route("DelegatePermission")]
+        public HttpResponseMessage PostRemoveDelegatedPermission(RemoveDelegatedPermissionRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.RemoveDelegatedPermission(User, request));
         }
         [Route("GetTermDefinition/{termId}/{organisationId}")]
         public HttpResponseMessage GetTermDefinition(int termId,int organisationId)

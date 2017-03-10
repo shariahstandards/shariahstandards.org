@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Services;
+using WebApiResources;
 
 namespace WebApi.Controllers
 {
@@ -16,11 +17,32 @@ namespace WebApi.Controllers
         {
             _service = service;
         }
-        [HttpGet]
-        [Route("Join")]
-        public HttpResponseMessage Get()
+
+        [HttpPost]
+        [Route("ApplyToJoin")]
+        public HttpResponseMessage Post(MembershipApplicationrequest request)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _service.SubmitApplication(User));
+            return Request.CreateResponse(HttpStatusCode.OK, _service.ApplyToJoin(User,request));
+        }
+
+        [HttpPost]
+        [Route("ViewApplications")]
+        public HttpResponseMessage Post(MembershipApplicationSearchRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.SearchMembershipApplications(User, request));
+        }
+
+        [HttpPost]
+        [Route("AcceptMembershipApplication")]
+        public HttpResponseMessage Post(MembershipApplicationAcceptanceRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.AcceptMembershipApplication(User, request));
+        }
+        [HttpPost]
+        [Route("RejectMembershipApplication")]
+        public HttpResponseMessage Post(MembershipApplicationRejectionRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.RejectMembershipApplication(User, request));
         }
     }
 }

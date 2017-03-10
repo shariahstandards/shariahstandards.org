@@ -23,6 +23,7 @@ namespace StoredObjects.Migrations
                 JoiningPolicy = JoiningPolicy.NoApplicationNeeded,
                 LastUpdateDateTimeUtc = theStartDate,
                 UrlDomain = "https://shariahstandards.org",
+                RequiredNumbersOfAcceptingMembers = 1
             };
 
             context.Set<ShurahBasedOrganisation>().AddOrUpdate(x=>x.Name,mainOrganisation);

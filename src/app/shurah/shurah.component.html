@@ -1,22 +1,18 @@
 <div *ngIf="rootOrganisation!=null">
   <h2>
-    Standards 
+    {{rootOrganisation.name}}  
   </h2>
+  <div *ngIf="rootOrganisation!=null && rootOrganisation.leaderMember!=null">
+    Organisation leader:  <img [src]="rootOrganisation.leaderMember.pictureUrl" title="leader picture" width="50"/> {{rootOrganisation.leaderMember.publicName}} 
+  </div>
  <!--  <pre>
     {{expandedSections|json}}
 
   </pre> -->
-  <p *ngIf="rootOrganisation.member==null && auth.authenticated()">
-  	To use the shurah tools, please agree to the following rules:
-  </p>
-   <div *ngIf="rootOrganisation.ruleSections.length==0">
+    <div *ngIf="rootOrganisation.ruleSections.length==0">
     <p>No rules have been set for this organisation</p>
   </div>
-  <p *ngIf="rootOrganisation.member==null && auth.authenticated() && !hideButtons">
-    I agree to hold to the rules of this organisation and to become a member.
-    <button (click)="join()"> Join </button>
-  </p>
-
+  <h3>Membership Rules</h3>
   <span *ngIf="auth.authenticated() && allow('EditMembershipRules')">
       <button (click)="openModalToAddMembershipRuleSection(addSectionModal)" title="add top level membership rule section">&sect;*</button>
   </span>
@@ -46,6 +42,16 @@
   </div>
  
 </div>
+ 
+ <p *ngIf="rootOrganisation && rootOrganisation.member==null && auth.authenticated() && !hideButtons && !rootOrganisation.hasPendingApplication">
+    <button (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)"> Apply to join </button>
+  </p>
+  <p *ngIf="rootOrganisation && rootOrganisation.hasPendingApplication">
+    Application for membership has been submitted - waiting for approval
+  </p>
+  <p *ngIf="showViewApplicationsLink()">
+    <a [routerLink]="'/membership-applications/organisation/'+this.rootOrganisation.id">Review Membership Applications</a>
+  </p>
 <div *ngIf="auth.authenticated() && rootOrganisation && rootOrganisation.member!=null">
   <a [routerLink]="'/suggestions'">Add and View Suggestions</a>
 </div>
@@ -175,6 +181,53 @@
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary" (click)="updateRule()">Update</button>
 
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</template>
+
+
+<template #applyToJoinOrganisationModal let-c="close" let-d="dismiss">
+   <form #applyToJoinOrganisationModalForm="ngForm" (ngSubmit)="applyToJoin()">
+      <div class="modal-header">
+        <div class="modal-title">Apply to join {{applyToJoinOrganisationModel.organisationName}}</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="form-group">
+          <label for="publicName">Full Name (visible to public)</label>
+          <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.publicName" required maxlength="100" id="publicName" name="publicName">
+      </div>
+      <div class="form-group">
+          <label for="email">Email</label>
+          <input class="form-control" type="email" [(ngModel)]="applyToJoinOrganisationModel.emailAddress" required maxlength="100" id="email" name="email">
+      </div>
+      <div class="form-group">
+          <label for="phoneNumber">Phone</label>
+          <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.phoneNumber" required maxlength="20" id="phoneNumber" name="phoneNumber">
+      </div>
+      <div class="form-check">
+          <label class="form-check-label">
+          <input class="form-check-input"  type="checkbox" [(ngModel)]="rulesAgreedTo" name="rulesAgreedTo" required>
+          I agree to hold to the rules of this organisation and to become a member.</label>
+      </div>
+      <div class="form-group">
+          <label for="publicProfileStatement">Application Supporting Statement</label>
+          <textarea rows="2" class="form-control" required maxlength="1000"  id="publicProfileStatement" name="publicProfileStatement"
+           col="100" [(ngModel)]="applyToJoinOrganisationModel.publicProfileStatement">
+          </textarea>
+        </div>
+        <ul>
+          <li class="error" *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="applyToJoin()" [disabled]="!rulesAgreedTo">Apply</button>
         <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
       </div>
     </form>

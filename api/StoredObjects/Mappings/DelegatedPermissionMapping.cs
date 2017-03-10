@@ -13,7 +13,6 @@ namespace StoredObjects.Mappings
         {
             _modelBuilder = modelBuilder;
             E.HasKey(x => x.Id);
-            E.HasRequired(x => x.Organisation).WithMany(x => x.DelegatedPermissions).HasForeignKey(x => x.OrganisationId).WillCascadeOnDelete(false);
             E.HasRequired(x => x.Member).WithMany(x => x.DelegatedPermissions).HasForeignKey(x => x.MemberId);
         }
     }

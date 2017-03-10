@@ -1,0 +1,48 @@
+<div class="container">
+<h3> Review and Approve or Reject Membership Applications </h3>
+<div>
+	<p *ngIf="results==null || results.length==0">
+		No membership applications left to review
+	</p>
+	<div class="card" *ngFor="let application of results">
+		<div class="card-header">
+			Membership Application {{application.id}}
+		</div>
+		<div class="card-block">
+			<dl class="row">
+				<dt class="col-sm-3">
+					Member Public Name
+				</dt>
+				<dd class="col-sm-9">
+					{{application.publicName}}
+				</dd>
+				<dt class="col-sm-3">
+					Email
+				</dt>
+				<dd class="col-sm-9">
+					{{application.emailAddress}}
+				</dd>
+				<dt class="col-sm-3">
+					Phone number
+				</dt>
+				<dd class="col-sm-9">
+					{{application.phoneNumber}}
+				</dd>
+				<dt class="col-sm-3">
+					Supporting statement
+				</dt>
+				<dd class="col-sm-9">
+					{{application.supportingStatement}}
+				</dd>
+				<dt class="col-sm-3">
+					Photo
+				</dt>
+				<dd class="col-sm-9">
+					<img title="member picture" [src]="application.pictureUrl"/>
+				</dd>
+			</dl>
+			<button (click)="accept(application.id)">Accept</button>
+		</div>
+	</div>
+</div>
+</div>

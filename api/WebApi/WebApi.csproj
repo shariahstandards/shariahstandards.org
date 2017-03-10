@@ -219,6 +219,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\UnityWebApiActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\MemberController.cs" />
     <Compile Include="Controllers\MembershipCancellationController.cs" />
     <Compile Include="Controllers\MembershipApplicationController.cs" />
     <Compile Include="Controllers\MembershipRuleSectionController.cs" />

@@ -10,8 +10,6 @@ namespace StoredObjects
     {
         public int Id { get; set; }
         public ShurahOrganisationPermission ShurahOrganisationPermission { get; set; }
-        public virtual ShurahBasedOrganisation Organisation { get; set; }
-        public int OrganisationId { get; set; }
         public virtual Member Member { get; set; }
         public int MemberId { get; set; }
     }

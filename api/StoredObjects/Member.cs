@@ -25,6 +25,7 @@ namespace StoredObjects
         public virtual IList<MembershipRuleViolationAccusation> MadeMembershipRuleViolationAccusations { get; set; }
         public string PublicName { get; set; }
         public virtual IList<DelegatedPermission> DelegatedPermissions { get; set; }
+        public string EmailAddress { get; set; }
 
         //public virtual IList<MembershipRuleAgreementViolationClaim> MembershipRuleAgreementViolationClaims { get; set; }
     }

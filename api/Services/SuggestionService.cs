@@ -51,7 +51,7 @@ namespace Services
         public ResponseResource CreateSuggestion(IPrincipal principal, CreateSugestionRequest request)
         {
             var organisationId = request.OrganisationId;
-            var member = GetGuaranteedMember(principal, organisationId);
+            var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, organisationId);
 
             var suggestion = _dependencies.StorageService.SetOf<Suggestion>().Create();
             suggestion.AuthorMember = member;
@@ -65,20 +65,11 @@ namespace Services
             return new ResponseResource();
         }
 
-        private Member GetGuaranteedMember(IPrincipal principal, int organisationId)
-        {
-            var user = _dependencies.UserService.GetAuthenticatedUser(principal);
-            if (user == null || user.MemberAuth0Users.All(m => m.Member.OrganisationId != organisationId))
-            {
-                throw new Exception("Access Denied");
-            }
-            var member = user.MemberAuth0Users.First(m => m.Member.OrganisationId == organisationId && !m.Member.Removed).Member;
-            return member;
-        }
+       
 
         public SearchSugestionsResponse Search(IPrincipal principal, SearchSuggestionsRequest request)
         {
-            var member = GetGuaranteedMember(principal, request.OrganisationId);
+            var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, request.OrganisationId);
 
             var suggestionsQuery = member.Organisation.Members
                 .SelectMany(m => m.Suggestions)
@@ -137,7 +128,7 @@ namespace Services
         {
             var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
             var suggestion = GetGuaranteedSuggestion(request.SuggestionId);
-            var member = GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
+            var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
             if(suggestion.AuthorMemberId != member.Id)
             {
                 _dependencies.OrganisationService.GuaranteeUserHasPermission(user, member.Organisation, ShurahOrganisationPermission.RemoveSuggestion);
@@ -167,7 +158,7 @@ namespace Services
             {
                 return new SuggestionDetailResource { HasError = true, Error = "Suggestion not found." };
             }
-            var member = GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
+            var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
             var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
             return new SuggestionDetailResource
             {
@@ -188,7 +179,7 @@ namespace Services
         public virtual ResponseResource Vote(IPrincipal principal, VoteOnSuggestionsRequest request)
         {
             var suggestion = GetGuaranteedSuggestion(request.SuggestionId);
-            var member = GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
+            var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
             var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
             if (vote == null)
             {
