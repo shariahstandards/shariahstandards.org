@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace WebApiResources
 {
+    public class OrganisationSummaryResource
+    {
+        public int Id { get; set; }
+        public MemberResource Member { get; set; }
+        public List<string> Permissions { get; set; }
+    }
     public class OrganisationResource
     {
         public int Id { get; set; }

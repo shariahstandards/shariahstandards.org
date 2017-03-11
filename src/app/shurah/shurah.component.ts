@@ -32,15 +32,7 @@ export class ShurahComponent implements OnInit {
   }
   private activeModal:NgbModalRef
   closeResult: string;
-  showViewApplicationsLink()
-  {
-    return(this.rootOrganisation
-     && this.rootOrganisation.pendingMembershipApplicationsCount>0
-     && this.rootOrganisation.member
-     && this.rootOrganisation.leaderMember
-     && this.rootOrganisation.member.id && this.rootOrganisation.leaderMember.id
-     && this.rootOrganisation.permissions.indexOf("AcceptMembershipApplication")>=0);
-  }
+ 
 
   applyToJoinOrganisationModel:applyToJoinOrganisationModel
   openModalToJoinOrganisation(content){
@@ -57,6 +49,7 @@ export class ShurahComponent implements OnInit {
       var response = result.json();
       if(response.hasError){
         this.applyToJoinOrganisationModel.errors=[response.error];
+        this.changeDetectorRef.detectChanges();
       }
       else{
         this.applyToJoinOrganisationModel=null;
@@ -280,7 +273,7 @@ export class ShurahComponent implements OnInit {
   hideButtons:boolean=false;
   leave(){
       this.hideButtons=true;
-       this.shurahService.leave().subscribe(result=>{
+       this.shurahService.leave(this.rootOrganisation.id).subscribe(result=>{
         var response = result.json();
         if(response.hasError){
           alert(response.error);

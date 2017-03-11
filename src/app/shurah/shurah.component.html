@@ -1,7 +1,10 @@
+<app-shurah-navigation *ngIf="rootOrganisation!=null" [organisation-id]="rootOrganisation.id"></app-shurah-navigation>
+
 <div *ngIf="rootOrganisation!=null">
   <h2>
     {{rootOrganisation.name}}  
   </h2>
+
   <div *ngIf="rootOrganisation!=null && rootOrganisation.leaderMember!=null">
     Organisation leader:  <img [src]="rootOrganisation.leaderMember.pictureUrl" title="leader picture" width="50"/> {{rootOrganisation.leaderMember.publicName}} 
   </div>
@@ -49,12 +52,8 @@
   <p *ngIf="rootOrganisation && rootOrganisation.hasPendingApplication">
     Application for membership has been submitted - waiting for approval
   </p>
-  <p *ngIf="showViewApplicationsLink()">
-    <a [routerLink]="'/membership-applications/organisation/'+this.rootOrganisation.id">Review Membership Applications</a>
-  </p>
-<div *ngIf="auth.authenticated() && rootOrganisation && rootOrganisation.member!=null">
-  <a [routerLink]="'/suggestions'">Add and View Suggestions</a>
-</div>
+  
+
 <div class="card">
   <p *ngIf="rootOrganisation && rootOrganisation.member!=null && auth.authenticated() && !hideButtons">
 
@@ -197,37 +196,37 @@
         </button>
       </div>
       <div class="modal-body">
-      <div class="form-group">
-          <label for="publicName">Full Name (visible to public)</label>
-          <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.publicName" required maxlength="100" id="publicName" name="publicName">
-      </div>
-      <div class="form-group">
-          <label for="email">Email</label>
-          <input class="form-control" type="email" [(ngModel)]="applyToJoinOrganisationModel.emailAddress" required maxlength="100" id="email" name="email">
-      </div>
-      <div class="form-group">
-          <label for="phoneNumber">Phone</label>
-          <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.phoneNumber" required maxlength="20" id="phoneNumber" name="phoneNumber">
-      </div>
-      <div class="form-check">
-          <label class="form-check-label">
-          <input class="form-check-input"  type="checkbox" [(ngModel)]="rulesAgreedTo" name="rulesAgreedTo" required>
-          I agree to hold to the rules of this organisation and to become a member.</label>
-      </div>
-      <div class="form-group">
+        <div class="form-group">
+            <label for="publicName">Full Name (visible to public)</label>
+            <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.publicName" required maxlength="100" id="publicName" name="publicName">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input class="form-control" type="email" [(ngModel)]="applyToJoinOrganisationModel.emailAddress" required maxlength="100" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Phone</label>
+            <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.phoneNumber" required maxlength="20" id="phoneNumber" name="phoneNumber">
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+            <input class="form-check-input"  type="checkbox" [(ngModel)]="rulesAgreedTo" name="rulesAgreedTo" required>
+            I agree to hold to the rules of this organisation and to become a member.</label>
+        </div>
+        <div class="form-group">
           <label for="publicProfileStatement">Application Supporting Statement</label>
           <textarea rows="2" class="form-control" required maxlength="1000"  id="publicProfileStatement" name="publicProfileStatement"
            col="100" [(ngModel)]="applyToJoinOrganisationModel.publicProfileStatement">
           </textarea>
         </div>
         <ul>
-          <li class="error" *ngFor="let error of errors">
+          <li class="error" *ngFor="let error of applyToJoinOrganisationModel.errors">
             {{error}}
           </li>
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" (click)="applyToJoin()" [disabled]="!rulesAgreedTo">Apply</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!rulesAgreedTo">Apply</button>
         <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
       </div>
     </form>

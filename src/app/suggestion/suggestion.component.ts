@@ -26,9 +26,15 @@ export class SuggestionComponent implements OnInit {
   private getRouteParamsSubscribe:any;
   searchResults:any;
   currentPage:number
+  organisationId:number
   ngOnInit() {
       this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
-      	this.currentPage=params['page'] || 1;
+        this.organisationId=params['organisationId'];
+        if(params['page']!=null){
+          this.currentPage=params['page'];
+        }else{
+          this.currentPage=1;
+        }
       	this.refresh();
      });       
   }

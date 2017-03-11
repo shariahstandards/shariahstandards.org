@@ -28,7 +28,9 @@ import { ShurahComponent } from './shurah/shurah.component'
 import { MembershipRuleSectionComponent } from './shurah/membership-rule-section.component';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { SuggestionDetailsComponent } from './suggestion-details/suggestion-details.component';
-import { MembershipApplicationComponent } from './membership-application/membership-application.component'
+import { MembershipApplicationComponent } from './membership-application/membership-application.component';
+import { ShurahNavigationComponent } from './shurah-navigation/shurah-navigation.component';
+import { MemberComponent } from './member/member.component'
 @NgModule({
   declarations: [
     ShariahStandardsAppComponent,
@@ -45,7 +47,9 @@ import { MembershipApplicationComponent } from './membership-application/members
     MembershipRuleSectionComponent,
     SuggestionComponent,
     SuggestionDetailsComponent,
-    MembershipApplicationComponent
+    MembershipApplicationComponent,
+    ShurahNavigationComponent,
+    MemberComponent
       ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 <div class="container">
 <h3> Review and Approve or Reject Membership Applications </h3>
 <div>
-	<p *ngIf="results==null || results.length==0">
+	<p *ngIf="results==null||results.length==0">
 		No membership applications left to review
 	</p>
 	<div class="card" *ngFor="let application of results">
@@ -41,8 +41,39 @@
 					<img title="member picture" [src]="application.pictureUrl"/>
 				</dd>
 			</dl>
-			<button (click)="accept(application.id)">Accept</button>
+			<button (click)="accept(application.id)" class="btn btn-success">Accept</button>
+			<button (click)="openModalToRejectApplication(applicationRejectionModal, application.id)" class="btn btn-danger">Reject</button>
 		</div>
 	</div>
 </div>
 </div>
+
+<template #applicationRejectionModal let-c="close" let-d="dismiss">
+   <form>
+      <div class="modal-header">
+        <div class="modal-title">Reject Membership Application</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+          <label for="reason">Reason for rejecting this application</label>
+          <textarea rows="2" class="form-control" required maxlength="1000" id="reason" name="reason"
+           col="100" [(ngModel)]="rejectMembershipApplicationModel.reason">
+          </textarea>
+        </div>
+        <ul>
+          <li class="error" *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="reject()">Reject Application</button>
+
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</template>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using StoredObjects;
 using WebApiResources;
 
 namespace Services
@@ -27,7 +28,7 @@ namespace Services
     }
     public interface IMembershipCancellationService
     {
-        MembershipCancellationResponseResource SubmitCancellation(IPrincipal principal);
+        MembershipCancellationResponseResource SubmitCancellation(LeaveOrganisationRequest request, IPrincipal principal);
     }
     public class MembershipCancellationService : IMembershipCancellationService
     {
@@ -38,7 +39,7 @@ namespace Services
             _dependencies = dependencies;
         }
 
-        public virtual MembershipCancellationResponseResource SubmitCancellation(IPrincipal principal)
+        public virtual MembershipCancellationResponseResource SubmitCancellation(LeaveOrganisationRequest request, IPrincipal principal)
         {
             var user = _dependencies.UserService.GetAuthenticatedUser(principal);
             if (user == null)
@@ -50,12 +51,19 @@ namespace Services
                 };
             }
             var membership =
-                user.MemberAuth0Users.FirstOrDefault(x => x.Member.Organisation.ParentOrganisationRelationship == null);
+                user.MemberAuth0Users.FirstOrDefault(x => x.Member.OrganisationId== request.OrganisationId);
             if (membership != null)
             {
                 membership.Member.Removed = true;
-                _dependencies.StorageService.SaveChanges();
             }
+            user.MembershipApplications.Where(m => m.OrganisationId == request.OrganisationId).ToList().ForEach(m =>
+            {
+                m.Acceptances.ToList().ForEach(a=>_dependencies.StorageService.SetOf<MembershipApplicationAcceptance>().Remove(a));
+                _dependencies.StorageService.SetOf<MembershipApplication>().Remove(m);
+
+            });
+            _dependencies.StorageService.SaveChanges();
+
             return new MembershipCancellationResponseResource
             {
                 HasError = false,

@@ -52,6 +52,7 @@ namespace Services
         AllOrganisationPermissionsResource GetAllPermissions(IPrincipal principal, int organisationId);
         ResponseResource DelegatePermission(IPrincipal principal, AddDelegatedPermissionRequest request);
         ResponseResource RemoveDelegatedPermission(IPrincipal principal, RemoveDelegatedPermissionRequest request);
+        OrganisationSummaryResource GetOrganisationSummary(IPrincipal user, GetOrganisationSummaryRequest request);
     }
     public class OrganisationService: IOrganisationService
     {
@@ -101,16 +102,20 @@ namespace Services
                 ,SortTerms(organisation.Terms),user);
             resource.Permissions = GetMemberPermissions(user, organisation);
             resource.LeaderMember = GetLeaderMember(organisation);
-            resource.PendingMembershipApplicationsCount = GetPendingMembershipApplicationsCount(organisation);
+            resource.PendingMembershipApplicationsCount = GetPendingMembershipApplicationsCount(organisation,user);
             return resource;
         }
 
-        public virtual int GetPendingMembershipApplicationsCount(ShurahBasedOrganisation organisation)
+        public virtual int GetPendingMembershipApplicationsCount(ShurahBasedOrganisation organisation, Auth0User user)
         {
             return
                 organisation.MembershipApplications.Count(
-                    a => a.Auth0User.MemberAuth0Users.All(m => m.Member.OrganisationId != organisation.Id ||    
-                    (m.Member.OrganisationId==organisation.Id && m.Member.Removed)));
+                    a =>
+                        (a.Auth0User.MemberAuth0Users.All(m => m.Member.OrganisationId != organisation.Id ||
+                                                               (m.Member.OrganisationId == organisation.Id &&
+                                                                m.Member.Removed)))
+                        &&
+                        !a.Acceptances.Any(ac => ac.AcceptingMember.MemberAuth0Users.Any(u => u.Auth0UserId == user.Id)));
         }
 
         public virtual bool HasAPendingApplication(MemberResource member, Auth0User user, ShurahBasedOrganisation organisation)
@@ -282,6 +287,18 @@ namespace Services
             _dependencies.StorageService.SetOf<DelegatedPermission>().Remove(delegatedPermission);
             _dependencies.StorageService.SaveChanges();
             return new ResponseResource();
+        }
+
+        public virtual OrganisationSummaryResource GetOrganisationSummary(IPrincipal principal, GetOrganisationSummaryRequest request)
+        {
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
+            var org = GetOrganisation(request.OrganisationId);
+
+            return new OrganisationSummaryResource
+            {
+                Member = GetMember(user, org.Members),
+                Permissions = GetPermission(principal,request.OrganisationId)
+            };
         }
 
         public virtual MemberPermissionListResource BuildDelegatedPermissionResource(Member member)

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Services;
+using WebApiResources;
 
 namespace WebApi.Controllers
 {
@@ -16,11 +17,11 @@ namespace WebApi.Controllers
         {
             _service = service;
         }
-        [HttpGet]
+        [HttpPost]
         [Route("Leave")]
-        public HttpResponseMessage Get()
+        public HttpResponseMessage Post(LeaveOrganisationRequest request)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _service.SubmitCancellation(User));
+            return Request.CreateResponse(HttpStatusCode.OK, value: _service.SubmitCancellation(request,User));
         }
     }
 }

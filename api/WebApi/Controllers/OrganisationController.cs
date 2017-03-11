@@ -23,6 +23,12 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.GetRootOrganisation(User));
         }
+        [HttpPost]
+        [Route("GetOrganisationSummary")]
+        public HttpResponseMessage GetOrganisationSummary(GetOrganisationSummaryRequest request) 
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.GetOrganisationSummary(User,request));
+        }
 
         [Route("GetPermissionsForOrganisation/{organisationId}")]
         public HttpResponseMessage Get(int organisationId)
