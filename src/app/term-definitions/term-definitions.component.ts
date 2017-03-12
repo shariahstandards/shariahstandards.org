@@ -87,6 +87,17 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
      this.refresh();
    })
   }
+  deleteTerm(termId:number){
+     this.shurahService.deleteTermDefinition(termId).subscribe(result=>{
+      var response = result.json();
+      if(response.hasError){
+         alert(response.error);
+      }
+      else{
+        this.router.navigateByUrl("/terms/"+this.organisationId);
+      }
+    }) 
+  }
   updateTermDefinition(){
     this.updateTermDefinitionModel.errors=[];
     this.shurahService.updateTermDefinition(this.updateTermDefinitionModel).subscribe(result=>{

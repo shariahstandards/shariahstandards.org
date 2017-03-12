@@ -28,5 +28,10 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.UpdateTermDefinition(User, request));
         }
+        [Route("DeleteTermDefinition")]
+        public HttpResponseMessage Post(DeleteTermDefinitionRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.DeleteTermDefinition(User, request));
+        }
     }
 }

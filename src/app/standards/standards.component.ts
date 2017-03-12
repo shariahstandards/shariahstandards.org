@@ -30,11 +30,11 @@ export class StandardsComponent implements OnInit {
         }
         this.changeDetectorRef.detectChanges();
      });
-     this.shurahService.getRootOrganisation().subscribe(result=>{
-       this.rootOrganisation=result.json();
-       this.changeDetectorRef.detectChanges();
-      // console.log(JSON.stringify(this.rootOrganisation));
-     })
+     // this.shurahService.getRootOrganisation().subscribe(result=>{
+     //   this.rootOrganisation=result.json();
+     //   this.changeDetectorRef.detectChanges();
+     //  // console.log(JSON.stringify(this.rootOrganisation));
+     // })
   }
   rootOrganisation:{}
   toggleCollapse(sectionName:string){

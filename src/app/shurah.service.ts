@@ -117,6 +117,11 @@ export class ShurahService {
 			definition:model.definition
 		})
 	}
+	deleteTermDefinition(termId:number){
+		return this.http.post(shariahStandardsApiUrlBase+"DeleteTermDefinition",{
+			termId:termId,
+		})
+	}
   	getOrganisation(organisationId:number){
   		return this.http.get(shariahStandardsApiUrlBase+"GetOrganisation/"+organisationId);
   	}

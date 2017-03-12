@@ -18,6 +18,10 @@ namespace WebApiResources
         public string Term { get; set; }
         public string Definition { get; set; }
     }
+    public class DeleteTermDefinitionRequest
+    {
+        public int TermId { get; set; }
+    }
     public class UpdateTermDefinitionResponse:ResponseResource
     {
         public int TermId { get; set; }

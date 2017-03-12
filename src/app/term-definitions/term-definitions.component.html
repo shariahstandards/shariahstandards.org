@@ -5,8 +5,11 @@
 <div *ngIf="termDefinitionModel!=null">
 	<dl>
 		<dt>
-		{{termDefinitionModel.term}} 
-		<button (click)="openModalToUpdateTermDefinition(updateTermDefinitionModal,termDefinitionModel)">Edit</button>
+			{{termDefinitionModel.term}} 
+			<span *ngIf=" auth.authenticated() && allow('EditMembershipRules')">
+				<button class="btn btn-default" (click)="openModalToUpdateTermDefinition(updateTermDefinitionModal,termDefinitionModel)">Edit</button>
+				<button  class="btn btn-danger" (click)="deleteTerm(termDefinitionModel.id)">Delete</button>
+			</span>
 		</dt>
 		<dd>
 			<span *ngFor="let fragment of termDefinitionModel.definition">

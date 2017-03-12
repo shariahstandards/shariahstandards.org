@@ -34,6 +34,7 @@ namespace Services
     {
         CreateTermDefinitionResponse CreateTermDefinition(IPrincipal principal, CreateTermDefinitionRequest request);
         UpdateTermDefinitionResponse UpdateTermDefinition(IPrincipal principal, UpdateTermDefinitionRequest request);
+        ResponseResource DeleteTermDefinition(IPrincipal principal, DeleteTermDefinitionRequest request);
     }
     public class TermDefinitionService: ITermDefinitionService
     {
@@ -105,6 +106,25 @@ namespace Services
                 TermId = term.Id,
                 Term = term.Term
             };
+        }
+
+        public ResponseResource DeleteTermDefinition(IPrincipal principal, DeleteTermDefinitionRequest request)
+        {
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
+            var term =
+                _dependencies.StorageService.SetOf<MembershipRuleTermDefinition>()
+                    .SingleOrDefault(t => t.Id == request.TermId);
+            if (term == null)
+            {
+                throw new Exception("Term not found");
+            }
+
+            var organisation = _dependencies.OrganisationService.GetOrganisation(term.OrganisationId);
+            _dependencies.OrganisationService.GuaranteeUserHasPermission(user, organisation, ShurahOrganisationPermission.EditMembershipRules);
+            _dependencies.StorageService.SetOf<MembershipRuleTermDefinition>().Remove(term);
+
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
         }
     }
 }
