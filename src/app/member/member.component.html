@@ -1,3 +1,18 @@
-<p>
-  member works!
+<app-shurah-navigation [organisation-id]="organisationId"></app-shurah-navigation>
+<p *ngIf="searchResults==null">
+  loading...
 </p>
+<div class="container" *ngIf="searchResults!=null">
+	<h2>Members of {{searchResults.organisationName}}</h2>
+	<div *ngIf="searchResults.members.length==0">
+		No members found
+	</div>
+	<div class="card" *ngFor="let member of searchResults.members">
+		<div class="card-header">
+			{{member.publicName}}
+		</div>
+		<div class="card-block">
+			<img width="100" [src]="member.pictureUrl" title="picture of member"/>
+		</div>
+	</div>
+</div>

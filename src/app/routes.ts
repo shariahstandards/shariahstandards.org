@@ -11,6 +11,7 @@ import {zakatRoutes} from './zakat-calculator/zakat-calculator.component.routes'
 import {inheritanceRoutes} from './inheritance-calculator/inheritance-calculator.component.routes'
 import {suggestionRoutes} from './suggestion/suggestion.component.routes'
 import {membershipApplicationRoutes} from './membership-application/membership-application.component.routes'
+import {memberRoutes} from './member/member.component.routes'
 const appRoutes: Routes = [
   ...termDefinitionsRoutes,
   // ...standardsRoutes,
@@ -20,6 +21,7 @@ const appRoutes: Routes = [
   ...quranSearchRoutes,
   ...suggestionRoutes,
   ...membershipApplicationRoutes,
+  ...memberRoutes,
   { path: '', component: PrayerTimesComponent },
   { path: 'about-us', component: AboutUsComponent }
 ];

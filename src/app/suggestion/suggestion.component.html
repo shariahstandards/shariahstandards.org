@@ -1,24 +1,24 @@
 <app-shurah-navigation [organisation-id]="organisationId"></app-shurah-navigation>
-
-<h2>Suggestions for ShariahStandards.org</h2>
 <p *ngIf="searchResults==null">
-  unexpected error
+  loading...
 </p>
-<span *ngIf="auth.authenticated()">
-    <button (click)="openModalToAddSuggestion(addSuggestionModal)" title="Add suggestion">Add new suggestion*</button>
-</span>
-<div *ngIf="searchResults">
-	<span *ngIf="searchResults.suggestions.length==0">
-		No suggestions found.
-	</span>
-	<ul *ngIf="searchResults.suggestions.length>0">
-  	<li *ngFor="let suggestion of searchResults.suggestions">
-      From: <img [src]="suggestion.authorPictureUrl" title="author picture" width="50"/> {{suggestion.authorPublicName}}       On: {{formatDate(suggestion.dateTimeText)}} {{suggestion.netSupportPercent}}% Agreeing ({{suggestion.votingPercent}}% Voting)
-      <a [routerLink]="'/suggestion/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a> 
-  	</li>
-	</ul>
+<div class="container" *ngIf="searchResults!=null">
+  <h2>Suggestions for {{searchResults.organisationName}}</h2>
+  <span *ngIf="auth.authenticated()">
+      <button (click)="openModalToAddSuggestion(addSuggestionModal)" title="Add suggestion">Add new suggestion*</button>
+  </span>
+  <div *ngIf="searchResults">
+  	<span *ngIf="searchResults.suggestions.length==0">
+  		No suggestions found.
+  	</span>
+  	<ul *ngIf="searchResults.suggestions.length>0">
+    	<li *ngFor="let suggestion of searchResults.suggestions">
+        From: <img [src]="suggestion.authorPictureUrl" title="author picture" width="50"/> {{suggestion.authorPublicName}}       On: {{formatDate(suggestion.dateTimeText)}} {{suggestion.netSupportPercent}}% Agreeing ({{suggestion.votingPercent}}% Voting)
+        <a [routerLink]="'/suggestions/'+organisationId+'/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a> 
+    	</li>
+  	</ul>
+  </div>
 </div>
-
 <template #addSuggestionModal let-c="close" let-d="dismiss">
    <form>
       <div class="modal-header">

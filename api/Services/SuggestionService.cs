@@ -81,6 +81,7 @@ namespace Services
             return new SearchSugestionsResponse
             {
                 OrganisationId = request.OrganisationId,
+                OrganisationName = member.Organisation.Name,
                 PageCount = suggestionsQuery.Count()/100,
                 Suggestions = suggestions.Select(BuildSummarySuggestion).ToList()
             };
@@ -161,7 +162,8 @@ namespace Services
             var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
             var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
             return new SuggestionDetailResource
-            {
+            {   
+                OrganisationId=suggestion.AuthorMember.OrganisationId,
                 Suggestion = suggestion.FullText,
                 SuggestionSummary = BuildSummarySuggestion(suggestion),
                 UserVoteId = vote?.Id,

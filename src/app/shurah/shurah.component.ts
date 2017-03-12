@@ -36,7 +36,7 @@ export class ShurahComponent implements OnInit {
 
   applyToJoinOrganisationModel:applyToJoinOrganisationModel
   openModalToJoinOrganisation(content){
-    this.applyToJoinOrganisationModel=new applyToJoinOrganisationModel(this.rootOrganisation.name,this.rootOrganisation.id);
+    this.applyToJoinOrganisationModel=new applyToJoinOrganisationModel(this.organisation.name,this.organisation.id);
     this.activeModal= this.modalService.open(content);
     document.getElementById('publicName').focus();
     this.activeModal.result.then(()=>{
@@ -174,16 +174,21 @@ export class ShurahComponent implements OnInit {
   private getRouteParamsSubscribe:any;
   expandedSections:string[]=[]
   routedSection:string
+  organisationId:number
   ngOnInit() {
-     this.refresh();
      this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
+        if(params['organisationId']!=null){
+          this.organisationId=params['organisationId'];
+        }
+        else{
+          this.organisationId=1;
+        }
         if(params['section']){
           this.routedSection=params['section'];
 
           this.expandedSections=this.routedSection.split('_');
-          //[].concat([params['section']]);
         }
-        this.changeDetectorRef.detectChanges();
+        this.refresh();
      });       
   }
   setActiveSection(section:membershipRuleSectionModel){
@@ -194,7 +199,7 @@ export class ShurahComponent implements OnInit {
   }
   allow(action:string)
   {
-    if(this.rootOrganisation.permissions.some(p=>{
+    if(this.organisation.permissions.some(p=>{
       return p==action;
     })){
       return true;
@@ -259,21 +264,21 @@ export class ShurahComponent implements OnInit {
     }) 
   }
   refresh(){
-    this.rootOrganisation=null;
+    this.organisation=null;
     this.changeDetectorRef.detectChanges();
-    this.shurahService.getRootOrganisation().subscribe(result=>{
-      this.rootOrganisation=result.json();
+    this.shurahService.getOrganisation(this.organisationId).subscribe(result=>{
+      this.organisation=result.json();
       this.hideButtons=false;
       this.changeDetectorRef.detectChanges();
       // this.changeDetectorRef.detectChanges();
-      // console.log(JSON.stringify(this.rootOrganisation));
+      // console.log(JSON.stringify(this.organisation));
      })
   }
  
   hideButtons:boolean=false;
   leave(){
       this.hideButtons=true;
-       this.shurahService.leave(this.rootOrganisation.id).subscribe(result=>{
+       this.shurahService.leave(this.organisation.id).subscribe(result=>{
         var response = result.json();
         if(response.hasError){
           alert(response.error);
@@ -282,5 +287,5 @@ export class ShurahComponent implements OnInit {
         }
       });
     }
-  rootOrganisation:organisationModel
+  organisation:organisationModel
 }

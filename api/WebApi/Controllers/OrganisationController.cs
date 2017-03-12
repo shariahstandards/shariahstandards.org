@@ -18,10 +18,10 @@ namespace WebApi.Controllers
         {
             _service = service;
         }
-        [Route("RootOrganisation")]
-        public HttpResponseMessage Get()
+        [Route("GetOrganisation/{organisationId}")]
+        public HttpResponseMessage Get(int organisationId)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _service.GetRootOrganisation(User));
+            return Request.CreateResponse(HttpStatusCode.OK, _service.GetOrganisation(User,organisationId));
         }
         [HttpPost]
         [Route("GetOrganisationSummary")]
@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         }
 
         [Route("GetPermissionsForOrganisation/{organisationId}")]
-        public HttpResponseMessage Get(int organisationId)
+        public HttpResponseMessage GetPermissions(int organisationId)
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.GetPermission(User, organisationId));
         }

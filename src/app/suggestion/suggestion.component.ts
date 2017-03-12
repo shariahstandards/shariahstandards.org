@@ -52,7 +52,7 @@ export class SuggestionComponent implements OnInit {
 	 	})
   }
     AddSuggestion(){
-    this.shurahService.addSuggestion(1,this.addSuggestionModel).subscribe(response=>{
+    this.shurahService.addSuggestion(this.organisationId,this.addSuggestionModel).subscribe(response=>{
     	var data = response.json();
     	if(data.hasError){
     		this.addSuggestionModel.errors=[data.error];

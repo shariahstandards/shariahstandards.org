@@ -13,31 +13,35 @@ using WebApiResources;
 
 namespace UnitTests.OrganisationServiceTests
 {
-    public class GettingRootLevelOrganisation:OrganisationServiceTestContext
+    public class GettingOrganisation:OrganisationServiceTestContext
     {
         [Test]
         public void ReturnsTheSingleOrganisationWithoutAParentOrganisation()
         {
-            MethodToTest(()=>service.GetRootOrganisation(A<IPrincipal>.Ignored));
+            MethodToTest(()=>service.GetOrganisation(A<IPrincipal>.Ignored,A<int>.Ignored));
 
+            var organisationId = 2;
             var principal = A.Fake<IPrincipal>();
             var user = new Auth0User();
             A.CallTo(() => dependencies.UserService.GetAuthenticatedUser(principal)).Returns(user);
-            var rootOrg = new ShurahBasedOrganisation();
+            var org = new ShurahBasedOrganisation();
             var orgs = A.Fake<IDbSet<ShurahBasedOrganisation>>();
             A.CallTo(() => dependencies.StorageService.SetOf<ShurahBasedOrganisation>()).Returns(orgs);
             A.CallTo(() => dependencies.LinqService.Single(orgs,
                 A<Expression<Func<ShurahBasedOrganisation, bool>>>.That.Matches(x =>
-                    x.Compile().Invoke(new ShurahBasedOrganisation())
+                    x.Compile().Invoke(new ShurahBasedOrganisation
+                    {
+                        Id = organisationId
+                    })
                     && !x.Compile().Invoke(new ShurahBasedOrganisation
                     {
-                        ParentOrganisationRelationship = new OrganisationRelationship()
+                        Id = organisationId+1
                     })
-                    ))).Returns(rootOrg);
+                    ))).Returns(org);
             var organisationResource = new OrganisationResource();
-            A.CallTo(() => service.BuildOrganisationResource(rootOrg, user)).Returns(organisationResource);
+            A.CallTo(() => service.BuildOrganisationResource(org, user)).Returns(organisationResource);
 
-            var result = service.GetRootOrganisation(principal);
+            var result = service.GetOrganisation(principal,organisationId);
 
             Assert.AreSame(organisationResource,result);
         }

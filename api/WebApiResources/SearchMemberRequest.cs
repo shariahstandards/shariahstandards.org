@@ -10,6 +10,7 @@ namespace WebApiResources
     public class SearchMemberResponse : ResponseResource
     {
         public int OrganisationId { get; set; }
+        public string OrganisationName { get; set; }
         public int PageCount { get; set; }
         public List<SearchedMemberResource> Members { get; set; }
     }

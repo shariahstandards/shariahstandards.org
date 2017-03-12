@@ -18,6 +18,13 @@ export class ShurahService {
 	constructor(private http: Http) { 
 		
 	}
+	searchForMembers(organisationId:number,page:number){
+		return this.http.post(shariahStandardsApiUrlBase+"SearchForMembers",{
+			organisationId:organisationId,
+			page:page
+		});
+	}
+
 	rejectMembershipApplication(model:RejectMembershipApplicationModel){
 		return this.http.post(shariahStandardsApiUrlBase+"RejectMembershipApplication",{
 			id:model.applicationId,
@@ -98,8 +105,8 @@ export class ShurahService {
 			definition:model.definition
 		})
 	}
-  	getRootOrganisation(){
-  		return this.http.get(shariahStandardsApiUrlBase+"RootOrganisation");
+  	getOrganisation(organisationId:number){
+  		return this.http.get(shariahStandardsApiUrlBase+"GetOrganisation/"+organisationId);
   	}
 	
 	leave(organisationId:number){

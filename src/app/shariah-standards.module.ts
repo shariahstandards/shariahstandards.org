@@ -30,7 +30,8 @@ import { SuggestionComponent } from './suggestion/suggestion.component';
 import { SuggestionDetailsComponent } from './suggestion-details/suggestion-details.component';
 import { MembershipApplicationComponent } from './membership-application/membership-application.component';
 import { ShurahNavigationComponent } from './shurah-navigation/shurah-navigation.component';
-import { MemberComponent } from './member/member.component'
+import { MemberComponent } from './member/member.component';
+import { MemberDetailsComponent } from './member-details/member-details.component'
 @NgModule({
   declarations: [
     ShariahStandardsAppComponent,
@@ -49,7 +50,8 @@ import { MemberComponent } from './member/member.component'
     SuggestionDetailsComponent,
     MembershipApplicationComponent,
     ShurahNavigationComponent,
-    MemberComponent
+    MemberComponent,
+    MemberDetailsComponent
       ],
   imports: [
     BrowserModule,

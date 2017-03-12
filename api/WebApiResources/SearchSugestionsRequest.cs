@@ -11,6 +11,7 @@ namespace WebApiResources
     public class SearchSugestionsResponse:ResponseResource
     {
         public int OrganisationId { get; set; }
+        public string OrganisationName { get; set; }
         public int PageCount { get; set; }
         public List<SuggestionSummaryResource> Suggestions { get; set; } 
     }
@@ -38,5 +39,6 @@ namespace WebApiResources
         public int AbstentionCount { get; set; }
         public List<string> MemberPermissions { get; set; }
         public bool UsersOwnSuggestion { get; set; }
+        public int OrganisationId { get; set; }
     }
 }

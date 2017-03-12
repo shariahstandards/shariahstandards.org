@@ -37,7 +37,7 @@ namespace Services
     }
     public interface IOrganisationService
     {
-        OrganisationResource GetRootOrganisation(IPrincipal principal);
+        OrganisationResource GetOrganisation(IPrincipal principal, int organisationId);
         ShurahBasedOrganisation GetOrganisation(int organisationId);
         List<string> GetMemberPermissions(Auth0User user, ShurahBasedOrganisation organisation);
         List<string> GetMemberPermissions(Auth0User user, MembershipRuleSection section);
@@ -74,11 +74,11 @@ namespace Services
             return member;
         }
 
-        public virtual OrganisationResource GetRootOrganisation(IPrincipal principal)
+        public virtual OrganisationResource GetOrganisation(IPrincipal principal, int organisationId)
         {
             var org = _dependencies.LinqService.Single(
               _dependencies.StorageService.SetOf<ShurahBasedOrganisation>(),
-              o => o.ParentOrganisationRelationship == null);
+              o => o.Id==organisationId);
             var user = _dependencies.UserService.GetAuthenticatedUser(principal);
             return BuildOrganisationResource(org, user);
         }

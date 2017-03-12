@@ -1,26 +1,23 @@
-<app-shurah-navigation *ngIf="rootOrganisation!=null" [organisation-id]="rootOrganisation.id"></app-shurah-navigation>
+<app-shurah-navigation *ngIf="organisation!=null" [organisation-id]="organisation.id"></app-shurah-navigation>
 
-<div *ngIf="rootOrganisation!=null">
+<div *ngIf="organisation!=null">
   <h2>
-    {{rootOrganisation.name}}  
+    Membership Rules of {{organisation.name}}  
   </h2>
 
-  <div *ngIf="rootOrganisation!=null && rootOrganisation.leaderMember!=null">
-    Organisation leader:  <img [src]="rootOrganisation.leaderMember.pictureUrl" title="leader picture" width="50"/> {{rootOrganisation.leaderMember.publicName}} 
-  </div>
+ 
  <!--  <pre>
     {{expandedSections|json}}
 
   </pre> -->
-    <div *ngIf="rootOrganisation.ruleSections.length==0">
+    <div *ngIf="organisation.ruleSections.length==0">
     <p>No rules have been set for this organisation</p>
   </div>
-  <h3>Membership Rules</h3>
   <span *ngIf="auth.authenticated() && allow('EditMembershipRules')">
       <button (click)="openModalToAddMembershipRuleSection(addSectionModal)" title="add top level membership rule section">&sect;*</button>
   </span>
   <div>
-    <div class="section" *ngFor="let section of rootOrganisation.ruleSections" [id]="section.uniqueName">
+    <div class="section" *ngFor="let section of organisation.ruleSections" [id]="section.uniqueName">
       <membership-rule-section 
       (cutSection)="cutSection($event)"
       (deleteSection)="deleteSection($event)"
@@ -45,21 +42,39 @@
   </div>
  
 </div>
- 
- <p *ngIf="rootOrganisation && rootOrganisation.member==null && auth.authenticated() && !hideButtons && !rootOrganisation.hasPendingApplication">
-    <button (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)"> Apply to join </button>
-  </p>
-  <p *ngIf="rootOrganisation && rootOrganisation.hasPendingApplication">
-    Application for membership has been submitted - waiting for approval
-  </p>
-  
-
+<br/>
 <div class="card">
-  <p *ngIf="rootOrganisation && rootOrganisation.member!=null && auth.authenticated() && !hideButtons">
+  <div class="card-header">
+    <h4>Membership Status</h4>
+  </div>
+  <div class="card-block">
+    <p *ngIf="!auth.authenticated()">
+      Log in above to see membership status
+    </p>
+    <p *ngIf="organisation && organisation.member==null && auth.authenticated() && !hideButtons && !organisation.hasPendingApplication">
+      You are currently not a member of this organisation.
+      <button (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)"> Apply to join </button>
+    </p>
+    <p *ngIf="organisation && organisation.member!=null && auth.authenticated() && !hideButtons">
+    You are a now member of this organisation, agreeing to these membership rules. If you do not wish to continue you may leave by clicking this button:<br/><br/>
+      I no longer agree to hold to the rules of this organisation and want to stop being a member.
+      <button (click)="leave()"> Leave </button>
+    </p>
+    <p *ngIf="organisation && organisation.hasPendingApplication">
+      You are currently not a member of this organisation.<br/>
+      Your application for membership has been submitted and is waiting for approval
+    </p>
+  </div>
+</div>
 
-    I no longer agree to hold to the rules of this organisation and want to stop being a member.
-    <button (click)="leave()"> Leave </button>
-  </p>
+  <div class="card"*ngIf="organisation!=null && organisation.leaderMember!=null">
+    <div class="card-header">
+     <h4> Organisation leader</h4> 
+    </div>
+    <div class="card-block">
+     <img [src]="organisation.leaderMember.pictureUrl" title="leader picture" width="50"/> 
+       {{organisation.leaderMember.publicName}} 
+     </div>
   </div>
 
 <template #addSectionModal let-c="close" let-d="dismiss">

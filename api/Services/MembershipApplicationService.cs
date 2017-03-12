@@ -54,6 +54,7 @@ namespace Services
 
             var existingMemberWithSameEmailAddress = _dependencies.StorageService.SetOf<Member>()
                 .FirstOrDefault(m => m.OrganisationId == request.OrganisationId
+                                    && !m.Removed
                                      && m.MemberAuth0Users.Any(a => a.Auth0UserId != user.Id)
                                      && m.EmailAddress == request.EmailAddress);
 

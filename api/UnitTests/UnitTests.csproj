@@ -74,7 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OrganisationServiceTests\GettingRootLevelOrganisation.cs" />
+    <Compile Include="OrganisationServiceTests\GettingOrganisation.cs" />
     <Compile Include="OrganisationServiceTests\OrganisationServiceTestContext.cs" />
     <Compile Include="OrganisationServiceTests\ParseQuranReference.cs" />
     <Compile Include="UserServiceTests\FakeDbSet.cs" />

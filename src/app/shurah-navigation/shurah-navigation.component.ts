@@ -21,7 +21,7 @@ export class ShurahNavigationComponent implements OnInit {
       return false
     }
     console.log(JSON.stringify(this.organisation));
-    return this.organisation.permissions.indexOf(permission)
+    return this.organisation.permissions.indexOf(permission)>=0
   }
   organisation:any
   ngOnInit(){

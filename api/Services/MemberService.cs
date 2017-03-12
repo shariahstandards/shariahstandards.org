@@ -45,6 +45,7 @@ namespace Services
             var response = new SearchMemberResponse();
             var members = member.Organisation.Members;
             response.OrganisationId = request.OrganisationId;
+            response.OrganisationName = member.Organisation.Name;
             response.PageCount = members.Count/10;
             response.Members = members.Skip(((request.Page ?? 1) - 1)*10).Take(10).Select(BuildSearchedMemberResource).ToList();
             return response;

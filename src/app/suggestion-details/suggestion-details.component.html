@@ -3,7 +3,8 @@
 </p>
 <div class="container">
 	<div *ngIf="suggestion!=null">
-		<h3>Suggestion</h3>
+	<app-shurah-navigation [organisation-id]="suggestion.organisationId"></app-shurah-navigation>
+	<h3>Suggestion</h3>
 		<div>From: <img [src]="suggestion.suggestionSummary.authorPictureUrl" title="author picture" width="50"/> 
 				{{suggestion.suggestionSummary.authorPublicName}}   
 			<br/>
@@ -42,6 +43,6 @@
 			this suggestion
 			<button class="btn btn-default" (click)="removeVote(suggestion.userVoteId)">Remove</button>
 		</div>
-		<a [routerLink]="'/suggestions'">back to suggestion list</a> 
+		<a [routerLink]="'/suggestions/'+suggestion.organisationId">back to suggestion list</a> 
 	</div>
 </div>
