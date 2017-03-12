@@ -57,5 +57,11 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.GetTermDefinition(termId,organisationId));
         }
+        [Route("GetTermList/{organisationId}")]
+        public HttpResponseMessage GetTermList(int organisationId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.GetTermList(User,organisationId));
+        }
+        
     }
 }

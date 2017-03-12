@@ -12,6 +12,17 @@ namespace WebApiResources
         public string Term { get; set; }
         public string Definition { get; set; }
     }
+    public class UpdateTermDefinitionRequest
+    {
+        public int TermId { get; set; }
+        public string Term { get; set; }
+        public string Definition { get; set; }
+    }
+    public class UpdateTermDefinitionResponse:ResponseResource
+    {
+        public int TermId { get; set; }
+        public string Term { get; set; }
+    }
     public class CreateTermDefinitionResponse:ResponseResource
     {
         public int Id { get; set; }

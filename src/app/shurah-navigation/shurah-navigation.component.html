@@ -2,6 +2,10 @@
   <a routerLinkActive="active-route" [routerLink]="'/rules/'+organisationId">
   	Rules
   </a>
+  <a routerLinkActive="active-route" [routerLink]="'/terms/'+organisationId">
+    Terminology
+  </a>
+
   <a routerLinkActive="active-route" *ngIf="auth.authenticated() && organisation && organisation.member!=null"  [routerLink]="'/members/'+organisationId">
   	Members
   </a>

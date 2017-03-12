@@ -12,6 +12,8 @@ import {addMembershipRuleModel} from './shurah/add-membership-rule.model'
 import {addSuggestionModel} from './suggestion/add-suggestion-model'
 import {applyToJoinOrganisationModel} from './shurah/apply-to-join-organisation.model'
 import {RejectMembershipApplicationModel} from './membership-application/reject-membership-application.model'
+import {updateTermDefinitionModel} from './term-definitions/update-term-definition.model'
+
 @Injectable()
 export class ShurahService {
 
@@ -87,7 +89,7 @@ export class ShurahService {
 			votingInSupport:inFavour
 		});
 	}
-	removeVoteOnSuggestion(voteId:number,){
+	removeVoteOnSuggestion(voteId:number){
 		return this.http.post(shariahStandardsApiUrlBase+"RemoveVote",{
 			voteId:voteId
 		});
@@ -95,12 +97,22 @@ export class ShurahService {
 	getPermissionsForOrganisation(organisationId:number){
 		return this.http.get(shariahStandardsApiUrlBase+"GetPermissionsForOrganisation/"+organisationId);
 	}
+	getTermList(organisationId:number){
+		return this.http.get(shariahStandardsApiUrlBase+"GetTermList/"+organisationId);
+	}
 	getTermDefinition(termId:number,organisationId:number){
 		return this.http.get(shariahStandardsApiUrlBase+"getTermDefinition/"+termId+'/'+organisationId);
 	}
 	createTermDefinition(model:addTermDefinitionModel,organisationId:number){
 		return this.http.post(shariahStandardsApiUrlBase+"CreateTermDefinition",{
 			organisationId:organisationId,
+			term:model.term,
+			definition:model.definition
+		})
+	}
+	updateTermDefinition(model:updateTermDefinitionModel){
+		return this.http.post(shariahStandardsApiUrlBase+"UpdateTermDefinition",{
+			termId:model.termId,
 			term:model.term,
 			definition:model.definition
 		})

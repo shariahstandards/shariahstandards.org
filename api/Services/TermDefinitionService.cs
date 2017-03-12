@@ -33,6 +33,7 @@ namespace Services
     public interface ITermDefinitionService
     {
         CreateTermDefinitionResponse CreateTermDefinition(IPrincipal principal, CreateTermDefinitionRequest request);
+        UpdateTermDefinitionResponse UpdateTermDefinition(IPrincipal principal, UpdateTermDefinitionRequest request);
     }
     public class TermDefinitionService: ITermDefinitionService
     {
@@ -68,6 +69,41 @@ namespace Services
             {
                 Id = defn.Id,
                 Term = defn.Term
+            };
+        }
+
+        public virtual UpdateTermDefinitionResponse UpdateTermDefinition(IPrincipal principal, UpdateTermDefinitionRequest request)
+        {
+            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
+            var term =
+                _dependencies.StorageService.SetOf<MembershipRuleTermDefinition>()
+                    .SingleOrDefault(t => t.Id == request.TermId);
+            if (term == null)
+            {
+                throw new Exception("Term not found");
+            }
+
+            var organisation = _dependencies.OrganisationService.GetOrganisation(term.OrganisationId);
+            _dependencies.OrganisationService.GuaranteeUserHasPermission(user, organisation, ShurahOrganisationPermission.EditMembershipRules);
+            var existingSimilarTerm = _dependencies.StorageService.SetOf<MembershipRuleTermDefinition>()
+                    .FirstOrDefault(t => t.Id != request.TermId && t.Term==request.Term);
+
+            if (existingSimilarTerm != null)
+            {
+                return new UpdateTermDefinitionResponse
+                {
+                    HasError = true,
+                    Error = "This term is already defined"
+                };
+            }
+
+            term.Term = request.Term;
+            term.Definition = request.Definition;
+            _dependencies.StorageService.SaveChanges();
+            return new UpdateTermDefinitionResponse
+            {
+                TermId = term.Id,
+                Term = term.Term
             };
         }
     }

@@ -1,5 +1,6 @@
 export interface termDefinitionModel{
-  id:string
+  id:number
   term:string
   definition:any[]
+  rawDefinition:string
 }

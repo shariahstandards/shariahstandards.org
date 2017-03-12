@@ -10,6 +10,7 @@ namespace WebApiResources
     {
         public string Term { get; set; }
         public int Id { get; set; }
+        public string RawDefinition { get; set; }
         public List<TextFragmentResource> Definition { get; set; }
     }
 }

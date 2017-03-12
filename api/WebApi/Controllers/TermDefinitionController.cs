@@ -23,5 +23,10 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.CreateTermDefinition(User, request));
         }
+        [Route("UpdateTermDefinition")]
+        public HttpResponseMessage Post(UpdateTermDefinitionRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.UpdateTermDefinition(User, request));
+        }
     }
 }

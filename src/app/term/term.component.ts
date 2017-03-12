@@ -10,6 +10,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class TermComponent implements OnInit {
   @Input("term") term:string	
   @Input("term-id") termId:string	
+  @Input("organisation-id") organisationId:string	
   constructor() { }
 
   ngOnInit() {

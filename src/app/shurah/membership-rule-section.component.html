@@ -34,7 +34,7 @@
 				<span *ngFor="let fragment of rule.ruleFragments">
 					<span *ngIf="fragment.isPlainText">{{fragment.text}}</span>
 					<span *ngIf="fragment.isTerm">
-						<term term-id="{{fragment.termId}}" term="{{fragment.text}}">{{fragment.text}}</term>
+						<term [term-id]="fragment.termId" [term]="fragment.text" [organisation-id]="section.organisationId">{{fragment.text}}</term>
 					</span>
 					<span *ngIf="fragment.quranReference!=null">
 						<a routerLinkActive="active-route" [routerLink]="'/quran/surah/'+fragment.quranReference.surah+'/verse/'+fragment.quranReference.verse">

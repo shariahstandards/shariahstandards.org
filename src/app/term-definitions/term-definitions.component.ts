@@ -6,7 +6,7 @@ import { addTermDefinitionModel} from './add-term-definition.model'
 import {termDefinitionModel} from './term-definition.model'
 import { AuthService } from '../auth.service';
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-
+import {updateTermDefinitionModel} from './update-term-definition.model'
 @Component({
   //moduleId: module.id,
   selector: 'app-term-definitions',
@@ -24,7 +24,6 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
     private modalService: NgbModal,
     private router:Router
   	) {
-    this.refresh();
   }
   termDefinitionModel:termDefinitionModel
   addTermDefinitionModel:addTermDefinitionModel
@@ -39,12 +38,20 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
     }
     return false;
   }
+  organisationId:number
   ngOnInit() {
-    this.shurahService.getPermissionsForOrganisation(1).subscribe(res=>{
-      this.permissions = res.json();
-    });
+
+    
 	  this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
-	  	this.termId=params['termId'];
+	    if(params['organisationId']!=null){
+        this.organisationId=params['organisationId'];
+      }else{
+        this.organisationId=1;
+      }
+    	this.termId=params['termId'];
+      this.shurahService.getPermissionsForOrganisation(this.organisationId).subscribe(res=>{
+        this.permissions = res.json();
+      });
 	  	this.refresh();
 	 });
   }
@@ -60,21 +67,44 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   }
   addTermDefinition(){
     this.addTermDefinitionModel.errors=[];
-    this.shurahService.createTermDefinition(this.addTermDefinitionModel,1).subscribe(result=>{
+    this.shurahService.createTermDefinition(this.addTermDefinitionModel,this.organisationId).subscribe(result=>{
       var response = result.json();
       if(response.hasError){
        this.addTermDefinitionModel.errors.push(response.error);
       }
       else{
-        this.activeModal.close('rule added');
+        this.activeModal.close('term added');
         this.router.navigateByUrl("/terms/"+response.id+"/"+response.term);
       }
     })
   }
+  updateTermDefinitionModel:updateTermDefinitionModel
+  openModalToUpdateTermDefinition(content,definitionModel:any) {
+   this.updateTermDefinitionModel= new updateTermDefinitionModel(definitionModel);
+   this.activeModal= this.modalService.open(content);
+   document.getElementById('term').focus();
+   this.activeModal.result.then(()=>{
+     this.refresh();
+   })
+  }
+  updateTermDefinition(){
+    this.updateTermDefinitionModel.errors=[];
+    this.shurahService.updateTermDefinition(this.updateTermDefinitionModel).subscribe(result=>{
+      var response = result.json();
+      if(response.hasError){
+       this.updateTermDefinitionModel.errors.push(response.error);
+      }
+      else{
+        this.activeModal.close('term updater');
+        this.router.navigateByUrl("/terms/"+this.organisationId+"/"+response.termId+"/"+response.term);
+      }
+    }) 
+  }
   termId:number
+  termList:any[]
   refresh(){
     if(this.termId!=null){
-      this.shurahService.getTermDefinition(this.termId,1).subscribe(result=>{
+      this.shurahService.getTermDefinition(this.termId,this.organisationId).subscribe(result=>{
         var response = result.json();
         if(response.hasError){
          alert(response.error);
@@ -83,6 +113,15 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
         }
       })
     }
+    this.shurahService.getTermList(this.organisationId).subscribe(result=>{
+      var response = result.json();
+      if(response.hasError){
+       alert(response.error);
+      }else{
+        this.termList=response
+      }
+    })
+  
   }
   ngOnDestroy() {
   	this.getRouteParamsSubscribe.unsubscribe();

@@ -61,6 +61,7 @@
     <Compile Include="SearchMemberRequest.cs" />
     <Compile Include="SearchSugestionsRequest.cs" />
     <Compile Include="TermDefinitionResource.cs" />
+    <Compile Include="TermListResource.cs" />
     <Compile Include="UpdateMembershipRuleSectionRequest.cs" />
     <Compile Include="UserProfileResource.cs" />
   </ItemGroup>

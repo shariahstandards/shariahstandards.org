@@ -53,6 +53,7 @@ namespace Services
         ResponseResource DelegatePermission(IPrincipal principal, AddDelegatedPermissionRequest request);
         ResponseResource RemoveDelegatedPermission(IPrincipal principal, RemoveDelegatedPermissionRequest request);
         OrganisationSummaryResource GetOrganisationSummary(IPrincipal user, GetOrganisationSummaryRequest request);
+        TermListResource GetTermList(IPrincipal principal, int organisationId);
     }
     public class OrganisationService: IOrganisationService
     {
@@ -220,6 +221,7 @@ namespace Services
             return new TermDefinitionResource
             {
                 Term = term.Term,
+                RawDefinition = term.Definition,
                 Id=term.Id,
                 Definition= ParseRuleStatement(term.Definition, organisation.Terms)
             };
@@ -301,6 +303,26 @@ namespace Services
             };
         }
 
+        public virtual TermListResource GetTermList(IPrincipal principal, int organisationId)
+        {
+            var org = GetOrganisation(organisationId);
+            return new TermListResource
+            {
+                OrganisationName=org.Name,
+                OrganisationId=org.Id,
+                Terms = org.Terms.OrderBy(t=>t.Term).Select(BuildTermResource).ToList(),
+            };
+        }
+
+        public virtual TermResource BuildTermResource(MembershipRuleTermDefinition termDefinition)
+        {
+            return new TermResource
+            {
+                Term = termDefinition.Term,
+                TermId = termDefinition.Id,
+            };
+        }
+
         public virtual MemberPermissionListResource BuildDelegatedPermissionResource(Member member)
         {
             return new MemberPermissionListResource
@@ -347,6 +369,7 @@ namespace Services
             var resource = new MembershipRuleSectionResource();
             resource.Title = ruleSection.Title;
             resource.Id = ruleSection.Id;
+            resource.OrganisationId = ruleSection.ShurahBasedOrganisationId;
             resource.SectionNumber = sectionPrefix + (sectionIndex + 1);
             resource.UniqueName = ruleSection.UniqueInOrganisationName;
             var orderedRules = _dependencies.LinqService.OrderBy(ruleSection.MembershipRules, r => r.Sequence);
