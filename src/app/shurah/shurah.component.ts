@@ -11,6 +11,7 @@ import {organisationModel} from './organisation.model'
 import {addMembershipRuleModel} from './add-membership-rule.model'
 import {applyToJoinOrganisationModel} from './apply-to-join-organisation.model'
 import { Router, ActivatedRoute }       from '@angular/router';
+import {sectionClickedNavigationEvent} from './section-clicked-event.model'
 
 @Component({
   selector: 'app-shurah',
@@ -173,7 +174,6 @@ export class ShurahComponent implements OnInit {
   }
   private getRouteParamsSubscribe:any;
   expandedSections:string[]=[]
-  routedSection:string
   organisationId:number
   ngOnInit() {
      this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
@@ -184,15 +184,16 @@ export class ShurahComponent implements OnInit {
           this.organisationId=1;
         }
         if(params['section']){
-          this.routedSection=params['section'];
+          ;
 
-          this.expandedSections=this.routedSection.split('_');
+          this.expandedSections=params['section'].split('_');
         }
         this.refresh();
      });       
   }
-  setActiveSection(section:membershipRuleSectionModel){
-    this.router.navigate(["standards",this.expandedSections.join('_')])
+  setActiveSection(event:sectionClickedNavigationEvent){
+    console.log("navigating")  
+    this.router.navigateByUrl("rules/"+this.organisationId+"/section/"+this.expandedSections.join('_'))
   }
  ngOnDestroy() {
     this.getRouteParamsSubscribe.unsubscribe();

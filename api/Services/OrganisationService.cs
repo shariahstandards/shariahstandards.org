@@ -293,7 +293,7 @@ namespace Services
 
         public virtual OrganisationSummaryResource GetOrganisationSummary(IPrincipal principal, GetOrganisationSummaryRequest request)
         {
-            var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
+            var user = _dependencies.UserService.GetAuthenticatedUser(principal);
             var org = GetOrganisation(request.OrganisationId);
 
             return new OrganisationSummaryResource

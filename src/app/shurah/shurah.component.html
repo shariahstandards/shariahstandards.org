@@ -31,7 +31,6 @@
       (onUpdateRule)="openModalToUpdateMembershipRule(updateMembershipRuleModal,$event)"
       [section]="section" 
       [sub-sections]="section.subSections" 
-      [routed-section]="routedSection" 
       [expanded-sections]="expandedSections" 
       [allow-edit]="auth.authenticated() && allow('EditMembershipRules')"
       [enable-paste]="sectionToDrop!=null"

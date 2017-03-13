@@ -1,7 +1,7 @@
 import { Component, OnInit,ChangeDetectorRef ,Input,Output,EventEmitter} from '@angular/core';
 import {membershipRuleSectionModel} from './membership-rule-section.model'
 import {membershipRuleModel} from './membership-rule.model'
-
+import {sectionClickedNavigationEvent} from './section-clicked-event.model'
 @Component({
   selector:'membership-rule-section',
   templateUrl:'./membership-rule-section.component.html',
@@ -18,8 +18,6 @@ export class MembershipRuleSectionComponent{
   section:membershipRuleSectionModel
   @Input('sub-sections') 
   subSections:membershipRuleSectionModel[]
-  @Input('routed-section') 
-  routedSection:string
   @Input('expanded-sections') 
   expandedSections:string[]
   isSectionExpanded(){
@@ -40,16 +38,15 @@ export class MembershipRuleSectionComponent{
   }
 
   ngOnInit() {
-    if(this.routedSection==this.section.uniqueName){
-      this.expandParents("x");
-    }else{
-    }
-   }
+  }
   expand(doNotSetActiveRoute?:boolean){
     console.log("expanding "+this.section.uniqueName);
     this.expandedSections.push(this.section.uniqueName)
     if(!doNotSetActiveRoute){
-      this.setActiveSection(this.section);
+      this.setActiveSection({
+        uniqueSectionName:this.section.uniqueName,
+        expanded:true
+      });
     }
  //   this.expandParents("x");
   }
@@ -57,8 +54,11 @@ export class MembershipRuleSectionComponent{
     var sectionToRemove=this.expandedSections.filter(sectionName=>{
       return sectionName==this.section.uniqueName;
     })[0];
-    this.expandedSections.splice(this.expandedSections.indexOf(sectionToRemove),1);
-    this.setActiveSection(this.section);
+    this.expandedSections.splice(this.expandedSections.indexOf(sectionToRemove),this.section.organisationId);
+    this.setActiveSection({
+       uniqueSectionName:this.section.uniqueName,
+       expanded:false
+    });
 
   }
   @Input('allow-edit') allowEdit:boolean
@@ -92,9 +92,9 @@ export class MembershipRuleSectionComponent{
   deleteRule(rule:membershipRuleModel){
     this.onDeleteRule.emit(rule);
   }
-  @Output() onSectionExpanded:EventEmitter<membershipRuleSectionModel>=new EventEmitter<membershipRuleSectionModel>();
-  setActiveSection(section:membershipRuleSectionModel){
-    this.onSectionExpanded.emit(section);
+  @Output() onSectionExpanded:EventEmitter<sectionClickedNavigationEvent>=new EventEmitter<sectionClickedNavigationEvent>();
+  setActiveSection(sectionClickedNavigationEvent:sectionClickedNavigationEvent){
+    this.onSectionExpanded.emit(sectionClickedNavigationEvent);
   }
   @Output() createRuleInSection:EventEmitter<membershipRuleSectionModel>=new EventEmitter<membershipRuleSectionModel>();
   createRule(section:membershipRuleSectionModel){
