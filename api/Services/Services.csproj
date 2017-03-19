@@ -130,6 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BatchJobservice.cs" />
     <Compile Include="LinqService.cs" />
     <Compile Include="MemberService.cs" />
     <Compile Include="MembershipApplicationService.cs" />

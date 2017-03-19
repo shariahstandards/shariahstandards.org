@@ -9,7 +9,7 @@
 	</div>
 	<div class="card" *ngFor="let member of searchResults.members">
 		<div class="card-header">
-			{{member.publicName}}
+			<a [routerLink]="'/members/'+organisationId+'/details/'+member.id">{{member.publicName}}</a>
 		</div>
 		<div class="card-block">
 			<img width="100" [src]="member.pictureUrl" title="picture of member"/>

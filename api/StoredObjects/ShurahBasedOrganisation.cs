@@ -24,5 +24,6 @@ namespace StoredObjects
         public virtual OrganisationRelationship ParentOrganisationRelationship { get; set; }
         public virtual IList<OrganisationRelationship> ChildOrganisationRelationships { get; set; }
         public int RequiredNumbersOfAcceptingMembers { get; set; }
+        public bool CountingInProgress { get; set; }
     }
 }

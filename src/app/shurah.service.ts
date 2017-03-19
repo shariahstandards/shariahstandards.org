@@ -20,6 +20,15 @@ export class ShurahService {
 	constructor(private http: Http) { 
 		
 	}
+	unfollow(organisationId:number){
+		return this.http.get(shariahStandardsApiUrlBase+"StopFollowingAMember/"+organisationId);
+	}
+	follow(memberId:number){
+		return this.http.get(shariahStandardsApiUrlBase+"FollowMember/"+memberId);
+	}
+	memberDetails(memberId:number){
+		return this.http.get(shariahStandardsApiUrlBase+"MemberDetails/"+memberId);
+	}
 	searchForMembers(organisationId:number,page:number){
 		return this.http.post(shariahStandardsApiUrlBase+"SearchForMembers",{
 			organisationId:organisationId,
@@ -59,9 +68,10 @@ export class ShurahService {
 			publicProfileStatement:model.publicProfileStatement
 		});
 	}
-	searchSuggestions(organisationId:number,page?:number){
+	searchSuggestions(organisationId:number,page:number,memberId?:number){
 		return this.http.post(shariahStandardsApiUrlBase+"SearchSuggestions",{
 			organisationId:organisationId,
+			memberId:memberId,
 			page:page
 		});
 	}

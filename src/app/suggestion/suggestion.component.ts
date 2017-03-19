@@ -24,16 +24,14 @@ export class SuggestionComponent implements OnInit {
   	private shurahService:ShurahService
   	) { }
   private getRouteParamsSubscribe:any;
-  searchResults:any;
-  currentPage:number
+  searchResultPages:any[]=[];
+  memberId?:number
   organisationId:number
   ngOnInit() {
       this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
         this.organisationId=params['organisationId'];
-        if(params['page']!=null){
-          this.currentPage=params['page'];
-        }else{
-          this.currentPage=1;
+        if(params['memberId']!=null){
+          this.memberId=params['memberId'];
         }
       	this.refresh();
      });       
@@ -42,12 +40,13 @@ export class SuggestionComponent implements OnInit {
     return moment(dateText,"YYYYMMDDTHH:mm:ss").format("ddd Do MMM YYYY");
   }
   refresh(){
-	 	this.shurahService.searchSuggestions(1,this.currentPage).subscribe(response=>{
+    this.lastPageShown=1;
+	 	this.shurahService.searchSuggestions(this.organisationId,1,this.memberId).subscribe(response=>{
 	 		var model=response.json();
 	 		if(model.hasError){
-	 			alert(this.searchResults.error);
+	 			alert(model.error);
 	 		}else{
-	 			this.searchResults=model;
+	 			this.searchResultPages=[model];
 	 		}
 	 	})
   }
@@ -63,7 +62,21 @@ export class SuggestionComponent implements OnInit {
     	}
     })
   }
-
+  lastPageShown:number
+  showMore(){
+   if(this.searchResultPages.length==0 || this.lastPageShown>=this.searchResultPages[0].pageCount){
+      return;
+   }
+   this.lastPageShown++;
+   this.shurahService.searchSuggestions(this.organisationId,this.lastPageShown,this.memberId).subscribe(response=>{
+       var model=response.json();
+       if(model.hasError){
+         alert(model.error);
+       }else{
+         this.searchResultPages.push(model);
+       }
+     }) 
+  }
   private activeModal:NgbModalRef
   private addSuggestionModel:addSuggestionModel
   openModalToAddSuggestion(content) {

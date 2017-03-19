@@ -5,5 +5,5 @@ import { SuggestionDetailsComponent } from '../suggestion-details/suggestion-det
 export const suggestionRoutes: Routes = [
   { path: 'suggestions/:organisationId', component: SuggestionComponent },
   { path: 'suggestions/:organisationId/details/:id', component: SuggestionDetailsComponent },
-  { path: 'suggestions/:organisationId/page/:page', component: SuggestionComponent }
+  { path: 'suggestions/:organisationId/:memberId', component: SuggestionComponent }
 ];

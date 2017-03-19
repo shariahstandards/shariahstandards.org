@@ -40,9 +40,10 @@ namespace StoredObjects.Migrations
                 Organisation = mainOrganisation,
                 OrganisationId = mainOrganisation.Id,
                 LastDateAndTimeUtcAgreedToMembershipRules = theStartDate,
-                PublicName = "Lamaan Ball"
+                PublicName = "Lamaan Ball",
+                EmailAddress = "lamaan@lamaan.com"
             };
-            context.Set<Member>().AddOrUpdate(x=>x.Introduction,member);
+            context.Set<Member>().AddOrUpdate(x=>x.EmailAddress,member);
 
             context.SaveChanges();
 

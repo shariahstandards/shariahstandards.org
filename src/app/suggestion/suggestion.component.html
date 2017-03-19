@@ -1,22 +1,27 @@
 <app-shurah-navigation [organisation-id]="organisationId"></app-shurah-navigation>
-<p *ngIf="searchResults==null">
+<p *ngIf="searchResultPages.length==0">
   loading...
 </p>
-<div class="container" *ngIf="searchResults!=null">
-  <h2>Suggestions for {{searchResults.organisationName}}</h2>
+<div class="container" *ngIf="searchResultPages.length>0" infinite-scroll (scrolled)="showMore()">
+  <h2>Suggestions for {{searchResultPages[0].organisationName}}</h2>
   <span *ngIf="auth.authenticated()">
       <button (click)="openModalToAddSuggestion(addSuggestionModal)" title="Add suggestion">Add new suggestion*</button>
   </span>
-  <div *ngIf="searchResults">
-  	<span *ngIf="searchResults.suggestions.length==0">
-  		No suggestions found.
-  	</span>
-  	<ul *ngIf="searchResults.suggestions.length>0">
-    	<li *ngFor="let suggestion of searchResults.suggestions">
-        From: <img [src]="suggestion.authorPictureUrl" title="author picture" width="50"/> {{suggestion.authorPublicName}}       On: {{formatDate(suggestion.dateTimeText)}} {{suggestion.netSupportPercent}}% Agreeing ({{suggestion.votingPercent}}% Voting)
-        <a [routerLink]="'/suggestions/'+organisationId+'/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a> 
-    	</li>
-  	</ul>
+  <div *ngIf="searchResultPages.length>0">
+     	<span *ngIf="searchResultPages[0].suggestions.length==0">
+    		No suggestions found.
+    	</span>
+    	<ul *ngIf="searchResultPages.length>0 && searchResultPages[0].suggestions.length>0">
+        <ng-container *ngFor="let searchResults of searchResultPages">
+        	<li *ngFor="let suggestion of searchResults.suggestions">
+            From: <img [src]="suggestion.authorPictureUrl" title="author picture" width="50"/> {{suggestion.authorPublicName}}       On: {{formatDate(suggestion.dateTimeText)}} {{suggestion.netSupportPercent}}% Agreeing ({{suggestion.votingPercent}}% Voting)
+            <a [routerLink]="'/suggestions/'+organisationId+'/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a> 
+        	</li>
+        </ng-container>
+        <li *ngIf="lastPageShown<searchResultPages[0].pageCount">
+          <button class="btn btn-default" (click)="showMore()"> show more </button>
+        </li>
+    	</ul> 
   </div>
 </div>
 <template #addSuggestionModal let-c="close" let-d="dismiss">

@@ -22,6 +22,7 @@ export class SuggestionDetailsComponent implements OnInit {
   	) { }
   suggestion:any
   suggestionId:number
+  organisationId:number
   private getRouteParamsSubscribe:any;
   formatDate(dateText:string){
   	var dateMoment=moment(dateText,"YYYYMMDDTHH:mm:ss");
@@ -29,7 +30,8 @@ export class SuggestionDetailsComponent implements OnInit {
   }
   ngOnInit() {
   	 this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
-      	this.suggestionId=params['id'];
+        this.suggestionId=params['id'];
+      	this.organisationId=params['organisationId'];
       	this.refresh();
      });  
   }
@@ -37,7 +39,7 @@ export class SuggestionDetailsComponent implements OnInit {
   	this.shurahService.deleteSuggestion(this.suggestionId).subscribe(response=>{
  		var model=response.json();
  		if(!model.hasError){
- 			this.router.navigateByUrl("/suggestions");
+ 			this.router.navigateByUrl("/suggestions/"+this.organisationId);
  		}
  	})
   }

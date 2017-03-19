@@ -39,7 +39,7 @@ export class MemberComponent implements OnInit {
  	this.shurahService.searchForMembers(this.organisationId,this.currentPage).subscribe(response=>{
  		var model=response.json();
  		if(model.hasError){
- 			alert(this.searchResults.error);
+ 			alert(model.error);
  		}else{
  			this.searchResults=model;
  		}

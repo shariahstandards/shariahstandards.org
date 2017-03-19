@@ -55,9 +55,9 @@
       <button (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)"> Apply to join </button>
     </p>
     <p *ngIf="organisation && organisation.member!=null && auth.authenticated() && !hideButtons">
-    You are a now member of this organisation, agreeing to these membership rules. If you do not wish to continue you may leave by clicking this button:<br/><br/>
-      I no longer agree to hold to the rules of this organisation and want to stop being a member.
-      <button (click)="leave()"> Leave </button>
+    You are a now member of this organisation, agreeing to these membership rules. You may choose to terminate this agreement at any time and leave by clicking this button:<br/><br/>
+  
+      <button class="btn btn-danger" (click)="leave()"> Leave </button>
     </p>
     <p *ngIf="organisation && organisation.hasPendingApplication">
       You are currently not a member of this organisation.<br/>

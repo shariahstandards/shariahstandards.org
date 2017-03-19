@@ -31,7 +31,8 @@ import { SuggestionDetailsComponent } from './suggestion-details/suggestion-deta
 import { MembershipApplicationComponent } from './membership-application/membership-application.component';
 import { ShurahNavigationComponent } from './shurah-navigation/shurah-navigation.component';
 import { MemberComponent } from './member/member.component';
-import { MemberDetailsComponent } from './member-details/member-details.component'
+import { MemberDetailsComponent } from './member-details/member-details.component';
+import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 @NgModule({
   declarations: [
     ShariahStandardsAppComponent,
@@ -60,6 +61,7 @@ import { MemberDetailsComponent } from './member-details/member-details.componen
     FormsModule,
     // ChartsModule,
     DatepickerModule,
+    InfiniteScrollModule,
     NgbModule.forRoot(),
    routing
   ],

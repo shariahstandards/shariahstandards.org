@@ -1,9 +1,9 @@
+<app-shurah-navigation [organisation-id]="organisationId"></app-shurah-navigation>
 <p *ngIf="suggestion==null">
 	loading...
 </p>
 <div class="container">
 	<div *ngIf="suggestion!=null">
-	<app-shurah-navigation [organisation-id]="suggestion.organisationId"></app-shurah-navigation>
 	<h3>Suggestion</h3>
 		<div>From: <img [src]="suggestion.suggestionSummary.authorPictureUrl" title="author picture" width="50"/> 
 				{{suggestion.suggestionSummary.authorPublicName}}   
@@ -41,6 +41,9 @@
 			<span *ngIf="suggestion.userVoteIsSupporting===false">opposing</span> 
 			<span *ngIf="suggestion.userVoteIsSupporting===null">abstaining on</span> 
 			this suggestion
+			<p *ngIf="suggestion.voteByLeader">
+				Your vote was cast on your behalf by someone you delegated the right to do so
+			</p>
 			<button class="btn btn-default" (click)="removeVote(suggestion.userVoteId)">Remove</button>
 		</div>
 		<a [routerLink]="'/suggestions/'+suggestion.organisationId">back to suggestion list</a> 

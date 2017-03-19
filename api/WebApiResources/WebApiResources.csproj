@@ -49,6 +49,7 @@
     <Compile Include="DragDropMembershipRuleSectionRequest.cs" />
     <Compile Include="GetOrganisationSummaryRequest.cs" />
     <Compile Include="LeaveOrganisationRequest.cs" />
+    <Compile Include="MemberDetailsResource.cs" />
     <Compile Include="MembershipApplicationrequest.cs" />
     <Compile Include="MembershipCancellationResponseResource.cs" />
     <Compile Include="MembershipApplicationResponseResource.cs" />

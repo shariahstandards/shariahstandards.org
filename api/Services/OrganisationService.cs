@@ -418,7 +418,7 @@ namespace Services
             var resource = new MemberResource();
             resource.Id = member.Id;
             resource.DirectFollowers = _dependencies.LinqService.EnumerableCount(member.Followers);
-            resource.IndirectFollowers = _dependencies.LinqService.EnumerableSum(member.Followers, f => f.FolloweCount);
+            resource.IndirectFollowers = member.FollowerCount;
             resource.ToDoCount = GetPendingActionsCount(member.ActionUpdates);
             resource.LeaderPublicName = member?.LeaderRecognition?.RecognisedLeaderMember?.PublicName;
             resource.PublicName = member.PublicName;

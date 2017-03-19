@@ -12,5 +12,6 @@ namespace StoredObjects
         public bool? MemberIsSupportingSuggestion { get; set; }
         public DateTime LastUpdateDateTimeUtc { get; set; }
         public int DelegatedVoteCount { get; set; }
+        public bool VoteByLeader { get; set; }
     }
 }

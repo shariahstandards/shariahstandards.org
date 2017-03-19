@@ -1,4 +1,20 @@
 <app-shurah-navigation [organisation-id]="organisationId"></app-shurah-navigation>
-<p>
-  member-details works!
-</p>
+<div *ngIf="member==null">loading...</div>
+<div *ngIf="member!=null">
+	<h3>{{member.publicName}}</h3>	
+	<img [src]="member.pictureUrl" title="member picture" height="100"/>
+	<div *ngIf="member.privateMemberDetails==null && !member.isFollowedByCurrentUser">
+		<button class="btn btn-default"(click)="follow()">Let this member vote on suggestions my behalf, if I choose not to vote</button>
+	</div>
+	<div *ngIf="member.isFollowedByCurrentUser">
+		can vote on your behalf on suggestions if you choose not to vote.
+		<button class="btn btn-default"(click)="unfollow()">Stop this member voting on my behalf when I choose not to vote</button>
+	</div>
+	<div *ngIf="member.privateMemberDetails!=null && member.privateMemberDetails.leader!=null">
+		<p>
+		<img [src]="member.privateMemberDetails.leader.pictureUrl" title="leader picture" height="100"/>
+			{{member.privateMemberDetails.leader.publicName}} can vote on your behalf on suggestions if you choose not to vote.
+		<button class="btn btn-default"(click)="unfollow()">Stop this member voting on my behalf</button>
+		</p>
+	</div>
+</div>

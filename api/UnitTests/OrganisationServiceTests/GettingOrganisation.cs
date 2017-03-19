@@ -237,13 +237,10 @@ namespace UnitTests.OrganisationServiceTests
                             Followers = new List<LeaderRecognition>(),
                             ActionUpdates = new List<ActionUpdate>(),
                             PublicName = "some name",
-                            MemberAuth0Users = new List<MemberAuth0User> { new MemberAuth0User {Auth0User = new Auth0User { PictureUrl = "pic"} } }
-                            
+                            MemberAuth0Users = new List<MemberAuth0User> { new MemberAuth0User {Auth0User = new Auth0User { PictureUrl = "pic"} } },
+                            FollowerCount = 108
                         };
                         A.CallTo(() => dependencies.LinqService.EnumerableCount(member.Followers)).Returns(12);
-                        A.CallTo(() => dependencies.LinqService.EnumerableSum(member.Followers,
-                            A<Func<LeaderRecognition, int>>.That.Matches(x =>
-                                x.Invoke(new LeaderRecognition {FolloweCount = 89}) == 89))).Returns(108);
                         A.CallTo(() => service.GetPendingActionsCount(member.ActionUpdates)).Returns(2);
 
                         var result = service.BuildMemberResource(member);
@@ -271,12 +268,11 @@ namespace UnitTests.OrganisationServiceTests
                                 Followers = new List<LeaderRecognition>(),
                                 ActionUpdates = new List<ActionUpdate>(),
                                 PublicName = "some name",
-                                MemberAuth0Users = new List<MemberAuth0User> { new MemberAuth0User { Auth0User = new Auth0User { PictureUrl = "pic" } } }
+                                MemberAuth0Users = new List<MemberAuth0User> { new MemberAuth0User { Auth0User = new Auth0User { PictureUrl = "pic" } } },
+                                FollowerCount = 108
+
                             };
                             A.CallTo(() => dependencies.LinqService.EnumerableCount(member.Followers)).Returns(12);
-                            A.CallTo(() => dependencies.LinqService.EnumerableSum(member.Followers,
-                                A<Func<LeaderRecognition, int>>.That.Matches(x =>
-                                    x.Invoke(new LeaderRecognition { FolloweCount = 89 }) == 89))).Returns(108);
                             A.CallTo(() => service.GetPendingActionsCount(member.ActionUpdates)).Returns(2);
 
                             var result = service.BuildMemberResource(member);

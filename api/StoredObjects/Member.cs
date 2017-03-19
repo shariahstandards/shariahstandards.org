@@ -26,6 +26,8 @@ namespace StoredObjects
         public string PublicName { get; set; }
         public virtual IList<DelegatedPermission> DelegatedPermissions { get; set; }
         public string EmailAddress { get; set; }
+        public bool SendNoEmailNotifications { get; set; }
+        public int FollowerCount { get; set; }
 
         //public virtual IList<MembershipRuleAgreementViolationClaim> MembershipRuleAgreementViolationClaims { get; set; }
     }

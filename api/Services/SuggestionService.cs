@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.ObjectBuilder2;
 using StoredObjects;
 using WebApiResources;
 
@@ -74,15 +75,19 @@ namespace Services
             var suggestionsQuery = member.Organisation.Members
                 .SelectMany(m => m.Suggestions)
                 .Where(x => !x.AuthorMember.Removed);
+            if (request.MemberId.HasValue)
+            {
+                suggestionsQuery = suggestionsQuery.Where(s => s.AuthorMemberId == request.MemberId.Value);
+            }
             var suggestions = suggestionsQuery
                 .OrderByDescending(s => s.CreatedDateUtc)
-                .Skip(((request.Page ?? 1) - 1)*100).Take(100);
+                .Skip(((request.Page ?? 1) - 1)*10).Take(10);
             
             return new SearchSugestionsResponse
             {
                 OrganisationId = request.OrganisationId,
                 OrganisationName = member.Organisation.Name,
-                PageCount = suggestionsQuery.Count()/100,
+                PageCount = (int)Math.Ceiling(suggestionsQuery.Count()/10.0),
                 Suggestions = suggestions.Select(BuildSummarySuggestion).ToList()
             };
                 
@@ -172,7 +177,8 @@ namespace Services
                 UsersOwnSuggestion = suggestion.AuthorMemberId==member.Id,
                 VotesFor = GetVoteCount(suggestion,true),
                 VotesAgainst = GetVoteCount(suggestion,false),
-                AbstentionCount = GetAbstentionCount(suggestion)
+                AbstentionCount = GetAbstentionCount(suggestion),
+                VoteByLeader = vote?.VoteByLeader
             };
 
             throw new NotImplementedException();
@@ -182,6 +188,10 @@ namespace Services
         {
             var suggestion = GetGuaranteedSuggestion(request.SuggestionId);
             var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
+            //if (member.Organisation.CountingInProgress)
+            //{
+            //    return new ResponseResource {Error = "Vote counting is in progress - please try again later",HasError = true};
+            //}
             var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
             if (vote == null)
             {
@@ -189,13 +199,46 @@ namespace Services
                 vote.SuggestionId = request.SuggestionId;
                 vote.Suggestion = suggestion;
                 vote.VoterMemberId = member.Id;
+                vote.VoteByLeader = false;
                 vote.VoterMember = member;
                 _dependencies.StorageService.SetOf<SuggestionVote>().Add(vote);
             }
             vote.MemberIsSupportingSuggestion = request.VotingInSupport;
             vote.LastUpdateDateTimeUtc=DateTime.UtcNow;
+            VoteForFollowers(request.VotingInSupport, suggestion, member);
             _dependencies.StorageService.SaveChanges();
             return new ResponseResource();
+        }
+
+        private void VoteForFollowers(bool? votingInSupport, Suggestion suggestion, Member member)
+        {
+            var followers= member.Followers.Select(f=>f.Member).ToList();
+            followers.ForEach(f=>VoteForFollower(f,votingInSupport,suggestion));
+        }
+
+        private void VoteForFollower(Member member, bool? votingInSupport, Suggestion suggestion)
+        {
+            var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
+            if (vote == null)
+            {
+                vote = _dependencies.StorageService.SetOf<SuggestionVote>().Create();
+                vote.SuggestionId = suggestion.Id;
+                vote.Suggestion = suggestion;
+                vote.VoterMemberId = member.Id;
+                vote.VoterMember = member;
+                vote.VoteByLeader = true;
+                vote.MemberIsSupportingSuggestion = votingInSupport;
+                vote.LastUpdateDateTimeUtc = DateTime.UtcNow;
+                _dependencies.StorageService.SetOf<SuggestionVote>().Add(vote);
+                VoteForFollowers(votingInSupport, suggestion, member);
+            }
+            else if(vote.VoteByLeader)
+            {
+                vote.MemberIsSupportingSuggestion = votingInSupport;
+                vote.LastUpdateDateTimeUtc = DateTime.UtcNow;
+                VoteForFollowers(votingInSupport, suggestion, member);
+            }
+
         }
 
         public ResponseResource RemoveVote(IPrincipal principal, RemoveVoteOnSuggestionsRequest request)

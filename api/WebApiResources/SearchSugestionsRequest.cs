@@ -5,6 +5,7 @@ namespace WebApiResources
     public class SearchSuggestionsRequest
     {
         public int OrganisationId { get; set; }
+        public int? MemberId { get; set; }
         public int? Page { get; set; }
     }
 
@@ -40,5 +41,6 @@ namespace WebApiResources
         public List<string> MemberPermissions { get; set; }
         public bool UsersOwnSuggestion { get; set; }
         public int OrganisationId { get; set; }
+        public bool? VoteByLeader { get; set; }
     }
 }
