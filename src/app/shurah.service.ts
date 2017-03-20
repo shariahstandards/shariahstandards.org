@@ -68,11 +68,12 @@ export class ShurahService {
 			publicProfileStatement:model.publicProfileStatement
 		});
 	}
-	searchSuggestions(organisationId:number,page:number,memberId?:number){
+	searchSuggestions(organisationId:number,page:number,mostRecentFirst:boolean,memberId?:number){
 		return this.http.post(shariahStandardsApiUrlBase+"SearchSuggestions",{
 			organisationId:organisationId,
 			memberId:memberId,
-			page:page
+			page:page,
+			mostRecentFirst:mostRecentFirst
 		});
 	}
 	suggestionDetails(suggestionId:number){

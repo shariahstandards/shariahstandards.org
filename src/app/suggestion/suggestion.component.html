@@ -7,6 +7,12 @@
   <span *ngIf="auth.authenticated()">
       <button (click)="openModalToAddSuggestion(addSuggestionModal)" title="Add suggestion">Add new suggestion*</button>
   </span>
+  <div *ngIf="searchResultPages[0].memberSearchedFor">
+    Searching for suggestions by <img [src]="searchResultPages[0].memberSearchedFor.pictureUrl" title="author picture" width="50"/> {{searchResultPages[0].memberSearchedFor.publicName}}   <a [routerLink]="'/suggestions/'+organisationId">Show all</a>   
+  </div>
+  <div *ngIf="sortingByMostRecentFirst">Showing most recent results first <button (click)="showMostSupportedSuggestionsFirst()">Show most supported suggestions first</button></div>
+  <div *ngIf="!sortingByMostRecentFirst">Showing most supported results first <button (click)="showMostRecentSuggestionsFirst()">Show most recent suggestions first</button></div>
+ 
   <div *ngIf="searchResultPages.length>0">
      	<span *ngIf="searchResultPages[0].suggestions.length==0">
     		No suggestions found.

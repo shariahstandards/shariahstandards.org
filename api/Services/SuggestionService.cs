@@ -15,21 +15,25 @@ namespace Services
         IStorageService StorageService { get; set; }
         IUserService UserService { get; set; }
         IOrganisationService OrganisationService { get; set; }
+        IMemberService MemberService { get; set; }
     }
     public class SuggestionServiceDependencies: ISuggestionServiceDependencies
     {
         public IOrganisationService OrganisationService { get; set; }
         public IUserService UserService { get; set; }
         public IStorageService StorageService { get; set; }
+        public IMemberService MemberService { get; set; }
 
         public SuggestionServiceDependencies(IOrganisationService organisationService,
             IUserService userService,
-            IStorageService storageService
+            IStorageService storageService,
+            IMemberService memberService
             )
         {
             OrganisationService = organisationService;
             UserService = userService;
             StorageService = storageService;
+            MemberService = memberService;
         }
     }
     public interface ISuggestionService
@@ -71,27 +75,50 @@ namespace Services
         public SearchSugestionsResponse Search(IPrincipal principal, SearchSuggestionsRequest request)
         {
             var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, request.OrganisationId);
-
+            var resource = new SearchSugestionsResponse();
+            resource.OrganisationId = request.OrganisationId;
+            resource.OrganisationName = member.Organisation.Name;
+            
             var suggestionsQuery = member.Organisation.Members
                 .SelectMany(m => m.Suggestions)
                 .Where(x => !x.AuthorMember.Removed);
             if (request.MemberId.HasValue)
             {
+                var memberSearchedFor = member.Organisation.Members.SingleOrDefault(m => m.Id == request.MemberId.Value);
+                if (memberSearchedFor != null)
+                {
+                    if (memberSearchedFor.Removed)
+                    {
+                        resource.Suggestions=new List<SuggestionSummaryResource>();
+                        return resource;
+                    }
+                    resource.MemberSearchedFor =
+                        _dependencies.MemberService.BuildSearchedMemberResource(memberSearchedFor);
                 suggestionsQuery = suggestionsQuery.Where(s => s.AuthorMemberId == request.MemberId.Value);
+
+                }
+            }
+            if (!request.MostRecentFirst)
+            {
+                suggestionsQuery =
+                    suggestionsQuery.OrderByDescending(
+                        s =>
+                            s.SuggestionVotes.Count(
+                                x => x.MemberIsSupportingSuggestion.HasValue && x.MemberIsSupportingSuggestion.Value));
+            }
+            else
+            {
+                suggestionsQuery = suggestionsQuery
+                    .OrderByDescending(s => s.CreatedDateUtc);
             }
             var suggestions = suggestionsQuery
-                .OrderByDescending(s => s.CreatedDateUtc)
                 .Skip(((request.Page ?? 1) - 1)*10).Take(10);
-            
-            return new SearchSugestionsResponse
-            {
-                OrganisationId = request.OrganisationId,
-                OrganisationName = member.Organisation.Name,
-                PageCount = (int)Math.Ceiling(suggestionsQuery.Count()/10.0),
-                Suggestions = suggestions.Select(BuildSummarySuggestion).ToList()
-            };
-                
-            throw new NotImplementedException();
+
+
+
+            resource.PageCount = (int) Math.Ceiling(suggestionsQuery.Count()/10.0);
+            resource.Suggestions = suggestions.Select(BuildSummarySuggestion).ToList();
+            return resource;
         }
 
         public virtual SuggestionSummaryResource BuildSummarySuggestion(Suggestion suggestion)

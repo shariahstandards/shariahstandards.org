@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef} from '@angular/core';
 import { ShurahService} from '../shurah.service';
 import { AuthService } from '../auth.service'
 import { Router, ActivatedRoute }       from '@angular/router';
@@ -21,7 +21,8 @@ export class SuggestionComponent implements OnInit {
     private router:Router,
     private auth: AuthService,
     private modalService: NgbModal,
-  	private shurahService:ShurahService
+  	private shurahService:ShurahService,
+    private changeDetectorRef:ChangeDetectorRef
   	) { }
   private getRouteParamsSubscribe:any;
   searchResultPages:any[]=[];
@@ -41,12 +42,13 @@ export class SuggestionComponent implements OnInit {
   }
   refresh(){
     this.lastPageShown=1;
-	 	this.shurahService.searchSuggestions(this.organisationId,1,this.memberId).subscribe(response=>{
+	 	this.shurahService.searchSuggestions(this.organisationId,1,this.sortingByMostRecentFirst,this.memberId).subscribe(response=>{
 	 		var model=response.json();
 	 		if(model.hasError){
 	 			alert(model.error);
 	 		}else{
 	 			this.searchResultPages=[model];
+         this.changeDetectorRef.detectChanges();
 	 		}
 	 	})
   }
@@ -62,13 +64,22 @@ export class SuggestionComponent implements OnInit {
     	}
     })
   }
+  sortingByMostRecentFirst:boolean=true;
+  showMostSupportedSuggestionsFirst(){
+    this.sortingByMostRecentFirst=false;
+    this.refresh();
+  }
+  showMostRecentSuggestionsFirst(){
+   this.sortingByMostRecentFirst=true;
+    this.refresh(); 
+  }
   lastPageShown:number
   showMore(){
    if(this.searchResultPages.length==0 || this.lastPageShown>=this.searchResultPages[0].pageCount){
       return;
    }
    this.lastPageShown++;
-   this.shurahService.searchSuggestions(this.organisationId,this.lastPageShown,this.memberId).subscribe(response=>{
+   this.shurahService.searchSuggestions(this.organisationId,this.lastPageShown,this.sortingByMostRecentFirst,this.memberId).subscribe(response=>{
        var model=response.json();
        if(model.hasError){
          alert(model.error);

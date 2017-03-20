@@ -3,6 +3,8 @@
 <div *ngIf="member!=null">
 	<h3>{{member.publicName}}</h3>	
 	<img [src]="member.pictureUrl" title="member picture" height="100"/>
+	<a [routerLink]="'/suggestions/'+organisationId+'/'+member.memberId">Suggestions</a>
+	
 	<div *ngIf="member.privateMemberDetails==null && !member.isFollowedByCurrentUser">
 		<button class="btn btn-default"(click)="follow()">Let this member vote on suggestions my behalf, if I choose not to vote</button>
 	</div>

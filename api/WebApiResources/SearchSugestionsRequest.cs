@@ -7,6 +7,7 @@ namespace WebApiResources
         public int OrganisationId { get; set; }
         public int? MemberId { get; set; }
         public int? Page { get; set; }
+        public bool MostRecentFirst { get; set; }
     }
 
     public class SearchSugestionsResponse:ResponseResource
@@ -14,7 +15,8 @@ namespace WebApiResources
         public int OrganisationId { get; set; }
         public string OrganisationName { get; set; }
         public int PageCount { get; set; }
-        public List<SuggestionSummaryResource> Suggestions { get; set; } 
+        public List<SuggestionSummaryResource> Suggestions { get; set; }
+        public SearchedMemberResource MemberSearchedFor { get; set; }
     }
 
     public class SuggestionSummaryResource

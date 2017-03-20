@@ -31,6 +31,7 @@ namespace Services
     }
     public interface IMemberService
     {
+        SearchedMemberResource BuildSearchedMemberResource(Member member);
         SearchMemberResponse SearchForMembers(IPrincipal user, SearchMemberRequest request);
         MemberDetailsResource GetMemberDetails(IPrincipal principal, int memberId);
         ResponseResource FollowMember(IPrincipal principal, int leaderMemberId);
