@@ -4,6 +4,5 @@ import { MemberDetailsComponent } from '../member-details/member-details.compone
 
 export const memberRoutes: Routes = [
   { path: 'members/:organisationId', component: MemberComponent },
-  { path: 'members/:organisationId/details/:memberId', component: MemberDetailsComponent },
-  { path: 'members/:organisationId/page/:page', component: MemberComponent }
+  { path: 'members/:organisationId/details/:memberId', component: MemberDetailsComponent }
 ];

@@ -23,29 +23,6 @@
 				<button class="btn btn-danger" (click)="deleteSuggestion()">Delete Suggestion</button>
 			</span>
 		</div>
-		<h4>Votes</h4>
-		<p>    For: {{suggestion.votesFor}}
-		<br/>  Against: {{suggestion.votesAgainst}}
-		<br/>  Abstentions: {{suggestion.abstentionCount}}
-		<br/>  Net Support: {{suggestion.suggestionSummary.netSupportPercent}}% 
-		<br/>  {{suggestion.suggestionSummary.votingPercent}}% of members' votes cast</p>
-		<div *ngIf="suggestion.userVoteId==null">
-			Add your vote:
-			<button class="btn btn-success" (click)="vote(true)">Agree</button>
-			<button class="btn btn-danger" (click)="vote(false)">Oppose</button>
-			<button class="btn btn-default" (click)="vote(null)">Abstain</button>
-		</div>
-		<div *ngIf="suggestion.userVoteId!=null">
-			You currently are 
-			<span *ngIf="suggestion.userVoteIsSupporting===true">agreeing to</span>
-			<span *ngIf="suggestion.userVoteIsSupporting===false">opposing</span> 
-			<span *ngIf="suggestion.userVoteIsSupporting===null">abstaining on</span> 
-			this suggestion
-			<p *ngIf="suggestion.voteByLeader">
-				Your vote was cast on your behalf by someone you delegated the right to do so
-			</p>
-			<button class="btn btn-default" (click)="removeVote(suggestion.userVoteId)">Remove</button>
-		</div>
-		<a [routerLink]="'/suggestions/'+suggestion.organisationId">back to suggestion list</a> 
+			<a [routerLink]="'/suggestions/'+suggestion.organisationId">back to suggestion list</a> 
 	</div>
 </div>

@@ -164,6 +164,24 @@ namespace Services
                 existingMembership.Organisation = application.Organisation;
                 existingMembership.Removed = false;
                 _dependencies.StorageService.SaveChanges();
+
+                var existingMemberAuth0User =
+                    _dependencies.StorageService.SetOf<MemberAuth0User>()
+                        .SingleOrDefault(
+                            x =>
+                                x.Auth0UserId == acceptance.MembershipApplication.Auth0UserId &&
+                                x.MemberId == existingMembership.Id);
+                if (existingMemberAuth0User == null)
+                {
+                    existingMemberAuth0User = _dependencies.StorageService.SetOf<MemberAuth0User>().Create();
+                    existingMemberAuth0User.Auth0UserId = acceptance.MembershipApplication.Auth0UserId;
+                    existingMemberAuth0User.Auth0User = acceptance.MembershipApplication.Auth0User;
+                    existingMemberAuth0User.MemberId = existingMembership.Id;
+                    existingMemberAuth0User.Member = existingMembership;
+                    _dependencies.StorageService.SetOf<MemberAuth0User>().Add(existingMemberAuth0User);
+                }
+                existingMemberAuth0User.Suspended = false;
+                _dependencies.StorageService.SaveChanges();
             }
 
             return new ResponseResource();

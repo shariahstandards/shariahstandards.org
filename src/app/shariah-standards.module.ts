@@ -33,6 +33,7 @@ import { ShurahNavigationComponent } from './shurah-navigation/shurah-navigation
 import { MemberComponent } from './member/member.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
 @NgModule({
   declarations: [
     ShariahStandardsAppComponent,
@@ -52,7 +53,8 @@ import { InfiniteScrollModule } from 'angular2-infinite-scroll';
     MembershipApplicationComponent,
     ShurahNavigationComponent,
     MemberComponent,
-    MemberDetailsComponent
+    MemberDetailsComponent,
+    PieChartComponent
       ],
   imports: [
     BrowserModule,

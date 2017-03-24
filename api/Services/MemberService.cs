@@ -174,7 +174,8 @@ namespace Services
             {
                 Id = member.Id,
                 PublicName = member.PublicName,
-                PictureUrl = member.MemberAuth0Users.First().Auth0User.PictureUrl
+                PictureUrl = member.MemberAuth0Users.First().Auth0User.PictureUrl,
+                Followers = member.FollowerCount
             };
         }
     }

@@ -43,10 +43,7 @@ namespace Services
 
         private void RunOrganisationCounts(ShurahBasedOrganisation org)
         {
-            if (org.OrganisationLeader?.LastUpdateDateTimeUtc.Date >= DateTime.UtcNow.Date)
-            {
-                return;
-            }
+           
             org.CountingInProgress = true;
             _dependencies.StorageService.SaveChanges();
             SetLeader(org);
@@ -98,6 +95,10 @@ namespace Services
             }
             _dependencies.StorageService.SaveChanges();
 
+            if (org.OrganisationLeader?.LastUpdateDateTimeUtc.Date >= DateTime.UtcNow.Date)
+            {
+                return;
+            }
             var leaderCandidate =
                 org.Members.Where(m => !m.Removed).OrderByDescending(m => m.FollowerCount).FirstOrDefault();
             if (leaderCandidate != null && (leaderCandidate.FollowerCount +1) > (org.Members.Count(m => !m.Removed)/2.0))

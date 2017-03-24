@@ -20,6 +20,7 @@ namespace WebApiResources
         public int Id { get; set; }
         public string PublicName { get; set; }
         public string PictureUrl { get; set; }
+        public int Followers { get; set; }
     }
     
 }

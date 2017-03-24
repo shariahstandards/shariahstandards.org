@@ -37,8 +37,49 @@ export class SuggestionComponent implements OnInit {
       	this.refresh();
      });       
   }
+  getPieChartData(suggestion:any){
+    return [
+      {
+        label:"For",
+        percentage:suggestion.percentFor,
+        colour:'#00AA00'
+      },
+      {
+        label:"Against",
+        percentage:suggestion.percentAgainst,
+        colour:'#AA0000'
+      },
+      {
+        label:"Abstaining",
+        percentage:suggestion.percentAbstaining,
+        colour:'#00AAAA'
+      }
+    ]
+  }
   formatDate(dateText:string){
     return moment(dateText,"YYYYMMDDTHH:mm:ss").format("ddd Do MMM YYYY");
+  }
+  vote(suggestionId:number,inFavour?:boolean){
+    this.shurahService.voteOnSuggestion(suggestionId, inFavour).subscribe(response=>{
+     var model=response.json();
+     if(model.hasError){
+       alert(model.error);
+     }
+     else{
+       this.refresh();
+     }
+   })
+  }
+   removeVote(voteId:number){
+    this.shurahService.removeVoteOnSuggestion(voteId).subscribe(response=>{
+     var model=response.json();
+     if(model.hasError){
+       alert(model.error);
+     }
+     else{
+       this.refresh();
+     }
+   })
   }
   refresh(){
     this.lastPageShown=1;
@@ -52,7 +93,7 @@ export class SuggestionComponent implements OnInit {
 	 		}
 	 	})
   }
-    AddSuggestion(){
+  AddSuggestion(){
     this.shurahService.addSuggestion(this.organisationId,this.addSuggestionModel).subscribe(response=>{
     	var data = response.json();
     	if(data.hasError){
@@ -64,7 +105,7 @@ export class SuggestionComponent implements OnInit {
     	}
     })
   }
-  sortingByMostRecentFirst:boolean=true;
+  sortingByMostRecentFirst:boolean=false;
   showMostSupportedSuggestionsFirst(){
     this.sortingByMostRecentFirst=false;
     this.refresh();

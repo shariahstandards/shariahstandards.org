@@ -23,6 +23,11 @@ namespace WebApi.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _service.CreateSuggestion(User, request));
         }
+        [Route("CommentOnSuggestion")]
+        public HttpResponseMessage Post(CreateSugestionCommentRequest request)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _service.CommentOnSuggestion(User, request));
+        }
         [Route("DeleteSuggestion")]
         public HttpResponseMessage Post(DeleteSugestionRequest request)
         {

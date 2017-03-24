@@ -25,10 +25,18 @@ namespace WebApiResources
         public string Subject { get; set; }
         public string DateTimeText { get; set; }
         public double VotingPercent { get; set; }
-        public double NetSupportPercent { get; set; }
         public int AuthorMemberId { get; set; }
         public string AuthorPublicName { get; set; }
         public string AuthorPictureUrl { get; set; }
+        public int For { get; set; }
+        public int Against { get; set; }
+        public int Abstaining { get; set; }
+        public double PercentFor { get; set; }
+        public double PercentAgainst { get; set; }
+        public double PercentAbstaining { get; set; }
+        public string FullText { get; set; }
+        public int? UserVoteId { get; set; }
+        public bool? UserVoteIsSupporting { get; set; }
     }
 
     public class SuggestionDetailResource:ResponseResource
@@ -44,5 +52,6 @@ namespace WebApiResources
         public bool UsersOwnSuggestion { get; set; }
         public int OrganisationId { get; set; }
         public bool? VoteByLeader { get; set; }
+        public List<SuggestionCommentResource> Comments { get; set; }
     }
 }

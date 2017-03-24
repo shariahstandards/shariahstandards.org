@@ -16,6 +16,13 @@ namespace WebApiResources
     {
         public int SuggestionId { get; set; }
     }
+
+    public class CreateSugestionCommentRequest
+    {
+        public int SuggestionId { get; set; }
+        public string Comment { get; set; }
+        public bool? Supporting { get; set; }
+    }
     public class ViewSugestionRequest
     {
         public int SuggestionId { get; set; }

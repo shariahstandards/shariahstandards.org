@@ -17,11 +17,55 @@
      	<span *ngIf="searchResultPages[0].suggestions.length==0">
     		No suggestions found.
     	</span>
-    	<ul *ngIf="searchResultPages.length>0 && searchResultPages[0].suggestions.length>0">
+      <br/>
+    	<ul *ngIf="searchResultPages.length>0 && searchResultPages[0].suggestions.length>0" class="list-unstyled">
         <ng-container *ngFor="let searchResults of searchResultPages">
         	<li *ngFor="let suggestion of searchResults.suggestions">
-            From: <img [src]="suggestion.authorPictureUrl" title="author picture" width="50"/> {{suggestion.authorPublicName}}       On: {{formatDate(suggestion.dateTimeText)}} {{suggestion.netSupportPercent}}% Agreeing ({{suggestion.votingPercent}}% Voting)
-            <a [routerLink]="'/suggestions/'+organisationId+'/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a> 
+            <div class="card">
+              <div class="card-header">
+                <div class="pull-left">
+                  <a [routerLink]="'/suggestions/'+organisationId+'/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a>
+                </div>
+                <div class="pull-right" >
+                {{formatDate(suggestion.dateTimeText)}} 
+                <span *ngIf="searchResultPages[0].memberSearchedFor==null">
+                  <img [src]="suggestion.authorPictureUrl" title="author picture" width="30"/> {{suggestion.authorPublicName}} 
+                  </span>
+                </div>
+              </div>
+              <div class="card-block">
+                <p>{{suggestion.fullText}}</p>
+                
+             
+              <!-- <div class="voting" [style.width]="suggestion.votingPercent+'%'"></div> -->
+
+                <div class="suggestion-vote-with-pie-chart">
+                  <div class="pie-chart-of-vote"> 
+                    <pie-chart [size]="50" [data]="getPieChartData(suggestion)"></pie-chart>
+                  </div>
+                  <div class="vote-info">
+                    {{suggestion.for}} for, {{suggestion.against}} against, {{suggestion.abstaining}} abstaining, {{suggestion.votingPercent}}% voting
+                  </div>
+                  <div *ngIf="suggestion.userVoteId==null">
+                    Add your vote:
+                    <button class="btn btn-success" (click)="vote(suggestion.id, true)">Agree</button>
+                    <button class="btn btn-danger" (click)="vote(suggestion.id, false)">Oppose</button>
+                    <button class="btn btn-default" (click)="vote(suggestion.id, null)">Abstain</button>
+                  </div>
+                  <div *ngIf="suggestion.userVoteId!=null">
+                    You currently are 
+                    <span *ngIf="suggestion.userVoteIsSupporting===true">agreeing to</span>
+                    <span *ngIf="suggestion.userVoteIsSupporting===false">opposing</span> 
+                    <span *ngIf="suggestion.userVoteIsSupporting===null">abstaining on</span> 
+                    this suggestion
+                    <p *ngIf="suggestion.voteByLeader">
+                      Your vote was cast on your behalf by someone you delegated the right to do so
+                    </p>
+                    <button class="btn btn-default" (click)="removeVote(suggestion.userVoteId)">Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
         	</li>
         </ng-container>
         <li *ngIf="lastPageShown<searchResultPages[0].pageCount">

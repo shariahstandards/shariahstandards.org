@@ -28,6 +28,8 @@ namespace StoredObjects
         public string EmailAddress { get; set; }
         public bool SendNoEmailNotifications { get; set; }
         public int FollowerCount { get; set; }
+        public virtual IList<SuggestionComment> SuggestionComments { get; set; }
+        public virtual IList<SuggestionVote> SuggestionFollowerVotes { get; set; }
 
         //public virtual IList<MembershipRuleAgreementViolationClaim> MembershipRuleAgreementViolationClaims { get; set; }
     }

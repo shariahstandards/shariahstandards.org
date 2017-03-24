@@ -44,6 +44,7 @@ namespace Services
         SuggestionDetailResource ViewSuggestion(IPrincipal user, ViewSugestionRequest request);
         ResponseResource Vote(IPrincipal user, VoteOnSuggestionsRequest request);
         ResponseResource RemoveVote(IPrincipal user, RemoveVoteOnSuggestionsRequest request);
+        ResponseResource CommentOnSuggestion(IPrincipal principal, CreateSugestionCommentRequest request);
     }
     public class SuggestionService: ISuggestionService
     {
@@ -80,7 +81,7 @@ namespace Services
             resource.OrganisationName = member.Organisation.Name;
             
             var suggestionsQuery = member.Organisation.Members
-                .SelectMany(m => m.Suggestions)
+                .SelectMany(m => m.Suggestions.Where(s=>!s.Removed && !s.PendingModeration))
                 .Where(x => !x.AuthorMember.Removed);
             if (request.MemberId.HasValue)
             {
@@ -103,8 +104,13 @@ namespace Services
                 suggestionsQuery =
                     suggestionsQuery.OrderByDescending(
                         s =>
-                            s.SuggestionVotes.Count(
-                                x => x.MemberIsSupportingSuggestion.HasValue && x.MemberIsSupportingSuggestion.Value));
+                            s.Votes
+                            .Count(
+                                x => (x.MemberIsSupportingSuggestion.HasValue && x.MemberIsSupportingSuggestion.Value))
+                            -s.Votes
+                            .Count(
+                                x => (x.MemberIsSupportingSuggestion.HasValue && !x.MemberIsSupportingSuggestion.Value))
+                                );
             }
             else
             {
@@ -117,45 +123,56 @@ namespace Services
 
 
             resource.PageCount = (int) Math.Ceiling(suggestionsQuery.Count()/10.0);
-            resource.Suggestions = suggestions.Select(BuildSummarySuggestion).ToList();
+            resource.Suggestions = suggestions.Select(s=>BuildSummarySuggestion(s,member)).ToList();
             return resource;
         }
 
-        public virtual SuggestionSummaryResource BuildSummarySuggestion(Suggestion suggestion)
+        public virtual SuggestionSummaryResource BuildSummarySuggestion(Suggestion suggestion,Member member)
         {
-            return new SuggestionSummaryResource
-            {
-                Id = suggestion.Id,
-                Subject = suggestion.ShortDescription,
-                DateTimeText = suggestion.CreatedDateUtc.ToString("s"),
-                NetSupportPercent = GetPercentSupport(suggestion),
-                VotingPercent = GetVotingPercent(suggestion),
-                AuthorMemberId = suggestion.AuthorMemberId,
-                AuthorPublicName = suggestion.AuthorMember.PublicName,
-                AuthorPictureUrl = suggestion.AuthorMember.MemberAuth0Users.First().Auth0User.PictureUrl
-            };
-         //   throw new NotImplementedException();
+            var vote = suggestion.Votes.SingleOrDefault(v => v.VoterMemberId == member.Id);
+                
+            var resource = new SuggestionSummaryResource();
+            resource.UserVoteId = vote?.Id;
+            resource.UserVoteIsSupporting = vote?.MemberIsSupportingSuggestion;
+            
+            resource.Id = suggestion.Id;
+            resource.Subject = suggestion.ShortDescription;
+            resource.FullText = suggestion.FullText;
+            resource.DateTimeText = suggestion.CreatedDateUtc.ToString("s");
+            resource.For = GetVoteCount(suggestion, true);
+            resource.Against = GetVoteCount(suggestion, false);
+            resource.Abstaining = GetAbstentionCount(suggestion);
+            double count = resource.For + resource.Against + resource.Abstaining;
+            resource.PercentFor = Math.Round(resource.For*100/count);
+            resource.PercentAgainst = Math.Round(resource.Against * 100 / count); ;
+            resource.PercentAbstaining = Math.Round(resource.Abstaining * 100 / count); ;
+            resource.VotingPercent = GetVotingPercent(suggestion);
+            resource.AuthorMemberId = suggestion.AuthorMemberId;
+            resource.AuthorPublicName = suggestion.AuthorMember.PublicName;
+            resource.AuthorPictureUrl = suggestion.AuthorMember.MemberAuth0Users.First().Auth0User.PictureUrl;
+            return resource;
         }
 
         public double GetVotingPercent(Suggestion suggestion)
         {
             var support = GetVoteCount(suggestion, true);
             var opposition = GetVoteCount(suggestion, false);
-            return (100.0 * (support+opposition+GetAbstentionCount(suggestion))) / 
-                (suggestion.AuthorMember.Organisation.Members.Where(m=>!m.Removed).Count());
-            throw new NotImplementedException();
+            var percent= (100.0 * (support+opposition+GetAbstentionCount(suggestion))) / 
+                (suggestion.AuthorMember.Organisation.Members.Count(m => !m.Removed));
+
+            return Math.Round(percent, 3);
         }
 
-        public virtual double GetPercentSupport(Suggestion suggestion)
-        {
-            var support = GetVoteCount(suggestion, true);
-            var opposition = GetVoteCount(suggestion, false);
-            var abstentions = GetAbstentionCount(suggestion);
+        //public virtual double GetPercentSupport(Suggestion suggestion)
+        //{
+        //    var support = GetVoteCount(suggestion, true);
+        //    var opposition = GetVoteCount(suggestion, false);
+        //    var abstentions = GetAbstentionCount(suggestion);
 
-            if ((support + opposition+ abstentions) == 0) { return 0; }
-            return Math.Round( (100.0 * (support-opposition)) / (support + opposition+ abstentions),1);
-            throw new NotImplementedException();
-        }
+        //    if ((support + opposition+ abstentions) == 0) { return 0; }
+        //    return Math.Round( (100.0 * (support-opposition)) / (support + opposition+ abstentions),1);
+        //    throw new NotImplementedException();
+        //}
 
         public ResponseResource DeleteSuggestion(IPrincipal principal, DeleteSugestionRequest request)
         {
@@ -192,12 +209,12 @@ namespace Services
                 return new SuggestionDetailResource { HasError = true, Error = "Suggestion not found." };
             }
             var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
-            var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
+            var vote = suggestion.Votes.SingleOrDefault(v => v.VoterMemberId == member.Id);
             return new SuggestionDetailResource
             {   
                 OrganisationId=suggestion.AuthorMember.OrganisationId,
                 Suggestion = suggestion.FullText,
-                SuggestionSummary = BuildSummarySuggestion(suggestion),
+                SuggestionSummary = BuildSummarySuggestion(suggestion,member),
                 UserVoteId = vote?.Id,
                 UserVoteIsSupporting = vote?.MemberIsSupportingSuggestion,
                 MemberPermissions = _dependencies.OrganisationService.GetMemberPermissions(user,member.Organisation),
@@ -205,10 +222,21 @@ namespace Services
                 VotesFor = GetVoteCount(suggestion,true),
                 VotesAgainst = GetVoteCount(suggestion,false),
                 AbstentionCount = GetAbstentionCount(suggestion),
-                VoteByLeader = vote?.VoteByLeader
+                VoteByLeader = vote?.VotingLeaderMemberId.HasValue,
+                Comments = suggestion.Comments.Where(c=>!c.IsCensored || c.CommentingMemberId==member.Id).Select(BuildCommentResource).ToList()
             };
+        }
 
-            throw new NotImplementedException();
+        public virtual SuggestionCommentResource BuildCommentResource(SuggestionComment comment)
+        {
+            var resource = new SuggestionCommentResource();
+            resource.CommentId = comment.Id;
+            resource.Comment = comment.Comment;
+            resource.DateTimeText = comment.LastUpdateDateTimeUtc.ToString("s");
+            resource.PublicNameOfCommentAuthor = comment.CommentingMember.PublicName;
+            resource.IsSupportive = comment.CommentIsSupportingSuggestion;
+            resource.Censored = comment.IsCensored;
+            return resource;
         }
 
         public virtual ResponseResource Vote(IPrincipal principal, VoteOnSuggestionsRequest request)
@@ -219,33 +247,33 @@ namespace Services
             //{
             //    return new ResponseResource {Error = "Vote counting is in progress - please try again later",HasError = true};
             //}
-            var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
+            var vote = suggestion.Votes.SingleOrDefault(v => v.VoterMemberId == member.Id);
             if (vote == null)
             {
                 vote = _dependencies.StorageService.SetOf<SuggestionVote>().Create();
                 vote.SuggestionId = request.SuggestionId;
                 vote.Suggestion = suggestion;
                 vote.VoterMemberId = member.Id;
-                vote.VoteByLeader = false;
+                vote.VotingLeaderMemberId = null;
                 vote.VoterMember = member;
                 _dependencies.StorageService.SetOf<SuggestionVote>().Add(vote);
             }
             vote.MemberIsSupportingSuggestion = request.VotingInSupport;
             vote.LastUpdateDateTimeUtc=DateTime.UtcNow;
-            VoteForFollowers(request.VotingInSupport, suggestion, member);
+            VoteForFollowers(request.VotingInSupport, suggestion, member,member);
             _dependencies.StorageService.SaveChanges();
             return new ResponseResource();
         }
 
-        private void VoteForFollowers(bool? votingInSupport, Suggestion suggestion, Member member)
+        private void VoteForFollowers(bool? votingInSupport, Suggestion suggestion, Member member, Member leader)
         {
             var followers= member.Followers.Select(f=>f.Member).ToList();
-            followers.ForEach(f=>VoteForFollower(f,votingInSupport,suggestion));
+            followers.ForEach(f=>VoteForFollower(f,votingInSupport,suggestion,leader));
         }
 
-        private void VoteForFollower(Member member, bool? votingInSupport, Suggestion suggestion)
+        private void VoteForFollower(Member member, bool? votingInSupport, Suggestion suggestion, Member leader)
         {
-            var vote = suggestion.SuggestionVotes.SingleOrDefault(v => v.VoterMemberId == member.Id);
+            var vote = suggestion.Votes.SingleOrDefault(v => v.VoterMemberId == member.Id);
             if (vote == null)
             {
                 vote = _dependencies.StorageService.SetOf<SuggestionVote>().Create();
@@ -253,17 +281,18 @@ namespace Services
                 vote.Suggestion = suggestion;
                 vote.VoterMemberId = member.Id;
                 vote.VoterMember = member;
-                vote.VoteByLeader = true;
+                vote.VotingLeaderMemberId = leader.Id;
+                vote.VotingLeaderMember = leader;
                 vote.MemberIsSupportingSuggestion = votingInSupport;
                 vote.LastUpdateDateTimeUtc = DateTime.UtcNow;
                 _dependencies.StorageService.SetOf<SuggestionVote>().Add(vote);
-                VoteForFollowers(votingInSupport, suggestion, member);
+                VoteForFollowers(votingInSupport, suggestion, member,leader);
             }
-            else if(vote.VoteByLeader)
+            else if(vote.VotingLeaderMemberId==leader.Id)
             {
                 vote.MemberIsSupportingSuggestion = votingInSupport;
                 vote.LastUpdateDateTimeUtc = DateTime.UtcNow;
-                VoteForFollowers(votingInSupport, suggestion, member);
+                VoteForFollowers(votingInSupport, suggestion, member,leader);
             }
 
         }
@@ -276,7 +305,12 @@ namespace Services
                     .SingleOrDefault(x => x.Id == request.VoteId);
             if (vote != null)
             {
+                var member = _dependencies.OrganisationService.GetGuaranteedMember(principal,
+                    vote.Suggestion.AuthorMember.OrganisationId);
+                var followerVotes =
+                    member.SuggestionFollowerVotes.Where(v => v.SuggestionId == vote.SuggestionId).ToList();
                 _dependencies.StorageService.SetOf<SuggestionVote>().Remove(vote);
+                followerVotes.ForEach(v=>_dependencies.StorageService.SetOf<SuggestionVote>().Remove(v));
                 _dependencies.StorageService.SaveChanges();
             }
             else
@@ -286,21 +320,35 @@ namespace Services
             return new ResponseResource();
         }
 
+        public ResponseResource CommentOnSuggestion(IPrincipal principal, CreateSugestionCommentRequest request)
+        {
+            var suggestion = GetGuaranteedSuggestion(request.SuggestionId);
+            var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, suggestion.AuthorMember.OrganisationId);
+            var comment = _dependencies.StorageService.SetOf<SuggestionComment>().Create();
+            comment.CommentingMemberId = member.Id;
+            comment.Comment = request.Comment;
+            comment.CommentIsSupportingSuggestion = request.Supporting;
+            comment.CommentingMember = member;
+            comment.LastUpdateDateTimeUtc = DateTime.UtcNow;
+            comment.Suggestion = suggestion;
+            comment.IsCensored = member.Moderated;
+            comment.SuggestionId = suggestion.Id;
+            _dependencies.StorageService.SetOf<SuggestionComment>().Add(comment);
+            _dependencies.StorageService.SaveChanges();
+            return new ResponseResource();
+        }
+
         public virtual int GetVoteCount(Suggestion suggestion,bool inFavour)
         {
-            return suggestion.SuggestionVotes.Where(v => 
-            !v.VoterMember.Removed
-            && v.MemberIsSupportingSuggestion.HasValue 
-            && v.MemberIsSupportingSuggestion.Value==inFavour)
-                .Sum(v => 1 + v.DelegatedVoteCount);
+            return suggestion.Votes
+                .Count(v => !v.VoterMember.Removed && v.MemberIsSupportingSuggestion.HasValue 
+                && v.MemberIsSupportingSuggestion.Value==inFavour);
         }
         public virtual int GetAbstentionCount(Suggestion suggestion)
         {
-            return suggestion.SuggestionVotes.Where(
-                v => 
-                !v.MemberIsSupportingSuggestion.HasValue
-                && !v.VoterMember.Removed)
-                .Sum(v => 1 + v.DelegatedVoteCount);
+            return suggestion.Votes
+                .Count(v => !v.MemberIsSupportingSuggestion.HasValue
+                && !v.VoterMember.Removed);
         }
     }
 }

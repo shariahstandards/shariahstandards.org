@@ -20,29 +20,35 @@ export class MemberComponent implements OnInit {
   	private shurahService:ShurahService
 ) { }
   private getRouteParamsSubscribe:any;
-  searchResults:any;
-  currentPage:number
+  searchResultPages:any[]=[];
+  lastPageLoaded:number=1
   organisationId:number
 
   ngOnInit() {
   	this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
         this.organisationId=params['organisationId'];
-        if(params['page']!=null){
-          this.currentPage=params['page'];
-        }else{
-          this.currentPage=1;
-        }
       	this.refresh();
      });       
   }
   refresh(){
- 	this.shurahService.searchForMembers(this.organisationId,this.currentPage).subscribe(response=>{
- 		var model=response.json();
- 		if(model.hasError){
- 			alert(model.error);
- 		}else{
- 			this.searchResults=model;
- 		}
- 	})
+ 	  this.shurahService.searchForMembers(this.organisationId,this.lastPageLoaded).subscribe(response=>{
+   		var model=response.json();
+   		if(model.hasError){
+   			alert(model.error);
+   		}else{
+   			this.searchResultPages=[model];
+   		}
+   	})
+  }
+  showMore(){
+    this.lastPageLoaded++;
+    this.shurahService.searchForMembers(this.organisationId,this.lastPageLoaded).subscribe(response=>{
+       var model=response.json();
+       if(model.hasError){
+         alert(model.error);
+       }else{
+         this.searchResultPages.push(model);
+       }
+     })
   }
 }

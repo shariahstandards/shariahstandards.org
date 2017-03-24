@@ -82,6 +82,7 @@
     <Compile Include="Mappings\OrganisationLeaderMapping.cs" />
     <Compile Include="Mappings\MemberAuth0UserMapping.cs" />
     <Compile Include="Mappings\LeaderRecognitionMapping.cs" />
+    <Compile Include="Mappings\SuggestionCommentMapping.cs" />
     <Compile Include="Mappings\SuggestionVoteMapping.cs" />
     <Compile Include="Mappings\SuggestionMapping.cs" />
     <Compile Include="Mappings\MembershipApplicationAcceptanceMapping.cs" />

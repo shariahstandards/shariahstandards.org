@@ -13,8 +13,9 @@ namespace StoredObjects.Mappings
         {
             _modelBuilder = modelBuilder;
             E.HasKey(x => x.Id);
-            E.HasRequired(x => x.Suggestion).WithMany(x => x.SuggestionVotes).HasForeignKey(x => x.SuggestionId);
+            E.HasRequired(x => x.Suggestion).WithMany(x => x.Votes).HasForeignKey(x => x.SuggestionId);
             E.HasRequired(x => x.VoterMember).WithMany(x => x.SuggestionVotes).HasForeignKey(x => x.VoterMemberId).WillCascadeOnDelete(false);
+            E.HasOptional(x => x.VotingLeaderMember).WithMany(x => x.SuggestionFollowerVotes).HasForeignKey(x => x.VotingLeaderMemberId).WillCascadeOnDelete(false);
 
         }
     }
