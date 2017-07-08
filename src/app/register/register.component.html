@@ -1,0 +1,25 @@
+<div>
+	<h2>Register yourself</h2>
+	<p>
+		Please provide your name and email address to register as a user of this site. 
+		<br/>You will then be able to make declarations and agreements according to open shariah standards and become able to take part in shaping those standards.  
+	</p>
+
+	<form (ngSubmit)="register()">
+		<div class="form-group">
+			<label for="fullName">Full name</label>
+			<input type="text" class="form-control" name="fullName" [(ngModel)]="registrationModel.fullName" maxlength="500" required>
+		</div>
+		<div class="form-group">
+			<label for="email">Email address</label>
+			<input type="email" class="form-control" name="email" [(ngModel)]="registrationModel.email" maxlength="200" required>
+		</div>
+		
+		<div class="error-summary" *ngIf="registrationModel.errors.length>0">
+			<p *ngFor="let error of registrationModel.errors">
+				{{error}}
+			</p>
+		</div>
+		<button type="submit">Register</button>
+	</form>
+</div>
