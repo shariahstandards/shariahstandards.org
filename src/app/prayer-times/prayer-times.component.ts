@@ -5,7 +5,6 @@ import { Observable} from "rxjs/Observable";
 import { Subscription} from "rxjs/Subscription"; 
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router'
-import {AlertComponent, DatepickerModule, ModalModule, DatePickerComponent} from 'ng2-bootstrap/ng2-bootstrap';
 import {NgbModule,NgbDateStruct} from '@ng-bootstrap/ng-bootstrap'
 import 'moment';
 import 'moment-timezone'
@@ -29,10 +28,11 @@ interface FileReaderEvent extends Event {
   styleUrls: ['./prayer-times.component.css'],
   selector: 'prayer-times',
  // directives: [DATEPICKER_DIRECTIVES, MODAL_DIRECTVES, ROUTER_DIRECTIVES],
-  providers: [PrayerTimesCalculatorService,DatepickerModule],
+  providers: [PrayerTimesCalculatorService]
  // viewProviders:[BS_VIEW_PROVIDERS],
 }) export class PrayerTimesComponent implements AfterViewInit {
 	date: NgbDateStruct;
+	month: {year: number, month: number};
 	latitude: number;
 	longitude: number;
 	initialiseMap: any;
@@ -56,7 +56,7 @@ interface FileReaderEvent extends Event {
 		private myElement: ElementRef) {
 		if(!moment){return;}
 		var now=new Date();
-		this.date={year: now.getFullYear(), month: now.getMonth(), day: now.getDate()}
+		this.date={year: now.getFullYear(), month: now.getMonth()+1, day: now.getDate()}
 		this.latitude = 53.482863;
 		this.longitude = -2.3459968;
 		//this.utcOffset=moment().utcOffset()/60.0;
@@ -91,11 +91,11 @@ interface FileReaderEvent extends Event {
 	}
 	getWeekDay() {
 		if(!moment){return "";}
-		return moment(this.date).format("dddd");
+		return moment(this.getDate()).format("dddd");
 	}
 	getFullDate() {
 		if(!moment){return "";}
-		return moment(this.date).format("D MMMM YYYY");
+		return moment(this.getDate()).format("D MMMM YYYY");
 	}
 	removeCalendar(){
 		this.numberOfDaysInCalendar = null;
@@ -211,13 +211,13 @@ interface FileReaderEvent extends Event {
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
 	}
 	getDate(){
-		return new Date(this.date.year,this.date.month,this.date.day);
+		return new Date(this.date.year,this.date.month-1,this.date.day);
 	}
 	getPrayerTimeTableForTimeZone(days:number,initialTimeZone:timeZoneInfo){
 		var self = this;
 
 		self.calendar = [];
-		var dateMoment = moment(self.date).startOf('d');
+		var dateMoment = moment(self.getDate()).startOf('d');
 		var yesterdayHijriDate=null;
 		var yesterdayWasNewMoon=false;
 		var previousTimeZoneAbbreviation=null;
@@ -496,7 +496,7 @@ interface FileReaderEvent extends Event {
 
 	
         pdf.save('ShariahStandardsTimeTable'+self.latitude+"_"
-        	+self.longitude+'_'+moment(self.date).format("YYYYMMDD")+self.numberOfDaysInCalendar+'.pdf');	
+        	+self.longitude+'_'+moment(self.getDate()).format("YYYYMMDD")+self.numberOfDaysInCalendar+'.pdf');	
 	}	
 	getPdfTimetable(){
 		var self=this;

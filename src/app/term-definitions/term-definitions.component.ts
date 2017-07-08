@@ -4,13 +4,6 @@ import { TermComponent } from '../term/term.component';
 import {DefinitionText} from './definition-text.interface';
 import {TermDefinition} from './term-definition.interface';
 
-// interface DefinitionSequentialContent{
-//   text:string,
-//   isADefinedTerm:boolean
-// }
-
-
-
 @Component({
   //moduleId: module.id,
   selector: 'app-term-definitions',

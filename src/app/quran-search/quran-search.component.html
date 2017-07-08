@@ -1,7 +1,7 @@
 <h2>Qur'an Search</h2>
 
 <div class="row" >
-	<div class="col-xs-5">
+	<div class="col-sm-5">
 		<label>Surah</label>
 		<select class="form-control" (ngModelChange)="gotoSurah($event)" 
 			[(ngModel)]="selectedSurah">
@@ -9,14 +9,14 @@
 		</select>
 			
 	</div>
-	<div class="col-xs-2">
+	<div class="col-sm-2">
 		<label>Verse</label>
 		<select class="form-control" (ngModelChange)="gotoVerse($event)" 
 			[(ngModel)]="selectedVerseNumber">
 			<option *ngFor="let verse of verseSelectionItems" [ngValue]="verse">{{verse}}</option>
 		</select>
 	</div>
-	<div class="col-xs-5">
+	<div class="col-sm-5">
 		<label>Search text</label>
 		<div class="input-group">
 		 	<span class="input-group-btn">
@@ -31,10 +31,10 @@
 	</div>
 </div>
 <!-- <div class="row" *ngIf="searchResults.hasEnglishResults">
-	<div class="col-xs-5">
+	<div class="col-5">
 		<label>{{searchResults.results.length}} English phrase matches</label>
 	</div>
-	<div class="col-xs-2">
+	<div class="col-2">
 		<select class="form-control" (ngModelChange)="gotoEnglishSearchResult($event)" 
 			[(ngModel)]="selectedEnglishSearchResult">
 			<option *ngFor="let result of searchResults.results" [ngValue]="result">								

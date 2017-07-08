@@ -1,54 +1,63 @@
 <h3>Zakat Calculator - for year from Ramadan 15<sup>th</sup> 1437 AH / June 20<sup>th</sup> 2016 CE</h3>
 	<a [routerLink]="['/standards/zakat-rules']">Details of the Standard</a>
 
-<div class="row dependents">
-	<h4>Zakat Free Wealth Allowance</h4>
-	<div class="col-md-5">
-		<div class="form-group">
-			<label>Currency</label>
-			<select [(ngModel)]="currency" class="form-control">
-				<option *ngFor="let c of currencies" [ngValue]="c">{{c.name}}</option>
-			</select>
-		</div>
-	</div>
-	
-	<div class="col-md-5">
-		<div class="form-group">
-			<label>Number of your dependents</label>
-			<input pattern="[0-9]+" required="true" type="number" [(ngModel)]="dependents" min="0" max="100" step="1" class="form-control"/>
-		</div>
-	</div>
-	<div class="col-md-2">
-		{{formattedZakatFreeWealthAllowance()}}	
-	</div>
 
+<div class="dependents">
+	<h4>Zakat Free Wealth Allowance</h4>
+	<div class="row">
+		<div class="col-md-5">
+			<div class="form-group">
+				<label>Currency</label>
+				<select [(ngModel)]="currency" class="form-control">
+					<option *ngFor="let c of currencies" [ngValue]="c">{{c.name}}</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="col-md-5">
+			<div class="form-group">
+				<label>Number of your dependents</label>
+				<input pattern="[0-9]+" required="true" type="number" [(ngModel)]="dependents" min="0" max="100" step="1" class="form-control"/>
+			</div>
+		</div>
+		<div class="col-md-2">
+		<br/>
+			{{formattedZakatFreeWealthAllowance()}}	
+		</div>
+	</div>
 </div>
-<div class="row assets">
-	<h4>Assets of you and your dependents</h4>
- 	<table *ngIf="assets.length!=0" class="table table-striped tally">
-		<thead>
-			<tr>
-				<th>Description</th>
-				<th class="money">Value</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			<template ngFor [ngForOf]="assets" let-asset>
-			<tr>
-				<td>
-					{{asset.description}}
-				</td>
-				<td class="money">
-					{{formatCurrency(asset.amount)}}
-				</td>
-				<td class="actions">
-					<button type="button" class="btn btn-default" (click)="removeAsset(asset)">X</button>
-				</td>
-			</tr>
-			</template>
-		</tbody>
-	</table>
+<div class="assets">
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Assets of you and your dependents</h4>
+			<br/>
+		 	<table *ngIf="assets.length!=0" class="table table-striped tally">
+				<thead>
+					<tr>
+						<th>Description</th>
+						<th class="money">Value</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<template ngFor [ngForOf]="assets" let-asset>
+					<tr>
+						<td>
+							{{asset.description}}
+						</td>
+						<td class="money">
+							{{formatCurrency(asset.amount)}}
+						</td>
+						<td class="actions">
+							<button type="button" class="btn btn-default" (click)="removeAsset(asset)">X</button>
+						</td>
+					</tr>
+					</template>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-5">
 			<div class="form-group">
 				<select [(ngModel)]="addAssetModel.description" class="form-control" required="true">
@@ -68,40 +77,46 @@
 					<div *ngIf="currency.prefix!=''" class="input-group-addon">{{currency.prefix}}</div>
 					<input required="true" type="number" [(ngModel)]="addAssetModel.amount" 
 					min="0" max="99999999999" step="1000" class="form-control" placeholder="value" />
-					<div class="input-group-addon">{{currency.suffix}}</div>
+					<span class="input-group-addon">{{currency.suffix}}</span>
 				</div>
 			</div>
 		</div>
 		<div class="col-md-2">
 			<button type="button" class="btn btn-primary" (click)="addAsset()">Add Asset</button>
 		</div>
+	</div>
 </div>
-<div class="row debts">
-	<h4>Debts of you and your dependents</h4>
- 	<table *ngIf="debts.length!=0" class="table table-striped tally">
-		<thead>
-			<tr>
-				<th>Description</th>
-				<th class="money">Value</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			<template ngFor [ngForOf]="debts" let-debt>
-			<tr>
-				<td>
-					{{debt.description}}
-				</td>
-				<td class="money">
-					{{formatCurrency(debt.amount)}}
-				</td>
-				<td class="actions">
-					<button type="button" class="btn btn-default" (click)="removeDebt(debt)">X</button>
-				</td>
-			</tr>
-			</template>
-		</tbody>
-	</table>
+<div class="debts">
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Debts of you and your dependents</h4>
+		 	<table *ngIf="debts.length!=0" class="table table-striped tally">
+				<thead>
+					<tr>
+						<th>Description</th>
+						<th class="money">Value</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<template ngFor [ngForOf]="debts" let-debt>
+					<tr>
+						<td>
+							{{debt.description}}
+						</td>
+						<td class="money">
+							{{formatCurrency(debt.amount)}}
+						</td>
+						<td class="actions">
+							<button type="button" class="btn btn-default" (click)="removeDebt(debt)">X</button>
+						</td>
+					</tr>
+					</template>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-5">
 			<div class="form-group">
 				<!-- <label>Description</label> -->
@@ -119,13 +134,14 @@
 					<div *ngIf="currency.prefix!=''" class="input-group-addon">{{currency.prefix}}</div>
 					<input required="true" type="number" [(ngModel)]="addDebtModel.amount" 
 					min="0" max="99999999999" step="1000" class="form-control" placeholder="value" />
-					<div class="input-group-addon">{{currency.suffix}}</div>
+					<span class="input-group-addon">{{currency.suffix}}</span>
 				</div>
 			</div>
 		</div>
 		<div class="col-md-2">
 			<button type="button" class="btn btn-primary" (click)="addDebt()">Add Debt</button>
 		</div>
+	</div>	
 </div>
 <div class="row zakat-due">
 	<table class="table table-striped">

@@ -41,7 +41,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
     FormsModule,
     // ChartsModule,
     //DatepickerModule,
-    NgbModule,
+    NgbModule.forRoot(),
     routing
   ],
    providers: [
