@@ -89,8 +89,8 @@ export interface inheritanceShare{
 }
 @Component({
   selector: 'app-inheritance-calculator',
-  templateUrl: 'inheritance-calculator.component.html',
-  styleUrls: ['inheritance-calculator.component.css']
+  templateUrl: './inheritance-calculator.component.html',
+  styleUrls: ['./inheritance-calculator.component.css']
   // directives:[NgClass,CORE_DIRECTIVES,FORM_DIRECTIVES,ROUTER_DIRECTIVES]
  // directives:[NgClass]
 })

@@ -1,9 +1,11 @@
 import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef,ChangeDetectorRef,ElementRef} from '@angular/core'
 import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
+import { Observable} from "rxjs/Observable"; 
+import { Subscription} from "rxjs/Subscription"; 
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router'
-import {AlertComponent, DatepickerModule, ModalModule} from 'ng2-bootstrap/ng2-bootstrap';
+import {AlertComponent, DatepickerModule, ModalModule, DatePickerComponent} from 'ng2-bootstrap/ng2-bootstrap';
 import {NgbModule,NgbDateStruct} from '@ng-bootstrap/ng-bootstrap'
 import 'moment';
 import 'moment-timezone'
@@ -27,7 +29,7 @@ interface FileReaderEvent extends Event {
   styleUrls: ['./prayer-times.component.css'],
   selector: 'prayer-times',
  // directives: [DATEPICKER_DIRECTIVES, MODAL_DIRECTVES, ROUTER_DIRECTIVES],
-  providers: [PrayerTimesCalculatorService],
+  providers: [PrayerTimesCalculatorService,DatepickerModule],
  // viewProviders:[BS_VIEW_PROVIDERS],
 }) export class PrayerTimesComponent implements AfterViewInit {
 	date: NgbDateStruct;

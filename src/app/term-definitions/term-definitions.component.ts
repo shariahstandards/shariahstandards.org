@@ -1,19 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute }       from '@angular/router';
 import { TermComponent } from '../term/term.component';
+import {DefinitionText} from './definition-text.interface';
+import {TermDefinition} from './term-definition.interface';
 
-interface TermDefinition{
-	term:string,
-	definition:DefinitionText,
-  relatedTerms:string[]
-}
-interface DefinitionSequentialContent{
-  text:string,
-  isADefinedTerm:boolean
-}
-interface DefinitionText{
-  contents:[DefinitionSequentialContent],
-}
+// interface DefinitionSequentialContent{
+//   text:string,
+//   isADefinedTerm:boolean
+// }
+
 
 
 @Component({

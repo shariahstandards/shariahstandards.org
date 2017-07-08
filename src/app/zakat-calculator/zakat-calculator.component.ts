@@ -17,8 +17,8 @@ export interface currency{
 }
 @Component({
   selector: 'app-zakat-calculator',
-  templateUrl: 'zakat-calculator.component.html',
-  styleUrls: ['zakat-calculator.component.css'],
+  templateUrl: './zakat-calculator.component.html',
+  styleUrls: ['./zakat-calculator.component.css'],
   providers:[CurrencyService],
   // directives: [ROUTER_DIRECTIVES]
 })
