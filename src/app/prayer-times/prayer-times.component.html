@@ -124,7 +124,7 @@
 	<div>&nbsp;</div>		   	    
 	<div class="row">
 
-        <div class="col-md-12">
+        <div class="col-md-11">
 			<div class="input-group">
         		<input class="form-control" type="number" min="1" max="31" placeholder="Number of Days" 
         		 [(ngModel)]="numberOfDaysInCalendar" value="7"/>
@@ -132,11 +132,14 @@
 			      	<button class="btn btn-default" type="button" (click)="buildCalendar()">
 			      		Build calendar
 			      	</button>
-			      	<button class="btn btn-default" *ngIf="calendar.length>0" type="button" (click)="removeCalendar()">
-			    		X
-			      	</button>
+			      	
 		    	</span>
  			</div>
+  		</div>
+        <div class="col-md-1">
+        <button class="btn btn-default" *ngIf="calendar.length>0" type="button" (click)="removeCalendar()">
+			X
+		</button>
   		</div>
     </div>
     <div>&nbsp;</div>
@@ -146,6 +149,11 @@
 			<div class="col-md-12">
 				<h4>Calculated Prayer times for {{locationFound}}
 				 </h4>
+				 <div class="form-group">
+				 	<label>Timetable Subtitle</label>
+				 	<textarea class="form-control" type="text" rows="5" cols="80" [(ngModel)]="pdfTitle">
+				 	</textarea>
+				 </div>
 			</div>
 		</div>
 		<div class="row">
