@@ -51,6 +51,7 @@ interface FileReaderEvent extends Event {
 	showNewMonthLegend: boolean;
 	map:any;
 	maxZoomService:any;
+	pdfTitle:string;
 	constructor(private prayerTimesCalculatorService: PrayerTimesCalculatorService,
 		private ngZone: NgZone,private changeDetectorRef:ChangeDetectorRef,
 		private myElement: ElementRef) {
@@ -208,6 +209,9 @@ interface FileReaderEvent extends Event {
 	numberOfDaysInCalendar:number
 	buildingCalendar: boolean = false;
 	buildCalendar(){
+		if(this.locationFound!=null){
+			this.pdfTitle=this.locationFound.split(',').join("\n");
+		}
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
 	}
 	getDate(){
@@ -427,7 +431,7 @@ interface FileReaderEvent extends Event {
 				self.placeTextCenteredOnPdf(pdf,'ShariahStandards.org Prayer Timetable', 105, self.topPosMm);
 				self.topPosMm+=10;
 				pdf.setFontSize(15);
-				self.locationFound.split(',').forEach(line=>{	
+				self.pdfTitle.split('\n').forEach(line=>{	
 					self.placeTextCenteredOnPdf(pdf,line, 105, self.topPosMm);	
 					self.topPosMm+=7;
 				})
