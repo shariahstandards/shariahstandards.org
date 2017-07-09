@@ -1,27 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute }       from '@angular/router';
 import { TermComponent } from '../term/term.component';
-
-interface TermDefinition{
-	term:string,
-	definition:DefinitionText,
-  relatedTerms:string[]
-}
-interface DefinitionSequentialContent{
-  text:string,
-  isADefinedTerm:boolean
-}
-interface DefinitionText{
-  contents:[DefinitionSequentialContent],
-}
-
+import {DefinitionText} from './definition-text.interface';
+import {TermDefinition} from './term-definition.interface';
 
 @Component({
   //moduleId: module.id,
   selector: 'app-term-definitions',
   templateUrl: './term-definitions.component.html',
   styleUrls: ['./term-definitions.component.css'],
-  directives:[TermComponent]
+//  directives:[TermComponent]
 })
 export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   public term:string;

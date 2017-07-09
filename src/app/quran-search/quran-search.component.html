@@ -1,22 +1,132 @@
 <h2>Qur'an Search</h2>
-<div class="form-group">
-<input class="form-control" type="text" (keyup)="search()" placeholder="type surah:verse or search term in english or arabic" [(ngModel)]="searchText" >
-</div>
-<div *ngIf="!searchResults.hasResults && searchResults.hasSearched">
-	<p>No results</p>
-</div>
-<div *ngIf="searchResults.hasResults">
-	<div *ngIf="searchResults.singleVerse">
-		<div class="col-md-1">
-			<button type="button" class="btn btn-default" (click)="previousVerse()">&lt; prev</button>
-		</div>
-		<div class="col-md-10">
-			<blockquote class="arabic-large">
-				{{searchResults.singleVerse.text}}
-			</blockquote> 
-		</div>
-		<div class="col-md-1">
-			<button type="button" class="btn btn-default" (click)="nextVerse()">next &gt;</button>
+
+<div class="row" >
+	<div class="col-sm-5">
+		<label>Surah</label>
+		<select class="form-control" (ngModelChange)="gotoSurah($event)" 
+			[(ngModel)]="selectedSurah">
+			<option *ngFor="let surah of surahsForSelection" [ngValue]="surah">{{surah.number}} - {{surah.englishName}} - {{surah.arabicName}}</option>
+		</select>
+			
+	</div>
+	<div class="col-sm-2">
+		<label>Verse</label>
+		<select class="form-control" (ngModelChange)="gotoVerse($event)" 
+			[(ngModel)]="selectedVerseNumber">
+			<option *ngFor="let verse of verseSelectionItems" [ngValue]="verse">{{verse}}</option>
+		</select>
+	</div>
+	<div class="col-sm-5">
+		<label>Search text</label>
+		<div class="input-group">
+		 	<span class="input-group-btn">
+		 		<button class="btn btn-default" type="button" (click)="toggleKeyboard(arabicKeyboard)">ع</button>
+		 	</span>
+			<input class="form-control searchTextBox" type="text"
+			 	[(ngModel)]="searchText" (keyup)="searchTextChanged()" >
+			 <span class="input-group-btn">
+			 	<button class="btn btn-primary"  [disabled]="searchText==null || searchText.length<3" type="button" (click)="gotoSearch()">Search</button>
+			 </span>
 		</div>
 	</div>
 </div>
+<!-- <div class="row" *ngIf="searchResults.hasEnglishResults">
+	<div class="col-5">
+		<label>{{searchResults.results.length}} English phrase matches</label>
+	</div>
+	<div class="col-2">
+		<select class="form-control" (ngModelChange)="gotoEnglishSearchResult($event)" 
+			[(ngModel)]="selectedEnglishSearchResult">
+			<option *ngFor="let result of searchResults.results" [ngValue]="result">								
+				{{result.surah}}:{{result.verse}}
+			</option>
+		</select>
+	</div>
+</div> -->
+<arabic-keyboard #arabicKeyboard (onValueChanged)="arabicKeyboardValueChanged($event)"></arabic-keyboard>
+<div class="clearfix">
+	<br/>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<div *ngIf="selectedSurah!=null">
+		<!-- 	<div>Surah {{selectedSurah.number}} {{selectedSurah.englishName}} - {{selectedSurah.arabicName}}</div>
+			<div>Verse {{selectedVerseNumber}}</div> -->
+			<div *ngIf="selectedVerseResult!=null">
+				<div class="row">
+					<div class="col-md-6">
+						<blockquote class="arabic-large">
+							<span *ngFor="let word of selectedVerseResult.text"
+								[ngClass]="{highlight:word==wordToHighlight}">
+								{{word}}
+							</span>
+							
+						</blockquote> 
+					</div>
+					<div class="col-md-6">
+						<blockquote>
+							<span *ngFor="let part of selectedVerseResult.englishTranslation"
+								[ngClass]="{highlight:part.highlight}">{{part.text}}</span>
+						</blockquote> 
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+	<div class="col-md-6">
+		<div *ngIf="searchResults.hasSearched">
+			<h4>Search Results</h4>
+			<div *ngIf="!searchResults.hasEnglishResults && !searchResults.hasArabicResults">
+				<p>No results</p>
+			</div>
+			<div *ngIf="searchResults.hasEnglishResults">
+			<label>{{searchResults.results.length}} English phrase matches</label>
+				<ul class="list-inline">
+					<li  *ngFor="let result of searchResults.results">
+						<a routerLinkActive="active-route"
+						[routerLink]="'/quran/surah/' + result.surah + '/verse/' + result.verse + '/' + result.searchText"
+						>
+							{{result.surah}}:{{result.verse}}
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div *ngIf="searchResults.hasArabicResults" class="heightLimited">
+				<ul class="list-inline">
+					<li  *ngFor="let result of searchResults.results">
+						<h4>{{result.category}} </h4>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Word</th>
+									<th>Count</th>
+									<th>Instances</th>
+								</tr>	
+							</thead>
+							<tbody>
+								<tr *ngFor="let match of result.matches">
+									<td class="arabic-large">
+										{{match.word}}
+									</td>
+									<td>
+										{{match.occurenceCount}}
+									</td>
+									<td>
+									<ul class="list-inline">
+										<li *ngFor="let occurence of match.occurences">
+											<a [routerLink]="'/quran/surah/' + occurence.surah + '/verse/' + occurence.verse + '/' + match.searchText+'/'+match.word">
+												{{occurence.surah}}:{{occurence.verse}}
+											</a>
+										</li>
+									</ul>
+									</td>
+								</tr>		
+							</tbody>
+						</table>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+

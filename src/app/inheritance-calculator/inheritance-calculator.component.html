@@ -1,81 +1,57 @@
 <h2> Inheritance Calculator </h2>
 	<a [routerLink]="['/standards/inheritance-rules']">Details of the Standard</a>
 
-<h3>Description of the deceased:</h3>
+
 <div class="row">
 	<div class="col-md-4">
 		<div class="row">
-			<div class="col-xs-3">
-				<div class="form-group">
-					<label>Married</label>
-					<input type="radio" 
-					[ngModel]="{checked:model.isMarried}" 
-					(ngModelChange)="model.isMarried=true"
-					class="form-control"
-					name="married"
-					(ngModelChange)="setShares()"/>
-				</div>
-			</div>
-			<div class="col-xs-3">
-				<div class="form-group">
-					<label>Single</label>
-					<input type="radio" 
-					[ngModel]="{checked:!model.isMarried}"
-					(ngModelChange)="model.isMarried=false"
-					class="form-control"
-					name="married"
-					(ngModelChange)="setShares()"/>
-				</div>
-			</div>
-			<div class="col-xs-3">
-				<div class="form-group">
-					<label>Male</label>
-					<input type="radio" 
-					[ngModel]="{checked:model.isMale}" 
-					(ngModelChange)="model.isMale=true"
-					name="male"
-					class="form-control"
-					(ngModelChange)="setShares()"/>
-				</div>
-			</div>
-			<div class="col-xs-3">
-				<div class="form-group">
-					<label>Female</label>
-					<input type="radio" 
-					[ngModel]="{checked:!model.isMale}" 
-					(ngModelChange)="model.isMale=false"
-					name="male"
-					class="form-control"
-					(ngModelChange)="setShares()"/>
+			<div class="col-12" >
+				<h3>Gender of the deceased:</h3>
+				<div class="row">
+					<div class="col-3" *ngFor="let gender of genders">
+		        		<div class="form-group pull-left" >
+							<label>{{gender.display}}
+							<input type="radio" 
+							class="form-control large-radio-control" 
+							[value]="gender.value"
+							[(ngModel)]="model.isMale" 
+							(ngModelChange)="setShares()"
+							name="gender">
+							</label>
+						</div>
+					</div>
+					<div class="col-6"></div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12">
+			<div class="col-12">
 				<h3>Primary heirs</h3>
 				<div class="row">
-					<div class="col-xs-3">
+					<div class="col-3">
 						<div class="form-group">
 							<label>Father</label>
-							<input type="checkbox" [(ngModel)]="model.hasFather" class="form-control"  
+							<input type="checkbox" [(ngModel)]="model.hasFather"
+							class="form-control large-checkbox-control"  
 							(ngModelChange)="setShares()"/>
 						</div>
 					</div>
-					<div class="col-xs-3">
+					<div class="col-3">
 						<div class="form-group">
 							<label>Mother</label>
-							<input type="checkbox" [(ngModel)]="model.hasMother" class="form-control"
+							<input type="checkbox" [(ngModel)]="model.hasMother" 
+							class="form-control large-checkbox-control"
 							(ngModelChange)="setShares()"/>
 						</div>
 					</div>
-					<div class="col-xs-3">
+					<div class="col-3">
 						<div class="form-group">
 							<label>Sons</label>
 							<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSons" class="form-control"
 							(ngModelChange)="setShares()"/>
 						</div>
 					</div>
-					<div class="col-xs-3">
+					<div class="col-3">
 						<div class="form-group">
 							<label>Daughters</label>
 							<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfDaughters" class="form-control"
@@ -83,42 +59,95 @@
 						</div>
 					</div>
 				</div>
+				<div class="row" *ngIf="(model.numberOfDaughters+model.numberOfSons)>0">
+					<div class="col-6">
+						<label>Were any of the sons and daughters dependent on the deceased?</label>
+					</div>
+					<div class="col-3" *ngFor="let state of yesNoStates">
+		        		<div class="form-group">
+							<label>{{state.display}}
+							<input type="radio" 
+							class="form-control large-radio-control" 
+							[value]="state.value"
+							[(ngModel)]="model.hasDependentChildren" 
+							(ngModelChange)="setShares()"
+							name="childrenAreAdults">
+							</label>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="col-xs-12">
+		</div>
+		<div class="row">
+			<div class="col-12">
 				<h3>Other heirs</h3>
 				<div class="row">		
-				<div class="col-xs-6">
-					<div class="form-group">
-						<label>Brothers</label>
-						<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfBrothers" class="form-control"
-						(ngModelChange)="setShares()"/>
+					
+					<div class="col-4" *ngIf="model.isMale">
+		        		<div class="form-group">
+							<label>
+								Wives
+							</label>
+							<input type="number" min="0" max="4" 
+									class="form-control" 
+									[(ngModel)]="model.wives" 
+									(ngModelChange)="setShares()"/>
+							</div>
 					</div>
-				</div>
-				<div class="col-xs-6">
-					<div class="form-group">
-						<label>Sisters</label>
-						<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSisters" class="form-control"
-						(ngModelChange)="setShares()"/>
+					<div class="col-4" *ngIf="!model.isMale">
+						<div class="form-group">
+							<label>
+								Husband
+							</label>
+							<input type="checkbox"  
+								class="form-control" 
+								[(ngModel)]="model.husband" 
+								(ngModelChange)="setShares()"/>
+						</div>
 					</div>
-				</div>
+					<div class="col-4">
+						<div class="form-group">
+							<label>Brothers</label>
+							<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfBrothers" class="form-control"
+							(ngModelChange)="setShares()"/>
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="form-group">
+							<label>Sisters</label>
+							<input type="number" min="0" step="1" max="100" [(ngModel)]="model.numberOfSisters" class="form-control"
+							(ngModelChange)="setShares()"/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-8">
-		<div class="row">
-			
-			<div class="col-xs-12">
-				<base-chart class="chart"
+		<div class="pie-chart-holder">
+			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+				[style.width]="pieChartSize+'px'" [style.height]="pieChartSize+'px'">
+				<template ngFor [ngForOf]="calculateSectors()" let-sector>
+					<circle [attr.cx]="sector.L" [attr.cy]="sector.L" [attr.r]="sector.L" 
+					[attr.fill]="sector.color" *ngIf="sector.percentage==1"/>
+
+				   	<path xmlns="http://www.w3.org/2000/svg" *ngIf="sector.percentage!=1"
+				   	 [attr.fill]="sector.color" 
+				   	[attr.d]="'M' + sector.L + ',' + sector.L + ' L' + sector.L*2 +',' + sector.L + ' A' + sector.L + ',' + sector.L + ' 0 '+sector.largeArc+','+sector.arcSweep+' ' + sector.X + ', ' + sector.Y "
+				   	[attr.transform]="'rotate(' + sector.R + ', '+ sector.L+', '+ sector.L+')'"
+				   	/>
+				
+				</template>
+		 	</svg>
+	 	</div>
+		<!-- <base-chart class="chart"
 			           [data]="pieChartData"
 			           [labels]="pieChartLabels"
 			           [chartType]="pieChartType"
 			           [options]="pieChartOptions"
 			           [colors]="pieChartColors"
 			           >
-			    </base-chart>
-			</div>
-		</div>
+			    </base-chart> -->
 	</div>
 </div>
 <div class="row">
@@ -127,6 +156,7 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
+					<th>Colour</th>
 					<th>Relationship</th>
 					<th>Share as percent</th>
 					<th>Share as a fraction</th> 
@@ -135,6 +165,9 @@
 			<tbody>
 			<template ngFor [ngForOf]="model.shares" let-share>
 				<tr>
+					<td [style.background-color]="getColour(share)">
+						&nbsp;
+					</td>
 					<td>
 						{{share.relationshipToDeceased}}
 					</td>
@@ -151,7 +184,7 @@
 	</div>
 </div>
 <div *ngIf="overAllocationSituations.length>0">
-Example situations
+<h3>All situation permutations</h3>
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -159,6 +192,7 @@ Example situations
 			<th> Father </th>
 			<th> Sons</th>
 			<th> Daughters</th>
+			<th> Dependent Children</th>
 			<th> Married </th>
 			<th> Male </th>
 			<th> Brothers </th>
@@ -167,7 +201,7 @@ Example situations
 		</tr>
 	</thead>
 	<tbody>
-		<template ngFor [ngForOf]="overAllocationSituations" let-situation>
+		<template ngFor [ngForOf]="exampleSituations" let-situation>
 			<tr>
 				<td>
 					<span *ngIf="situation.hasMother">Y</span>
@@ -182,6 +216,10 @@ Example situations
 				</td>
 				<td>
 					{{situation.numberOfDaughters}}
+				</td>
+				<td>
+					<span *ngIf="situation.hasDependentChildren">Y</span>
+					<span *ngIf="!situation.hasDependentChildren">N</span>
 				</td>
 				<td>
 					<span *ngIf="situation.isMarried">Y</span>

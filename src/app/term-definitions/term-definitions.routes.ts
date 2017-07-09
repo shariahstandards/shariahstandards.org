@@ -1,7 +1,7 @@
-import { RouterConfig }          from '@angular/router';
+import { Routes }          from '@angular/router';
 import { TermDefinitionsComponent }   from './term-definitions.component';
 
-export const termDefinitionsRoutes: RouterConfig = [
+export const termDefinitionsRoutes: Routes = [
   { path: 'terms', component: TermDefinitionsComponent },
   { path: 'terms/:term', component: TermDefinitionsComponent },
 ];

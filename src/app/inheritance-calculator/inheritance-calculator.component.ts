@@ -1,8 +1,11 @@
-import {CHART_DIRECTIVES} from 'ng2-charts/ng2-charts';
-import {CORE_DIRECTIVES, NgClass,FORM_DIRECTIVES} from '@angular/common';
-import { Component, OnInit, OnChanges,Input } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+// import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { NgClass} from '@angular/common';
+import { NgModule, Component, OnInit, OnChanges,Input } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 export interface inheritanceSituation{
+	wives:number,
+	husband:boolean,
 	hasMother:boolean,
 	hasFather:boolean,
 	numberOfSons:number,
@@ -10,12 +13,12 @@ export interface inheritanceSituation{
 	numberOfBrothers:number,
 	numberOfSisters:number,
 	isMale:boolean,
-	isMarried:boolean,
 	shares:inheritanceShare[],
 	allocatedShare:number,
 	allocatedShareFraction:Fraction,
 	unallocatedShare:number,
-	unallocatedShareFraction:Fraction
+	unallocatedShareFraction:Fraction,
+	hasDependentChildren:boolean
 }
 export class Fraction{
 	constructor(public top:number,public bottom:number){
@@ -36,6 +39,16 @@ export class Fraction{
 		var c=Fraction.minus(a,b);
 		if(c.top>0){return b;}
 		return a;
+	}
+	static divide(a:Fraction,b:Fraction){
+		var f = new Fraction(a.top*b.bottom,a.bottom*b.top)
+		f.reduce();
+		return f;
+	}
+	static multiply(a:Fraction,b:Fraction){
+		var f = new Fraction(a.top*b.top,a.bottom*b.bottom)
+		f.reduce();
+		return f;
 	}
 	static divideByInt(a:Fraction,n:number){
 		var f = new Fraction(a.top,a.bottom*Math.round(n))
@@ -76,41 +89,119 @@ export interface inheritanceShare{
 }
 @Component({
   selector: 'app-inheritance-calculator',
-  templateUrl: 'inheritance-calculator.component.html',
-  styleUrls: ['inheritance-calculator.component.css'],
-  directives:[CHART_DIRECTIVES,NgClass,CORE_DIRECTIVES,FORM_DIRECTIVES,ROUTER_DIRECTIVES]
+  templateUrl: './inheritance-calculator.component.html',
+  styleUrls: ['./inheritance-calculator.component.css']
+  // directives:[NgClass,CORE_DIRECTIVES,FORM_DIRECTIVES,ROUTER_DIRECTIVES]
+ // directives:[NgClass]
 })
 export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 
 	model:inheritanceSituation={
+		husband:false,
+		wives:0,
 		hasMother:false,
 		hasFather:false,
 		numberOfSons:0,
 		numberOfDaughters:0,
 		numberOfBrothers:0,
 		numberOfSisters:0,
-		isMale:false,
-		isMarried:false,
+		isMale:true,
 		shares:[],
 		allocatedShare:0,
 		allocatedShareFraction:new Fraction(0,1),
 		unallocatedShare:1,
-		unallocatedShareFraction:new Fraction(1,1)
+		unallocatedShareFraction:new Fraction(1,1),
+		hasDependentChildren:true
 	};
 	pieChartData:number[]
 	pieChartLabels:string[]
 	pieChartColours:{}[]
 	pieChartType:string='pie'
 	pieChartOptions={
-		tooltips:{
-			callbacks:{
-				label:function(item,data){
+		// tooltips:{
+		// 	callbacks:{
+		// 		label:function(item,data){
 
-					return data.labels[item.index]+" : "+data.datasets[0].data[item.index].toFixed(3)+"%";
-				}
-			}
-		}
+		// 			return data.labels[item.index]+" : "+data.datasets[0].data[item.index].toFixed(3)+"%";
+		// 		}
+		// 	}
+		// }
 	}
+	pieChartSize:number=300;
+	
+	// from https://danielpataki.com/svg-pie-chart-javascript/
+	calculateSectors(  ) {
+		var data = {
+			size:this.pieChartSize,
+			sectors:this.model.shares.map(s=>{
+				return {
+					percentage:s.share,
+					label:s.relationshipToDeceased+" "+s.counter
+				}
+			})
+		};
+	    var sectors = [];
+	    // var colors = [
+	    //     "#61C0BF", "#DA507A", "#BB3D49", "#DB4547"
+	    // ];
+	    var colors=this.model.shares.map(s=>{
+	    	return this.getColour(s);
+	    })
+	    var l = data.size / 2
+	    var a = 0 // Angle
+	    var aRad = 0 // Angle in Rad
+	    var z = 0 // Size z
+	    var x = 0 // Side x
+	    var y = 0 // Side y
+	    var X = 0 // SVG X coordinate
+	    var Y = 0 // SVG Y coordinate
+	    var R = 0 // Rotation
+	    var aCalc,arcSweep;
+
+	    data.sectors.map( function(item, key ) {
+	        //a = 360 * ;
+	       // aCalc = ( a > 180 ) ? 360 - a : a;
+	        aRad = item.percentage * 2 * Math.PI;
+	        y=l*Math.sin(aRad);
+	        x=l*Math.cos(aRad);
+	        //z = Math.sqrt( 2*l*l - ( 2*l*l*Math.cos(aRad) ) );
+	        // if( aCalc <= 90 ) {
+	        //     x = l*Math.sin(aRad);
+	        // }
+	        // else {
+	        //     x = l*Math.sin((180 - aCalc) * Math.PI/180 );
+	        // }
+	        
+	        // y = Math.sqrt( z*z - x*x );
+	        // // if(isNaN(y)){
+	        // // 	y=0;
+	        // // }
+	        // Y = y;
+            X = l + x;
+            var largeArc=0;
+            var arcSweep=1;
+	        if( aRad > Math.PI ) {
+	         	largeArc=1
+	        }
+	        Y = l + y;
+	        sectors.push({
+	            percentage: item.percentage,
+	            label: item.label,
+	            color: colors[key],
+	            arcSweep: arcSweep,
+	            largeArc:largeArc,
+	            L: l,
+	            X: X,
+	            Y: Y,
+	            R: R
+	        });
+
+	        R = R + aRad*180/Math.PI;
+	    })
+
+    	return sectors
+	}
+
 	pieChartColors:{}
 	ngOnChanges(changes) {
       console.log(changes);
@@ -133,6 +224,30 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			return 0;
 		});
   	}
+  	yesNoStates=[
+  		{
+	  		value:true,display:"Yes"
+	  	},
+	  	{
+	  		value:false,display:"No"
+	  	}
+  	]
+  	genders=[
+  		{
+	  		value:true,display:"Male"
+	  	},
+	  	{
+	  		value:false,display:"Female"
+	  	}
+  	]
+  	marritalStatuses=[
+	  	{
+	  		value:true,display:"Married"
+	  	},
+	  	{
+	  		value:false,display:"Single"
+	  	}
+  	];
   	pieChartDataStructure:{}
   	setShares(){
 		this.calculateShares(this.model);
@@ -166,17 +281,17 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		}];
 	}
 	getHoverColour(hexColour:string){
-		console.log(hexColour);
+		//console.log(hexColour);
 		var r=hexColour.substring(1,3);
 		var g=hexColour.substring(3,5);
 		var b=hexColour.substring(5);
-		console.log(r+" "+g+" "+b);
+		// console.log(r+" "+g+" "+b);
 		
 		var reducedColour= "#"
 		+this.reduceIntensity(r)
 		+this.reduceIntensity(g)
 		+this.reduceIntensity(b);
-		console.log(reducedColour);
+	//	console.log(reducedColour);
 		return reducedColour;
 	}
 	reduceIntensity(hexPair:string){
@@ -198,8 +313,9 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		if(share.relationshipToDeceased=="father"){
 			return "#824E2C"
 		}
-		if(share.relationshipToDeceased=="wives"){
-			return "#A7E2E1"
+		if(share.relationshipToDeceased=="wife"){
+			var hex=this.toHexPair(share.counter);
+			return "#"+hex+hex+"00";
 		}
 		if(share.relationshipToDeceased=="husband"){
 			return "#35E0DA"
@@ -254,7 +370,7 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 				fraction:Fraction.divideByInt(new Fraction(2,3),situation.numberOfDaughters)
 			});
 		}
-		if(situation.numberOfSons +situation.numberOfDaughters>0){
+		if((situation.numberOfSons +situation.numberOfDaughters)>0){
 			if(situation.hasFather){
 				situation.shares.push(
 				{
@@ -275,15 +391,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			}
 		}
 		if(situation.numberOfSons +situation.numberOfDaughters	==0){
-			if(situation.hasFather){
-				situation.shares.push(
-				{
-					relationshipToDeceased:"father",
-					counter:null,
-					share:(1.0/6.0),
-					fraction:new Fraction(1,6)
-				});
-			}
+			// if(situation.hasFather){
+			// 	situation.shares.push(
+			// 	{
+			// 		relationshipToDeceased:"father",
+			// 		counter:null,
+			// 		share:(1.0/6.0),
+			// 		fraction:new Fraction(1,6)
+			// 	});
+			// }
 			if(situation.hasMother){
 				if(situation.numberOfBrothers==0){
 					situation.shares.push(
@@ -312,45 +428,58 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		if(situation.unallocatedShareFraction.top==0){
 			return;
 		}
-		if(situation.isMarried){
-			if(situation.numberOfSons+situation.numberOfDaughters==0){
-				if(!situation.isMale){
+		
+		if(situation.numberOfSons+situation.numberOfDaughters==0){
+			if(!situation.isMale && situation.husband){
+				situation.shares.push({
+					relationshipToDeceased:"husband",
+					counter:null,
+					share: Math.min(0.5,situation.unallocatedShare),
+					fraction:Fraction.minimum(new Fraction(1,2),situation.unallocatedShareFraction)
+
+				});
+			}
+			if(situation.isMale && situation.wives>0){
+				var collectiveShareForWives=Math.min(0.25,situation.unallocatedShare);
+				var shareForEachWife=collectiveShareForWives / situation.wives;
+				var collectiveFractionForWives=Fraction.minimum(new Fraction(1,4),situation.unallocatedShareFraction);
+				var fractionForEachWife = Fraction.divideByInt(collectiveFractionForWives,situation.wives);
+				for(var w=1;w<=situation.wives;w++){
 					situation.shares.push({
-						relationshipToDeceased:"husband",
-						counter:null,
-						share: Math.min(0.5,situation.unallocatedShare),
-						fraction:Fraction.minimum(new Fraction(1,2),situation.unallocatedShareFraction)
+						relationshipToDeceased:"wife",
+						counter:w,
+						share:shareForEachWife,
+						fraction:fractionForEachWife
 
 					});
 				}
-				if(situation.isMale){
+			}
+		}else{
+			if(!situation.isMale && situation.husband){
+				situation.shares.push({
+					relationshipToDeceased:"husband",
+					counter:null,
+					share:Math.min(0.25,situation.unallocatedShare),
+					fraction:Fraction.minimum(new Fraction(1,4),situation.unallocatedShareFraction)
+				});
+			}
+			if(situation.isMale && situation.wives>0){
+				var collectiveShareForWives=Math.min(0.125,situation.unallocatedShare);
+				var shareForEachWife=collectiveShareForWives / situation.wives;
+				var collectiveFractionForWives=Fraction.minimum(new Fraction(1,8),situation.unallocatedShareFraction);
+				var fractionForEachWife = Fraction.divideByInt(collectiveFractionForWives,situation.wives);
+				for(var w=1;w<=situation.wives;w++){
 					situation.shares.push({
-						relationshipToDeceased:"wives",
-						counter:null,
-						share:Math.min(0.25,situation.unallocatedShare),
-						fraction:Fraction.minimum(new Fraction(1,4),situation.unallocatedShareFraction)
+						relationshipToDeceased:"wife",
+						counter:w,
+						share:shareForEachWife,
+						fraction:fractionForEachWife
 
-					});
-				}
-			}else{
-				if(!situation.isMale){
-					situation.shares.push({
-						relationshipToDeceased:"husband",
-						counter:null,
-						share:Math.min(0.25,situation.unallocatedShare),
-						fraction:Fraction.minimum(new Fraction(1,4),situation.unallocatedShareFraction)
-					});
-				}
-				if(situation.isMale){
-					situation.shares.push({
-						relationshipToDeceased:"wives",
-						counter:null,
-						share:Math.min(0.125,situation.unallocatedShare),
-						fraction:Fraction.minimum(new Fraction(1,8),situation.unallocatedShareFraction)
 					});
 				}
 			}
 		}
+		
 		this.calculateAllocatedShare(situation);
 		
 		if(situation.unallocatedShare<0.00001){
@@ -360,12 +489,15 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			return;
 		}
 		//kalalah
+		var hasDependentChildren=situation.hasDependentChildren&&(situation.numberOfDaughters>0 || situation.numberOfSons>0);
+
 		if(
 			(!situation.hasFather && !situation.hasMother)
-			||(situation.numberOfSons==0 && situation.numberOfDaughters==0)
+			&& ((situation.numberOfSons==0 && situation.numberOfDaughters==0) 
+				|| !hasDependentChildren)
 			){
 			var siblingCount=situation.numberOfSisters+situation.numberOfBrothers;
-			if(situation.numberOfSons+situation.numberOfDaughters>0){
+			if((situation.numberOfSons+situation.numberOfDaughters>0) && !hasDependentChildren){
 
 				var adjustedShare=Math.min(1.0/3.0,situation.unallocatedShare);
 				var adjustedShareFraction=Fraction.minimum(new Fraction(1,3),situation.unallocatedShareFraction);
@@ -477,6 +609,54 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 			}
 		
 		}
+		if(situation.numberOfSons==0 && situation.numberOfDaughters==0 && situation.hasFather){
+			situation.shares.push({
+				relationshipToDeceased:"father",
+				fraction:situation.unallocatedShareFraction,
+				share:situation.unallocatedShare,
+				counter:null
+			})
+		}
+		this.calculateAllocatedShare(situation);
+		if(situation.unallocatedShare<0.00001){
+			return;
+		}
+		// if(situation.hasFather || situation.hasMother
+		//  || situation.numberOfSons>0 || situation.numberOfDaughters>0){
+			// var parentsAndChildrensTotalShareFraction=new Fraction(0,1);
+			// situation.shares.forEach(share=>{
+			// 	if(share.relationshipToDeceased=="father" 
+			// 		|| share.relationshipToDeceased=="mother"
+			// 		|| share.relationshipToDeceased=="daughter"
+			// 		|| share.relationshipToDeceased=="son")
+			// 	{
+			// 		parentsAndChildrensTotalShareFraction=
+			// 		Fraction.add(parentsAndChildrensTotalShareFraction,share.fraction);
+			// 	}
+			// })
+			console.log("reallocating unused shares to minimum shares");
+			// console.log("qualifying minimum shares"+parentsAndChildrensTotalShareFraction.top+" / "+parentsAndChildrensTotalShareFraction.bottom);
+			situation.shares.forEach(share=>{
+				// if(share.relationshipToDeceased=="father" 
+				// 	|| share.relationshipToDeceased=="mother"
+				// 	|| share.relationshipToDeceased=="daughter"
+				// 	|| share.relationshipToDeceased=="son")
+				// {
+					var additionalShareOfRemainder=Fraction
+						.divide(share.fraction,situation.allocatedShareFraction);
+					console.log(share.relationshipToDeceased+ " has share of remainder = "
+						+additionalShareOfRemainder.top+" / "+additionalShareOfRemainder.bottom);
+					
+					var additionalShareOfEstate=
+						Fraction.multiply(situation.unallocatedShareFraction,additionalShareOfRemainder);
+					console.log(share.relationshipToDeceased+ " has additional share of estate = "
+						+additionalShareOfEstate.top+" / "+additionalShareOfEstate.bottom);
+				
+					share.fraction = Fraction.add(share.fraction,additionalShareOfEstate);
+					share.share=share.share+(additionalShareOfEstate.top/additionalShareOfEstate.bottom)
+				// }
+			});
+		// }
 		this.calculateAllocatedShare(situation);
 		if(situation.unallocatedShare<0.00001){
 			return;
@@ -515,7 +695,11 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 		situation.unallocatedShareFraction = Fraction.minus(new Fraction(1,1),sum)
     }
     ngOnInit() {
-  	var hasMotherStatuses=[true,false];
+  		this.setShares()
+   	}
+    calculateAllExampleShares(){
+
+   	var hasMotherStatuses=[true,false];
   	for(var m=0;m<hasMotherStatuses.length;m++){
   		var hasMother=hasMotherStatuses[m];
   		var hasFatherStatuses =[true,false];
@@ -539,24 +723,31 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
   								var isMarriedStatuses=[true,false];
   								for(var m3=0;m3<isMarriedStatuses.length;m3++){
   									var isMarried=isMaleStatuses[m3];
-  									var situation:inheritanceSituation={
-  										hasFather:hasFather,
-  										hasMother:hasMother,
-  										isMale:isMale,
-  										isMarried:isMarried,
-  										numberOfBrothers:numberOfBrothers,
-  										numberOfDaughters:numberOfDaughters,
-  										numberOfSisters:numberOfSisters,
-  										numberOfSons:numberOfSons,
-  										shares:[],
-  										allocatedShare:0.0,
-  										unallocatedShare:1.0,
-  										allocatedShareFraction:new Fraction(0,1),
-  										unallocatedShareFraction:new Fraction(1,1)
-  									};
-							  		this.calculateShares(situation);
+  									var hasDependentChildrenStatuses=[true,false];
+  									for(var ca=0;ca<hasDependentChildrenStatuses.length;ca++)
+  									{
+  										var hasDependentChildren=hasDependentChildrenStatuses[ca];
+	  									var situation:inheritanceSituation={
+	  										hasFather:hasFather,
+	  										hasMother:hasMother,
+	  										isMale:isMale,
+	  										wives:(isMarried && !isMale)?1:0,
+	  										husband:(isMarried && isMale),
+	  										numberOfBrothers:numberOfBrothers,
+	  										numberOfDaughters:numberOfDaughters,
+	  										numberOfSisters:numberOfSisters,
+	  										numberOfSons:numberOfSons,
+	  										shares:[],
+	  										allocatedShare:0.0,
+	  										unallocatedShare:1.0,
+	  										allocatedShareFraction:new Fraction(0,1),
+	  										unallocatedShareFraction:new Fraction(1,1),
+	  										hasDependentChildren:hasDependentChildren
+	  									};
+								  		this.calculateShares(situation);
+								  		this.exampleSituations.push(situation);
+  									}
 
-							  		this.exampleSituations.push(situation);
 							  	//	console.log(situation.allocatedShare);
 							  	}
 						  	}
@@ -572,7 +763,6 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
   	this.underAllocationSituations=this.exampleSituations.filter(function(situation){
   		return situation.allocatedShare==0.0
   	});
-  	this.setShares()
   }
   overAllocationSituations:inheritanceSituation[]=[]
   underAllocationSituations:inheritanceSituation[]=[]

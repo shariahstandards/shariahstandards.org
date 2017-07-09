@@ -1,11 +1,18 @@
- <h1  class="pull-left"><img title="logo" src="/content/images/logo.svg" width="100px">ShariahStandards.org</h1><span class="tagline">Developing a global open standard interpretation of Islamic law in English</span>
- <div class="clearfix"></div>
-  <nav>
-    <a routerLinkActive="active-route"  [routerLinkActiveOptions]="{exact: true}" [routerLink]="['']">Prayer Times and Direction</a>
-    <a routerLinkActive="active-route" [routerLink]="['/zakat']">Zakat Calculator</a>
-    <a routerLinkActive="active-route" [routerLink]="['/inheritance']">Inheritance Calculator</a>
-    <a routerLinkActive="active-route" [routerLink]="['/standards']">Standards</a>
-    <a routerLinkActive="active-route" [routerLink]="['/terms']">Terminology</a>
-    <a routerLinkActive="active-route" [routerLink]="['/about-us']">About Us</a>
-  </nav>
-  <router-outlet></router-outlet>
+ 
+<div class="pull-left">
+  <img title="logo" src="/assets/content/images/logo.svg" width="100px">
+ </div>
+<h1>ShariahStandards.org</h1>
+<div>Developing a global open standard interpretation of Islamic law in English</div>
+<div class="clearfix"></div>
+ 
+<nav>
+  <a routerLinkActive="active-route" 
+  [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
+  <a routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
+  <a routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>
+  <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a>
+  <!-- <a routerLinkActive="active-route" [routerLink]="'/terms'">Terminology</a> -->
+  <a routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
+</nav>
+<router-outlet></router-outlet>

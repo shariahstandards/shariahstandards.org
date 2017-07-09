@@ -1,18 +1,18 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: '[term]',
-  templateUrl: 'term.component.html',
-  styleUrls: ['term.component.css'],
-  directives: [ROUTER_DIRECTIVES]
+  templateUrl: './term.component.html',
+  styleUrls: ['./term.component.css'],
+  // directives: [ROUTER_DIRECTIVES]
 })
 export class TermComponent implements OnInit {
-  @Input('term') name:string;
+  @Input("term") content:string	
   constructor() { }
 
   ngOnInit() {
-  	console.log("creating term component "+this.name);
+//  	console.log("creating term component "+this.content);
   }
 
 }

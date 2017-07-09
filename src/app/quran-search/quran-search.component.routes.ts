@@ -1,7 +1,10 @@
-import { RouterConfig }          from '@angular/router';
+import { Routes }          from '@angular/router';
 import { QuranSearchComponent }   from './quran-search.component';
 
-export const quranSearchRoutes: RouterConfig = [
+export const quranSearchRoutes: Routes = [
   { path: 'quran', component: QuranSearchComponent },
-  { path: 'quran/:searchText', component: QuranSearchComponent }
+  { path: 'quran/search/:searchText', component: QuranSearchComponent },
+  { path: 'quran/surah/:surahNumber/verse/:verseNumber', component: QuranSearchComponent },
+  { path: 'quran/surah/:surahNumber/verse/:verseNumber/:searchText', component: QuranSearchComponent },
+  { path: 'quran/surah/:surahNumber/verse/:verseNumber/:searchText/:wordToHighlight', component: QuranSearchComponent },
 ];

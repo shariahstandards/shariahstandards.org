@@ -1,10 +1,10 @@
-import { Angular2SalahTimesPage } from './app.po';
+import { ShariahstandardsPage } from './app.po';
 
-describe('angular2-salah-times App', function() {
-  let page: Angular2SalahTimesPage;
+describe('shariahstandards App', function() {
+  let page: ShariahstandardsPage;
 
   beforeEach(() => {
-    page = new Angular2SalahTimesPage();
+    page = new ShariahstandardsPage();
   });
 
   it('should display message saying app works', () => {

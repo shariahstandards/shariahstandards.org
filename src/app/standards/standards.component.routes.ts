@@ -1,7 +1,7 @@
-import { RouterConfig }          from '@angular/router';
+import { Routes }          from '@angular/router';
 import { StandardsComponent }   from './standards.component';
 
-export const standardsRoutes: RouterConfig = [
+export const standardsRoutes: Routes = [
   { path: 'standards', component: StandardsComponent },
   { path: 'standards/:section', component: StandardsComponent }
 ];
