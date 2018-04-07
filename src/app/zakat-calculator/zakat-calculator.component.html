@@ -34,7 +34,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<template ngFor [ngForOf]="assets" let-asset>
+			<ng-template ngFor [ngForOf]="assets" let-asset>
 			<tr>
 				<td>
 					{{asset.description}}
@@ -46,7 +46,7 @@
 					<button type="button" class="btn btn-default" (click)="removeAsset(asset)">X</button>
 				</td>
 			</tr>
-			</template>
+			</ng-template>
 		</tbody>
 	</table>
 		<div class="col-md-5">
@@ -87,7 +87,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<template ngFor [ngForOf]="debts" let-debt>
+			<ng-template ngFor [ngForOf]="debts" let-debt>
 			<tr>
 				<td>
 					{{debt.description}}
@@ -99,7 +99,7 @@
 					<button type="button" class="btn btn-default" (click)="removeDebt(debt)">X</button>
 				</td>
 			</tr>
-			</template>
+			</ng-template>
 		</tbody>
 	</table>
 		<div class="col-md-5">

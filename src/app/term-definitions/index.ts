@@ -1,1 +1,1 @@
-export * from './word-definitions.component';
+export * from './term-definitions.component';

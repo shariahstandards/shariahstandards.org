@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-variable */
 
-import { addProviders, async, inject } from '@angular/core/testing';
+import { addProviders, async, inject } from 'jasmine-core';
 import { CurrencyService } from './currency.service';
 
 describe('Service: Currency', () => {

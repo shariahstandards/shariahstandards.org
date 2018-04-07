@@ -142,7 +142,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			<template ngFor [ngForOf]="model.shares" let-share>
+			<ng-template ngFor [ngForOf]="model.shares" let-share>
 				<tr>
 					<td [style.background-color]="getColour(share)">
 						&nbsp;
@@ -157,7 +157,7 @@
 						{{share.fraction.top}} / {{share.fraction.bottom}}
 					</td>
 				</tr>
-			</template>
+			</ng-template>
 			</tbody>
 		</table> 
 	</div>
@@ -180,7 +180,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<template ngFor [ngForOf]="exampleSituations" let-situation>
+		<ng-template ngFor [ngForOf]="exampleSituations" let-situation>
 			<tr>
 				<td>
 					<span *ngIf="situation.hasMother">Y</span>
@@ -218,7 +218,7 @@
 					{{situation.allocatedShare.toPrecision(5)*100}} %
 				</td>
 			</tr>			
-		</template>
+		</ng-template>
 	</tbody>
 </table>	
 </div>

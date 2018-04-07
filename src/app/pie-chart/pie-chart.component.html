@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 	x="0px" y="0px" [attr.width]="size+'px'" [attr.height]="size+'px'" [attr.viewBox]="'0 0 '+size+' '+size">
-	<template ngFor [ngForOf]="calculateSectors()" let-sector>
+	<ng-template ngFor [ngForOf]="calculateSectors()" let-sector>
 		<circle [attr.cx]="sector.L" [attr.cy]="sector.L" [attr.r]="sector.L" 
 		[attr.fill]="sector.color" *ngIf="sector.percentage==1"/>
 
@@ -9,5 +9,5 @@
 	   	[attr.d]="'M' + sector.L + ',' + sector.L + ' L' + sector.L*2 +',' + sector.L + ' A' + sector.L + ',' + sector.L + ' 0 '+sector.largeArc+','+sector.arcSweep+' ' + sector.X + ', ' + sector.Y "
 	   	[attr.transform]="'rotate(' + sector.R + ', '+ sector.L+', '+ sector.L+')'"
 	   	/>
-	</template>
+	</ng-template>
 </svg>

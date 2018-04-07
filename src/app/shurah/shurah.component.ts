@@ -26,7 +26,7 @@ export class ShurahComponent implements OnInit {
     private router:Router,
     private changeDetectorRef:ChangeDetectorRef,
     private shurahService:ShurahService,
-    private auth: AuthService,
+    public auth: AuthService,
     private modalService: NgbModal
 ) { 
 

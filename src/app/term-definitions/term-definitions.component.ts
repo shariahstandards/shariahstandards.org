@@ -20,7 +20,7 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   constructor( 
   	private route:ActivatedRoute,
     private shurahService:ShurahService,
-    private auth: AuthService,
+    public auth: AuthService,
     private modalService: NgbModal,
     private router:Router
   	) {

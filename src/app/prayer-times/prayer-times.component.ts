@@ -3,7 +3,7 @@ import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router'
-import {AlertComponent, DatepickerModule, ModalModule} from 'ng2-bootstrap/ng2-bootstrap';
+//import {AlertComponent, DatepickerModule, ModalModule} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModule,NgbDateStruct} from '@ng-bootstrap/ng-bootstrap'
 import {Subscription} from 'rxjs/Subscription'
 import 'moment';

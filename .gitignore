@@ -51,3 +51,6 @@ api/WebApi/obj/*
 api/_NCrunch*/*
 **/.suo
 **/*.user
+/cordova sample/
+/distunoptimised/
+/api/.vs/

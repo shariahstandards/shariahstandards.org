@@ -30,17 +30,17 @@ export class SuggestionDetailComponent implements OnInit {
 		return moment(dateText,"YYYYMMDDTHH:mm:ss").format("ddd Do MMM HH:mm:ss");
 	}
 	addComment(){
-		this.shurahService.commentOnSuggestion(this.addCommentModel,this.suggestion.id).subscribe(r=>
-			{
-				var response = r.json();
-				if(response.hasError){
-					alert(response.error);
-				}
-				else{
-					this.refresh();
-					this.addCommentModel={};
-				}
-			});
+		// this.shurahService.commentOnSuggestion(this.addCommentModel,this.suggestion.id).subscribe(r=>
+		// 	{
+		// 		var response = r.json();
+		// 		if(response.hasError){
+		// 			alert(response.error);
+		// 		}
+		// 		else{
+		// 			this.refresh();
+		// 			this.addCommentModel={};
+		// 		}
+		// 	});
 	}
 	showingComments:boolean=false;
 	toggleShowComments(){

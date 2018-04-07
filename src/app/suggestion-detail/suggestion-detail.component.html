@@ -1,8 +1,8 @@
 <div class="card">
 	<div class="card-header">
-		<div class="pull-left">
+		<!-- <div class="pull-left">
 			<a [routerLink]="'/suggestions/'+organisationId+'/details/'+suggestion.id"> <h4>{{suggestion.title}}</h4></a>
-		</div>
+		</div> -->
 		<div class="pull-right" >
 			<button *ngIf="canDelete()" class="btn btn-danger" (click)="deleteSuggestion()">Delete</button>
 			{{formatDate(suggestion.dateTimeText)}} 

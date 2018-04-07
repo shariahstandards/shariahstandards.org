@@ -12,10 +12,10 @@ import { TermDefinitionsComponent} from './term-definitions/term-definitions.com
 import { TermComponent } from './term/term.component';
 import { StandardsComponent } from './standards/standards.component';
 import { QuranSearchComponent } from './quran-search/quran-search.component';
+import {QuranReferenceComponent} from './quran-reference/quran-reference.component';
 import { PrayerTimesComponent } from './prayer-times/prayer-times.component';
 import { AboutUsComponent } from './about-us/about-us.component';
-import { AUTH_PROVIDERS }      from 'angular2-jwt';
-import {AlertModule, DatepickerModule} from 'ng2-bootstrap/ng2-bootstrap';
+// import { AUTH_PROVIDERS }      from 'angular2-jwt';
 import {routing,appRoutingProviders} from './routes';
 import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
 import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
@@ -25,6 +25,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {UserProfileRegistrationService} from './user-profile-registration.service'
 import {AuthenticatedHttpService} from './authenticated-http.service';
 import { ShurahComponent } from './shurah/shurah.component'
+import {OrganisationComponent} from './organisation/organisation.component';
+import {RegisterComponent} from './register/register.component';
+import {SuggestionDetailComponent} from './suggestion-detail/suggestion-detail.component';
 import { MembershipRuleSectionComponent } from './shurah/membership-rule-section.component';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { SuggestionDetailsComponent } from './suggestion-details/suggestion-details.component';
@@ -43,6 +46,8 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
     TermComponent,
     StandardsComponent,
     QuranSearchComponent,
+    OrganisationComponent,
+    QuranReferenceComponent,
     PrayerTimesComponent,
     AboutUsComponent,
     ArabicKeyboardComponent,
@@ -54,7 +59,9 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
     ShurahNavigationComponent,
     MemberComponent,
     MemberDetailsComponent,
-    PieChartComponent
+    PieChartComponent,
+    RegisterComponent,
+    SuggestionDetailComponent
       ],
   imports: [
     BrowserModule,
@@ -62,7 +69,6 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
     CommonModule,
     FormsModule,
     // ChartsModule,
-    DatepickerModule,
     InfiniteScrollModule,
     NgbModule.forRoot(),
    routing
@@ -70,7 +76,7 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
    providers: [
     appRoutingProviders,
     UserProfileRegistrationService,
-    AUTH_PROVIDERS,
+    // AUTH_PROVIDERS,
     AuthService,
     AuthenticatedHttpService,
     {

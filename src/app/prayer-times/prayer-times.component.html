@@ -213,7 +213,7 @@
 				  		</tr>
 				  	</thead>
 					<tbody>
-						<template ngFor [ngForOf]="calendar" let-day>
+						<ng-template ngFor [ngForOf]="calendar" let-day>
 						<tr *ngIf="day.timeZoneChange">
 							<td colspan="8">
 								<div style="text-align:center">
@@ -255,7 +255,7 @@
 								There is a new moon visible before isha on {{day.formatedDate}}
 							</td>
 						</tr> -->
-						</template>
+						</ng-template>
 					</tbody>
 			  	</table>
 		  	</div>

@@ -15,6 +15,6 @@ declare var shariahStandardsApiUrlBase:string;
 })
 export class ShariahStandardsAppComponent {
   title = 'Muslim Prayer Times and Directions';
-  public constructor(private viewContainerRef: ViewContainerRef,private auth: AuthService) {
+  public constructor(private viewContainerRef: ViewContainerRef,public auth: AuthService) {
   }
 }

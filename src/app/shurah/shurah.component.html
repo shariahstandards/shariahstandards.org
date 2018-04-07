@@ -50,7 +50,8 @@
     <p *ngIf="!auth.authenticated()">
       Log in above to see membership status
     </p>
-    <p *ngIf="organisation && organisation.member==null && auth.authenticated() && !hideButtons && !organisation.hasPendingApplication">
+    <p *ngIf="organisation && organisation.member==null && auth.authenticated() && !hideButtons">
+      <!--has pending application logic missing-->
       You are currently not a member of this organisation.
       <button (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)"> Apply to join </button>
     </p>
@@ -59,10 +60,10 @@
   
       <button class="btn btn-danger" (click)="leave()"> Leave </button>
     </p>
-    <p *ngIf="organisation && organisation.hasPendingApplication">
+ <!--    <p *ngIf="organisation && organisation.hasPendingApplication">
       You are currently not a member of this organisation.<br/>
       Your application for membership has been submitted and is waiting for approval
-    </p>
+    </p> -->
   </div>
 </div>
 
@@ -76,7 +77,7 @@
      </div>
   </div>
 
-<template #addSectionModal let-c="close" let-d="dismiss">
+<ng-template #addSectionModal let-c="close" let-d="dismiss">
    <form>
       <div class="modal-header">
         <div class="modal-title">Add Membership Rules Section
@@ -107,9 +108,9 @@
       </div>
     </form>
 
-</template>
+</ng-template>
 
-<template #updateSectionModal let-c="close" let-d="dismiss">
+<ng-template #updateSectionModal let-c="close" let-d="dismiss">
   <form>
     <div class="modal-header">
       <div class="modal-title">Edit Membership Rules Section
@@ -140,9 +141,9 @@
     </div>
   </form>
 
-</template>
+</ng-template>
 
-<template #addMembershipRuleModal let-c="close" let-d="dismiss">
+<ng-template #addMembershipRuleModal let-c="close" let-d="dismiss">
    <form>
       <div class="modal-header">
         <div class="modal-title">Add Membership Rule
@@ -170,9 +171,9 @@
       </div>
     </form>
 
-</template>
+</ng-template>
 
-<template #updateMembershipRuleModal let-c="close" let-d="dismiss">
+<ng-template #updateMembershipRuleModal let-c="close" let-d="dismiss">
    <form>
       <div class="modal-header">
         <div class="modal-title">Update Membership Rule</div>
@@ -198,10 +199,10 @@
       </div>
     </form>
 
-</template>
+</ng-template>
 
 
-<template #applyToJoinOrganisationModal let-c="close" let-d="dismiss">
+<ng-template #applyToJoinOrganisationModal let-c="close" let-d="dismiss">
    <form #applyToJoinOrganisationModalForm="ngForm" (ngSubmit)="applyToJoin()">
       <div class="modal-header">
         <div class="modal-title">Apply to join {{applyToJoinOrganisationModel.organisationName}}</div>
@@ -245,4 +246,4 @@
       </div>
     </form>
 
-</template>
+</ng-template>
