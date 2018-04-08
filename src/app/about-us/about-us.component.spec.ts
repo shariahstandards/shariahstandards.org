@@ -2,14 +2,6 @@
 
 import { By }           from '@angular/platform-browser';
 import { DebugElement } from 'jasmine-core';
-
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from 'jasmine-core';
-
 import { AboutUsComponent } from './about-us.component';
 
 describe('Component: AboutUs', () => {

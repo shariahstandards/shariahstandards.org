@@ -7,6 +7,8 @@ import {termDefinitionModel} from './term-definition.model'
 import { AuthService } from '../auth.service';
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {updateTermDefinitionModel} from './update-term-definition.model'
+import {DefinitionText} from './definition-text.interface';
+import {TermDefinition} from './term-definition.interface';
 @Component({
   //moduleId: module.id,
   selector: 'app-term-definitions',
@@ -19,11 +21,11 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   //private route:ActivatedRoute;
   constructor( 
   	private route:ActivatedRoute,
-    private shurahService:ShurahService,
     public auth: AuthService,
     private modalService: NgbModal,
-    private router:Router
-  	) {
+    private router:Router,
+    private shurahService:ShurahService
+   	) {
   }
   termDefinitionModel:termDefinitionModel
   addTermDefinitionModel:addTermDefinitionModel

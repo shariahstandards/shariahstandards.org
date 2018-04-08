@@ -1,9 +1,9 @@
-/* tslint:disable:no-unused-variable */
+// /* tslint:disable:no-unused-variable */
 
-import { By }           from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+// import { By }           from '@angular/platform-browser';
+// import { DebugElement } from '@angular/core';
 import { addProviders, async, inject } from 'jasmine-core';
-import { ZakatCalculatorComponent } from './zakat-calculator.component';
+// import { ZakatCalculatorComponent } from './zakat-calculator.component';
 
 // describe('Component: ZakatCalculator', () => {
 //   it('should create an instance', () => {

@@ -1,16 +1,16 @@
-/* tslint:disable:no-unused-variable */
+// /* tslint:disable:no-unused-variable */
 
 import { addProviders, async, inject } from 'jasmine-core';
-import { QuranService } from './quran.service';
+// import { QuranService } from './quran.service';
 
-describe('Service: Quran', () => {
-  beforeEach(() => {
-    addProviders([QuranService]);
-  });
+// describe('Service: Quran', () => {
+//   beforeEach(() => {
+//     addProviders([QuranService]);
+//   });
 
-  it('should ...',
-    inject([QuranService],
-      (service: QuranService) => {
-        expect(service).toBeTruthy();
-      }));
-});
+//   it('should ...',
+//     inject([QuranService],
+//       (service: QuranService) => {
+//         expect(service).toBeTruthy();
+//       }));
+// });

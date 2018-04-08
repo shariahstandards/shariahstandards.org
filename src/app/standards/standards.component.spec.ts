@@ -1,9 +1,9 @@
-/* tslint:disable:no-unused-variable */
+// /* tslint:disable:no-unused-variable */
 
-import { By }           from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+// import { By }           from '@angular/platform-browser';
+// import { DebugElement } from '@angular/core';
 import { addProviders, async, inject } from 'jasmine-core';
-import { StandardsComponent } from './standards.component';
+// import { StandardsComponent } from './standards.component';
 
 // describe('Component: Standards', () => {
 //   it('should create an instance', () => {

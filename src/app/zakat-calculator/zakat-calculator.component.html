@@ -1,6 +1,7 @@
 <h3>Zakat Calculator</h3>
 <a [routerLink]="['/standards/zakat-rules']">Details of the Standard</a>
-<div class="row dependents">
+
+<div class="dependents">
 	<h4>Zakat Free Wealth Allowance</h4>
 	<div class="row">
 		<div class="col-md-5">
@@ -19,39 +20,44 @@
 			</div>
 		</div>
 		<div class="col-md-2">
+		<br/>
 			{{formattedZakatFreeWealthAllowance()}}	
 		</div>
 	</div>
-
+	</div>
 </div>
-<div class="row assets">
-	<h4>Assets of you and your dependents</h4>
- 	<table *ngIf="assets.length!=0" class="table table-striped tally">
-		<thead>
-			<tr>
-				<th>Description</th>
-				<th class="money">Value</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
+<div class="assets">
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Assets of you and your dependents</h4>
+			<br/>
+		 	<table *ngIf="assets.length!=0" class="table table-striped tally">
+				<thead>
+					<tr>
+						<th>Description</th>
+						<th class="money">Value</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
 			<ng-template ngFor [ngForOf]="assets" let-asset>
-			<tr>
-				<td>
-					{{asset.description}}
-				</td>
-				<td class="money">
-					{{formatCurrency(asset.amount)}}
-				</td>
-				<td class="actions">
-					<button type="button" class="btn btn-default" (click)="removeAsset(asset)">X</button>
-				</td>
-			</tr>
+					<tr>
+						<td>
+							{{asset.description}}
+						</td>
+						<td class="money">
+							{{formatCurrency(asset.amount)}}
+						</td>
+						<td class="actions">
+							<button type="button" class="btn btn-default" (click)="removeAsset(asset)">X</button>
+						</td>
+					</tr>
 			</ng-template>
-		</tbody>
-	</table>
+				</tbody>
+			</table>
 	<div class="container">
 		<div class="row">
+	<div class="row">
 			<div class="col-md-5">
 				<div class="form-group">
 					<select [(ngModel)]="addAssetModel.description" class="form-control" required="true">
@@ -86,34 +92,36 @@
 		</div>
 	</div>
 </div>
-<div class="row debts">
-	<h4>Debts of you and your dependents</h4>
- 	<table *ngIf="debts.length!=0" class="table table-striped tally">
-		<thead>
-			<tr>
-				<th>Description</th>
-				<th class="money">Value</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Debts of you and your dependents</h4>
+		 	<table *ngIf="debts.length!=0" class="table table-striped tally">
+				<thead>
+					<tr>
+						<th>Description</th>
+						<th class="money">Value</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
 			<ng-template ngFor [ngForOf]="debts" let-debt>
-			<tr>
-				<td>
-					{{debt.description}}
-				</td>
-				<td class="money">
-					{{formatCurrency(debt.amount)}}
-				</td>
-				<td class="actions">
-					<button type="button" class="btn btn-default" (click)="removeDebt(debt)">X</button>
-				</td>
-			</tr>
+					<tr>
+						<td>
+							{{debt.description}}
+						</td>
+						<td class="money">
+							{{formatCurrency(debt.amount)}}
+						</td>
+						<td class="actions">
+							<button type="button" class="btn btn-default" (click)="removeDebt(debt)">X</button>
+						</td>
+					</tr>
 			</ng-template>
-		</tbody>
-	</table>
+				</tbody>
+			</table>
 	<div class ="container">
 		<div class="row">
+	<div class="row">
 			<div class="col-md-5">
 				<div class="form-group">
 					<!-- <label>Description</label> -->

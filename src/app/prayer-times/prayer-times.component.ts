@@ -1,6 +1,7 @@
 import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef,ChangeDetectorRef,ElementRef} from '@angular/core'
 import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
+import { Observable} from "rxjs/Observable"; 
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router'
 //import {AlertComponent, DatepickerModule, ModalModule} from '@ng-bootstrap/ng-bootstrap';
@@ -28,10 +29,11 @@ interface FileReaderEvent extends Event {
   styleUrls: ['./prayer-times.component.css'],
   selector: 'prayer-times',
  // directives: [DATEPICKER_DIRECTIVES, MODAL_DIRECTVES, ROUTER_DIRECTIVES],
-  providers: [PrayerTimesCalculatorService],
+  providers: [PrayerTimesCalculatorService]
  // viewProviders:[BS_VIEW_PROVIDERS],
 }) export class PrayerTimesComponent implements AfterViewInit {
 	date: NgbDateStruct;
+	month: {year: number, month: number};
 	latitude: number;
 	longitude: number;
 	initialiseMap: any;
@@ -56,7 +58,7 @@ interface FileReaderEvent extends Event {
 		private myElement: ElementRef) {
 		if(!moment){return;}
 		var now = moment();
-		this.date= {year: now.year(), month: now.month()+1, day: now.date()}
+		this.date={year: now.getFullYear(), month: now.getMonth()+1, day: now.getDate()}
 		this.latitude = 53.482863;
 		this.longitude = -2.3459968;
 		//this.utcOffset=moment().utcOffset()/60.0;
@@ -210,9 +212,7 @@ interface FileReaderEvent extends Event {
 	buildingCalendar: boolean = false;
 	buildCalendar(){
 		if(this.locationFound!=null){
-			this.pdfTitle=this.locationFound.split(',').map(l=>{
-				return l.trim();
-			}).join("\n");
+			this.pdfTitle=this.locationFound.split(',').join("\n");
 		}
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
 	}

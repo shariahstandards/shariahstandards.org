@@ -3,15 +3,9 @@
 # compiled output
 /dist
 /tmp
-**/obj/*
-**/bin/*
-**/*.ncrunchsolution
-**/*.ncrunchproject
-api/packages/*
 
 # dependencies
 /node_modules
-/bower_components
 
 # IDEs and editors
 /.idea
@@ -21,6 +15,13 @@ api/packages/*
 .c9/
 *.launch
 .settings/
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # misc
 /.sass-cache
@@ -47,6 +48,13 @@ api/WebApi/obj/*
 **/*.ncrunchsolution
 **/*.ncrunchproject
 
+api/*/bin/*
+api/*/obj/*
+src/deployment/FtpDeployment/obj/*
+src/deployment/FtpDeployment/bin/*
+*NCrunch*
+*/.vs/*
+*.user
 **NCrunch*
 api/_NCrunch*/*
 **/.suo
@@ -54,3 +62,5 @@ api/_NCrunch*/*
 /cordova sample/
 /distunoptimised/
 /api/.vs/
+
+*.orig

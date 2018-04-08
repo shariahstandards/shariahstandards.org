@@ -1,22 +1,22 @@
-import {
-  beforeEachProviders,
-  describe,
-  expect,
-  it,
-  inject
+// import {
+//   beforeEachProviders,
+//   describe,
+//   expect,
+//   it,
+//   inject
 } from 'jasmine-core';
-import { ShariahStandardsAppComponent } from '../app/shariah-standards.component';
+// import { ShariahStandardsAppComponent } from '../app/shariah-standards.component';
 
-beforeEachProviders(() => [ShariahStandardsAppComponent]);
+// beforeEachProviders(() => [ShariahStandardsAppComponent]);
 
-describe('App: ShariahStandardsAppComponent', () => {
-  it('should create the app',
-      inject([ShariahStandardsAppComponent], (app: ShariahStandardsAppComponent) => {
-    expect(app).toBeTruthy();
-  }));
+// describe('App: ShariahStandardsAppComponent', () => {
+//   it('should create the app',
+//       inject([ShariahStandardsAppComponent], (app: ShariahStandardsAppComponent) => {
+//     expect(app).toBeTruthy();
+//   }));
 
-  it('should have as title \'shariah-standards works!\'',
-      inject([ShariahStandardsAppComponent], (app: ShariahStandardsAppComponent) => {
-    expect(app.title).toEqual('shariah-standards works!');
-  }));
-});
+//   it('should have as title \'shariah-standards works!\'',
+//       inject([ShariahStandardsAppComponent], (app: ShariahStandardsAppComponent) => {
+//     expect(app.title).toEqual('shariah-standards works!');
+//   }));
+// });
