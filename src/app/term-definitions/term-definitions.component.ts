@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy,Input} from '@angular/core';
+import { Component, OnInit, OnDestroy,Input,forwardRef, Injectable} from '@angular/core';
 import { Router, ActivatedRoute }       from '@angular/router';
 import { TermComponent } from '../term/term.component';
 import { ShurahService} from '../shurah.service';
@@ -24,6 +24,7 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
     public auth: AuthService,
     private modalService: NgbModal,
     private router:Router,
+    // @Inject(forwardRef(() => ShurahService)) 
     private shurahService:ShurahService
    	) {
   }

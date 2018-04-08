@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable,forwardRef } from '@angular/core';
 import {HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 declare var shariahStandardsApiUrlBase:string;
@@ -19,7 +19,9 @@ import {organisationModel} from './shurah/organisation.model'
 @Injectable()
 export class ShurahService {
 
-	constructor(private http: HttpClient) { 
+	constructor(
+		// @Inject(forwardRef(() => HttpClient)) 
+		private http: HttpClient) { 
 		
 	}
 	unfollow(organisationId:number):Observable<StandardApiResponse>{

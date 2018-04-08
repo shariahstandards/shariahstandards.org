@@ -21,6 +21,7 @@ import {routing,appRoutingProviders} from './routes';
 import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
 // import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
 import { AuthService} from './auth.service'
+import {ShurahService} from './shurah.service'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 // import {NgBootstrapModule} from './ng-bootstrap-module'
 import {UserProfileRegistrationService} from './user-profile-registration.service'
@@ -115,6 +116,7 @@ export function tokenGetter() {
     UserProfileRegistrationService,
     // AUTH_PROVIDERS,
     AuthService,
+    ShurahService,
     // AuthenticatedHttpService,
     // {
     //   provide:Http,
