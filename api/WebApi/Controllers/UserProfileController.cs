@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
@@ -45,7 +45,7 @@ namespace WebApi.Controllers
         //    });
         //}
 
-        [Authorize]
+       // [Authorize]
         [Route("UserProfile")]
         public HttpResponseMessage PostFullUserProfileRequest(Auth0UserProfile profile)
         {

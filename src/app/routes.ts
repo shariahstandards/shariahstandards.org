@@ -6,7 +6,7 @@ import {TermDefinitionsComponent} from './term-definitions/term-definitions.comp
 import {termDefinitionsRoutes} from './term-definitions/term-definitions.routes'
 // import {standardsRoutes} from './standards/standards.component.routes'
 import {shurahRoutes} from './shurah/shurah.component.routes'
-import {quranSearchRoutes} from './quran-search/quran-search.component.routes'
+// import {quranSearchRoutes} from './quran-search/quran-search.component.routes'
 import {zakatRoutes} from './zakat-calculator/zakat-calculator.component.routes'
 import {inheritanceRoutes} from './inheritance-calculator/inheritance-calculator.component.routes'
 import {suggestionRoutes} from './suggestion/suggestion.component.routes'
@@ -18,12 +18,12 @@ const appRoutes: Routes = [
   ...shurahRoutes,
   ...zakatRoutes,
   ...inheritanceRoutes,
-  ...quranSearchRoutes,
   ...suggestionRoutes,
   ...membershipApplicationRoutes,
   ...memberRoutes,
   { path: '', component: PrayerTimesComponent },
-  { path: 'about-us', component: AboutUsComponent }
+  { path: 'about-us', component: AboutUsComponent },
+  { path: 'quran', loadChildren: './quran.module#QuranModule'}
 ];
 export const appRoutingProviders: any[] = [
 

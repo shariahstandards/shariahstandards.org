@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -116,7 +116,7 @@ namespace Services
                                                                (m.Member.OrganisationId == organisation.Id &&
                                                                 m.Member.Removed)))
                         &&
-                        !a.Acceptances.Any(ac => ac.AcceptingMember.MemberAuth0Users.Any(u => u.Auth0UserId == user.Id)));
+                        !a.Acceptances.Any(ac => ac.AcceptingMember.MemberAuth0Users.Any(u => user!=null &&  u.Auth0UserId == user.Id)));
         }
 
         public virtual bool HasAPendingApplication(MemberResource member, Auth0User user, ShurahBasedOrganisation organisation)

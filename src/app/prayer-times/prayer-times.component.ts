@@ -334,8 +334,8 @@ interface FileReaderEvent extends Event {
 				resolve();
 			}
 			var reader = new FileReader();
-			reader.onload = (event:FileReaderEvent) =>{
-				self.headerImageData.src = event.target.result;
+			reader.onloadend = () =>{
+				self.headerImageData.src = reader.result;
 
 				// we need this to get img dimensions in points
 				var user_img = new Image();

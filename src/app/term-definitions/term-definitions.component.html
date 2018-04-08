@@ -6,7 +6,7 @@
 	<dl>
 		<dt>
 			{{termDefinitionModel.term}} 
-			<span *ngIf=" auth.authenticated() && allow('EditMembershipRules')">
+			<span *ngIf=" auth.isAuthenticated() && allow('EditMembershipRules')">
 				<button class="btn btn-default" (click)="openModalToUpdateTermDefinition(updateTermDefinitionModal,termDefinitionModel)">Edit</button>
 				<button  class="btn btn-danger" (click)="deleteTerm(termDefinitionModel.id)">Delete</button>
 			</span>
@@ -26,7 +26,7 @@
 		</dd>
 	</dl>
 </div>
-<span *ngIf=" auth.authenticated() && allow('EditMembershipRules')">
+<span *ngIf=" auth.isAuthenticated() && allow('EditMembershipRules')">
 	<button (click)="openModalToAddTermDefinition(addTermDefinitionModal)" title="add top level membership rule section">Add new term</button>
 </span>
 <div class="container" *ngIf="termList!=null">

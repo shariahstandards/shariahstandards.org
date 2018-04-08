@@ -4,7 +4,7 @@
 </p>
 <div class="container" *ngIf="searchResultPages.length>0" infinite-scroll (scrolled)="showMore()">
   <h2>Suggestions for {{searchResultPages[0].organisationName}}</h2>
-  <span *ngIf="auth.authenticated()">
+  <span *ngIf="auth.isAuthenticated()">
       <button (click)="openModalToAddSuggestion(addSuggestionModal)" title="Add suggestion">Add new suggestion*</button>
   </span>
   <div *ngIf="searchResultPages[0].memberSearchedFor">

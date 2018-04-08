@@ -1,4 +1,4 @@
-﻿using System.Web.Http;
+using System.Web.Http;
 using System.Web.Http.Cors;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -23,7 +23,7 @@ namespace WebApi
 
             var cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
-            config.DependencyResolver=new Microsoft.Practices.Unity.WebApi.UnityHierarchicalDependencyResolver(UnityConfig.GetConfiguredContainer());
+            config.DependencyResolver=new UnityDependencyResolver(UnityConfig.Container);
             // Web API routes
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute(

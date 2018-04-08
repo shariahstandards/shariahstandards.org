@@ -10,11 +10,13 @@
   </div>
   <div class="col-md-3">
     <div *ngIf="auth.userProfile" class="user-profile">
-      <img [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"/>
+      <img *ngIf="auth.userProfile.picture!=null" [src]="auth.userProfile.picture" width="50" alt="" class="profile-img"/>
+      <img *ngIf="auth.userProfile.pictureUrl!=null" [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"/>
+      
       {{auth.userProfile.name}}
-      <a class="btn btn-default" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</a>
+      <a class="btn btn-default" (click)="auth.logout()" *ngIf="auth.isAuthenticated()">Log Out</a>
     </div>
-    <div *ngIf="!auth.authenticated()" class="user-profile">
+    <div *ngIf="!auth.isAuthenticated()" class="user-profile">
       <a class="btn btn-default" (click)="auth.login()">Log In</a>
     </div>
   </div>

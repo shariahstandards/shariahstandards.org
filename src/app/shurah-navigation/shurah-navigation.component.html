@@ -6,10 +6,10 @@
     Terminology
   </a>
 
-  <a routerLinkActive="active-route" *ngIf="auth.authenticated() && organisation && organisation.member!=null"  [routerLink]="'/members/'+organisationId">
+  <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null"  [routerLink]="'/members/'+organisationId">
   	Members
   </a>
-  <a routerLinkActive="active-route" *ngIf="auth.authenticated() && organisation && organisation.member!=null" [routerLink]="'/suggestions/'+organisationId">
+  <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null" [routerLink]="'/suggestions/'+organisationId">
   	Suggestions
   </a>
   <a routerLinkActive="active-route" *ngIf="hasPermission('AcceptMembershipApplication')" 

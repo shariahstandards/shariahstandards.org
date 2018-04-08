@@ -3,10 +3,10 @@ using System.Web.Mvc;
 
 using Unity.AspNet.Mvc;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(WebApi.UnityMvcActivator), nameof(WebApi.UnityMvcActivator.Start))]
-[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(WebApi.UnityMvcActivator), nameof(WebApi.UnityMvcActivator.Shutdown))]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Services.UnityMvcActivator), nameof(Services.UnityMvcActivator.Start))]
+[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(Services.UnityMvcActivator), nameof(Services.UnityMvcActivator.Shutdown))]
 
-namespace WebApi
+namespace Services
 {
     /// <summary>
     /// Provides the bootstrapping for integrating Unity with ASP.NET MVC.
@@ -32,6 +32,7 @@ namespace WebApi
         /// </summary>
         public static void Shutdown()
         {
+            UnityConfig.Container.Dispose();
         }
     }
 }
