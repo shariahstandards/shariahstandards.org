@@ -61,7 +61,7 @@ export class SuggestionComponent implements OnInit {
   }
   vote(suggestionId:number,inFavour?:boolean){
     this.shurahService.voteOnSuggestion(suggestionId, inFavour).subscribe(response=>{
-     var model=response.json();
+     var model=response;
      if(model.hasError){
        alert(model.error);
      }
@@ -72,7 +72,7 @@ export class SuggestionComponent implements OnInit {
   }
    removeVote(voteId:number){
     this.shurahService.removeVoteOnSuggestion(voteId).subscribe(response=>{
-     var model=response.json();
+     var model=response;
      if(model.hasError){
        alert(model.error);
      }
@@ -84,7 +84,7 @@ export class SuggestionComponent implements OnInit {
   refresh(){
     this.lastPageShown=1;
 	 	this.shurahService.searchSuggestions(this.organisationId,1,this.sortingByMostRecentFirst,this.memberId).subscribe(response=>{
-	 		var model=response.json();
+	 		var model=response;
 	 		if(model.hasError){
 	 			alert(model.error);
 	 		}else{
@@ -95,7 +95,7 @@ export class SuggestionComponent implements OnInit {
   }
   AddSuggestion(){
     this.shurahService.addSuggestion(this.organisationId,this.addSuggestionModel).subscribe(response=>{
-    	var data = response.json();
+    	var data = response;
     	if(data.hasError){
     		this.addSuggestionModel.errors=[data.error];
     	}
@@ -121,7 +121,7 @@ export class SuggestionComponent implements OnInit {
    }
    this.lastPageShown++;
    this.shurahService.searchSuggestions(this.organisationId,this.lastPageShown,this.sortingByMostRecentFirst,this.memberId).subscribe(response=>{
-       var model=response.json();
+       var model=response;
        if(model.hasError){
          alert(model.error);
        }else{

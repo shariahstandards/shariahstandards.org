@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,7 +9,9 @@ using WebApiResources;
 
 namespace WebApi.Controllers
 {
-    public class MembershipApplicationController : ApiController
+  [Authorize]
+
+  public class MembershipApplicationController : ApiController
     {
         private readonly IMembershipApplicationService _service;
 
@@ -17,7 +19,6 @@ namespace WebApi.Controllers
         {
             _service = service;
         }
-
         [HttpPost]
         [Route("ApplyToJoin")]
         public HttpResponseMessage Post(MembershipApplicationrequest request)

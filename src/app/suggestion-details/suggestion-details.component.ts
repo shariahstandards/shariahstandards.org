@@ -37,7 +37,7 @@ export class SuggestionDetailsComponent implements OnInit {
   }
   deleteSuggestion(){
   	this.shurahService.deleteSuggestion(this.suggestionId).subscribe(response=>{
- 		var model=response.json();
+ 		var model=response;
  		if(!model.hasError){
  			this.router.navigateByUrl("/suggestions/"+this.organisationId);
  		}
@@ -45,7 +45,7 @@ export class SuggestionDetailsComponent implements OnInit {
   }
   vote(inFavour?:boolean){
   	this.shurahService.voteOnSuggestion(this.suggestionId, inFavour).subscribe(response=>{
- 		var model=response.json();
+ 		var model=response;
  		if(model.hasError){
  			alert(model.error);
  		}
@@ -56,7 +56,7 @@ export class SuggestionDetailsComponent implements OnInit {
   }
    removeVote(voteId:number){
   	this.shurahService.removeVoteOnSuggestion(voteId).subscribe(response=>{
- 		var model=response.json();
+ 		var model=response;
  		if(model.hasError){
  			alert(model.error);
  		}
@@ -67,7 +67,7 @@ export class SuggestionDetailsComponent implements OnInit {
   }
   refresh(){
 	this.shurahService.suggestionDetails(this.suggestionId).subscribe(response=>{
- 		var model=response.json();
+ 		var model=response;
  		if(model.hasError){
  			this.suggestion=null;
  		}else{

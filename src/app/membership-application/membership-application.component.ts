@@ -40,7 +40,7 @@ export class MembershipApplicationComponent implements OnInit {
   	rejectMembershipApplicationModel:RejectMembershipApplicationModel
   	refresh(){
   		this.shurahService.viewApplications(this.organisationId,this.page).subscribe(r=>{
-  			var response =r.json();
+  			var response =r;
   			if(response.hasError){
   				alert(response.error);
   			}else{
@@ -50,7 +50,7 @@ export class MembershipApplicationComponent implements OnInit {
   	}
   	accept(applicationId:number){
   		this.shurahService.acceptMembershipApplication(applicationId).subscribe(r=>{
-  			var response =r.json();
+  			var response =r;
   			if(response.hasError){
   				alert(response.error);
   			}else{
@@ -71,7 +71,7 @@ export class MembershipApplicationComponent implements OnInit {
 
 	reject(){
     	this.shurahService.rejectMembershipApplication(this.rejectMembershipApplicationModel).subscribe(result=>{
-	      	var response = result.json();
+	      	var response = result;
 	      	if(response.hasError){
 	        	this.rejectMembershipApplicationModel.errors=[response.error];
 	      	}

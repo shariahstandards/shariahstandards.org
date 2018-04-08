@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace WebApiResources
 {
@@ -6,7 +6,7 @@ namespace WebApiResources
     {
         public string Name { get; set; }
         public string Picture { get; set; }
-        public string user_id { get; set; }
+        public string sub { get; set; }
         public List<Auth0Identity> Identities { get; set; } 
     }
 

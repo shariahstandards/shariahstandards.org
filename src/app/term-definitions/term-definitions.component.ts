@@ -50,7 +50,7 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
       }
     	this.termId=params['termId'];
       this.shurahService.getPermissionsForOrganisation(this.organisationId).subscribe(res=>{
-        this.permissions = res.json();
+        this.permissions = res;
       });
 	  	this.refresh();
 	 });
@@ -68,7 +68,7 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   addTermDefinition(){
     this.addTermDefinitionModel.errors=[];
     this.shurahService.createTermDefinition(this.addTermDefinitionModel,this.organisationId).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
        this.addTermDefinitionModel.errors.push(response.error);
       }
@@ -89,7 +89,7 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   }
   deleteTerm(termId:number){
      this.shurahService.deleteTermDefinition(termId).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
          alert(response.error);
       }
@@ -101,13 +101,14 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   updateTermDefinition(){
     this.updateTermDefinitionModel.errors=[];
     this.shurahService.updateTermDefinition(this.updateTermDefinitionModel).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
        this.updateTermDefinitionModel.errors.push(response.error);
       }
       else{
         this.activeModal.close('term updater');
-        this.router.navigateByUrl("/terms/"+this.organisationId+"/"+response.termId+"/"+response.term);
+        this.router.navigateByUrl("/terms/"+this.organisationId+"/"
+          +response.termId+"/"+response.term);
       }
     }) 
   }
@@ -116,7 +117,7 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
   refresh(){
     if(this.termId!=null){
       this.shurahService.getTermDefinition(this.termId,this.organisationId).subscribe(result=>{
-        var response = result.json();
+        var response = result;
         if(response.hasError){
          alert(response.error);
         }else{
@@ -125,7 +126,7 @@ export class TermDefinitionsComponent implements OnInit, OnDestroy  {
       })
     }
     this.shurahService.getTermList(this.organisationId).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
        alert(response.error);
       }else{

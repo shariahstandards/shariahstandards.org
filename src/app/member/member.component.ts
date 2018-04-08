@@ -32,7 +32,7 @@ export class MemberComponent implements OnInit {
   }
   refresh(){
  	  this.shurahService.searchForMembers(this.organisationId,this.lastPageLoaded).subscribe(response=>{
-   		var model=response.json();
+   		var model=response;
    		if(model.hasError){
    			alert(model.error);
    		}else{
@@ -43,7 +43,7 @@ export class MemberComponent implements OnInit {
   showMore(){
     this.lastPageLoaded++;
     this.shurahService.searchForMembers(this.organisationId,this.lastPageLoaded).subscribe(response=>{
-       var model=response.json();
+       var model=response;
        if(model.hasError){
          alert(model.error);
        }else{

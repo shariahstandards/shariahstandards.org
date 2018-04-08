@@ -39,15 +39,17 @@ export class ShurahComponent implements OnInit {
   openModalToJoinOrganisation(content){
     this.applyToJoinOrganisationModel=new applyToJoinOrganisationModel(this.organisation.name,this.organisation.id);
     this.activeModal= this.modalService.open(content);
-    document.getElementById('publicName').focus();
+    //document.getElementById('publicName').focus();
     this.activeModal.result.then(()=>{
     this.refresh();
-   })
+     },(reason)=>{
+
+     });
     
   }
   applyToJoin(){
      this.shurahService.applyToJoinOrganisation(this.applyToJoinOrganisationModel).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
         this.applyToJoinOrganisationModel.errors=[response.error];
         this.changeDetectorRef.detectChanges();
@@ -100,7 +102,7 @@ export class ShurahComponent implements OnInit {
 
   deleteRule(rule:membershipRuleModel){
      this.shurahService.deleteRule(rule).subscribe(result=>{
-      var response = result.json();
+      var response = result;
        if(this.ruleToDrop!=null && this.ruleToDrop.id==rule.id){
         this.ruleToDrop=null;
       }
@@ -114,7 +116,7 @@ export class ShurahComponent implements OnInit {
   }
   updateRule(){
     this.shurahService.updateMembershipRule(this.updateMembershipRuleModel).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
         this.updateMembershipRuleModel.errors=[response.error];
       }
@@ -127,7 +129,7 @@ export class ShurahComponent implements OnInit {
   }
   deleteSection(section:membershipRuleSectionModel){
     this.shurahService.deleteRuleSection(section).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(this.sectionToDrop!=null && this.sectionToDrop.id==section.id){
         this.sectionToDrop=null;
       }
@@ -141,7 +143,7 @@ export class ShurahComponent implements OnInit {
   }
   pasteIntoSection(section:membershipRuleSectionModel){
     this.shurahService.dragDropRuleSection(this.sectionToDrop,section).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       this.sectionToDrop=null;
       if(response.hasError){
         alert(response.error);
@@ -153,7 +155,7 @@ export class ShurahComponent implements OnInit {
   }
   pasteRule(rule:membershipRuleModel){
      this.shurahService.dragDropRule(this.ruleToDrop,rule).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       this.ruleToDrop=null;
       if(response.hasError){
         alert(response.error);
@@ -220,7 +222,7 @@ export class ShurahComponent implements OnInit {
      this.addMembershipRuleModel.errors=[];
    
     this.shurahService.createRule(this.addMembershipRuleModel).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
         this.addMembershipRuleModel.errors=[response.error];
       }
@@ -239,7 +241,7 @@ export class ShurahComponent implements OnInit {
       parentSectionId=this.addMembershipRuleSectionModel.parentSection.id;
     }
     this.shurahService.createRuleSection(this.addMembershipRuleSectionModel,1,parentSectionId).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
         this.addMembershipRuleSectionModel.errors=[response.error];
       }
@@ -253,7 +255,7 @@ export class ShurahComponent implements OnInit {
   beginUpdateMembershipRuleSection(){
     this.updateMembershipRuleSectionModel.errors=[];
     this.shurahService.updateMembershipRuleSection(this.updateMembershipRuleSectionModel).subscribe(result=>{
-      var response = result.json();
+      var response = result;
       if(response.hasError){
         this.updateMembershipRuleSectionModel.errors=[response.error];
       }
@@ -268,7 +270,7 @@ export class ShurahComponent implements OnInit {
     this.organisation=null;
     this.changeDetectorRef.detectChanges();
     this.shurahService.getOrganisation(this.organisationId).subscribe(result=>{
-      this.organisation=result.json();
+      this.organisation=result;
       this.hideButtons=false;
       this.changeDetectorRef.detectChanges();
       // this.changeDetectorRef.detectChanges();
@@ -280,7 +282,7 @@ export class ShurahComponent implements OnInit {
   leave(){
       this.hideButtons=true;
        this.shurahService.leave(this.organisation.id).subscribe(result=>{
-        var response = result.json();
+        var response = result;
         if(response.hasError){
           alert(response.error);
         }else{

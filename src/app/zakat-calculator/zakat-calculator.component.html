@@ -1,25 +1,26 @@
-<h3>Zakat Calculator - for year from Ramadan 15<sup>th</sup> 1437 AH / June 20<sup>th</sup> 2016 CE</h3>
-	<a [routerLink]="['/standards/zakat-rules']">Details of the Standard</a>
-
+<h3>Zakat Calculator</h3>
+<a [routerLink]="['/standards/zakat-rules']">Details of the Standard</a>
 <div class="row dependents">
 	<h4>Zakat Free Wealth Allowance</h4>
-	<div class="col-md-5">
-		<div class="form-group">
-			<label>Currency</label>
-			<select [(ngModel)]="currency" class="form-control">
-				<option *ngFor="let c of currencies" [ngValue]="c">{{c.name}}</option>
-			</select>
+	<div class="row">
+		<div class="col-md-5">
+			<div class="form-group">
+				<label>Currency</label>
+				<select [(ngModel)]="currency" class="form-control">
+					<option *ngFor="let c of currencies" [ngValue]="c">{{c.name}}</option>
+				</select>
+			</div>
 		</div>
-	</div>
-	
-	<div class="col-md-5">
-		<div class="form-group">
-			<label>Number of your dependents</label>
-			<input pattern="[0-9]+" required="true" type="number" [(ngModel)]="dependents" min="0" max="100" step="1" class="form-control"/>
+		
+		<div class="col-md-5">
+			<div class="form-group">
+				<label>Number of your dependents</label>
+				<input pattern="[0-9]+" required="true" type="number" [(ngModel)]="dependents" min="0" max="100" step="1" class="form-control"/>
+			</div>
 		</div>
-	</div>
-	<div class="col-md-2">
-		{{formattedZakatFreeWealthAllowance()}}	
+		<div class="col-md-2">
+			{{formattedZakatFreeWealthAllowance()}}	
+		</div>
 	</div>
 
 </div>
@@ -49,32 +50,41 @@
 			</ng-template>
 		</tbody>
 	</table>
-		<div class="col-md-5">
-			<div class="form-group">
-				<select [(ngModel)]="addAssetModel.description" class="form-control" required="true">
-					<option value="">select an asset type</option> 
-					<option value="Residential Property">Residential Property</option> 
-					<option value="Personal Transport">Personal Transport</option>
-					<option value="Money You Have">Money You Have</option>
-					<option value="Money Owed to You">Money Owed to You</option>
-					<option value="Investments">Investments</option>
-					<option value="Other Possessions">Other Possessions</option>
-				</select>
-			</div>
-		</div>
-		<div class="col-md-5">
-			<div class="form-group">
-				<div class="input-group">
-					<div *ngIf="currency.prefix!=''" class="input-group-addon">{{currency.prefix}}</div>
-					<input required="true" type="number" [(ngModel)]="addAssetModel.amount" 
-					min="0" max="99999999999" step="1000" class="form-control" placeholder="value" />
-					<div class="input-group-addon">{{currency.suffix}}</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5">
+				<div class="form-group">
+					<select [(ngModel)]="addAssetModel.description" class="form-control" required="true">
+						<option value="">select an asset type</option> 
+						<option value="Residential Property">Residential Property</option> 
+						<option value="Personal Transport">Personal Transport</option>
+						<option value="Money You Have">Money You Have</option>
+						<option value="Money Owed to You">Money Owed to You</option>
+						<option value="Investments">Investments</option>
+						<option value="Other Possessions">Other Possessions</option>
+					</select>
 				</div>
 			</div>
+			<div class="col-md-5">
+				<div class="form-group">
+					<div class="input-group">
+						<div  *ngIf="currency.prefix!=''" class="input-group-prepend">
+      						<div class="input-group-text">{{currency.prefix}}</div>
+    					</div>
+    					<input required="true" type="number" [(ngModel)]="addAssetModel.amount" 
+						min="0" max="99999999999" step="1000" class="form-control" placeholder="value" />
+						<div class="input-group-append">
+      						<div class="input-group-text">{{currency.suffix}}</div>
+    					</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-primary" (click)="addAsset()">Add Asset</button>
+			</div>
 		</div>
-		<div class="col-md-2">
-			<button type="button" class="btn btn-primary" (click)="addAsset()">Add Asset</button>
-		</div>
+	</div>
 </div>
 <div class="row debts">
 	<h4>Debts of you and your dependents</h4>
@@ -102,30 +112,39 @@
 			</ng-template>
 		</tbody>
 	</table>
-		<div class="col-md-5">
-			<div class="form-group">
-				<!-- <label>Description</label> -->
-				<select [(ngModel)]="addDebtModel.description" class="form-control" required="true" >
-					<option value="">select a debt type</option> 
-					<option value="Mortgage">Mortgage</option> 
-					<option value="Loan">Loan</option>
-					<option value="Other">Other</option>
-				</select>
-			</div>
-		</div>
-		<div class="col-md-5">
-			<div class="form-group">
-				<div class="input-group">
-					<div *ngIf="currency.prefix!=''" class="input-group-addon">{{currency.prefix}}</div>
-					<input required="true" type="number" [(ngModel)]="addDebtModel.amount" 
-					min="0" max="99999999999" step="1000" class="form-control" placeholder="value" />
-					<div class="input-group-addon">{{currency.suffix}}</div>
+	<div class ="container">
+		<div class="row">
+			<div class="col-md-5">
+				<div class="form-group">
+					<!-- <label>Description</label> -->
+					<select [(ngModel)]="addDebtModel.description" class="form-control" required="true" >
+						<option value="">select a debt type</option> 
+						<option value="Mortgage">Mortgage</option> 
+						<option value="Loan">Loan</option>
+						<option value="Other">Other</option>
+					</select>
 				</div>
 			</div>
+			<div class="col-md-5">
+				<div class="form-group">
+					<div class="input-group">
+						<div  *ngIf="currency.prefix!=''" class="input-group-prepend">
+      						<div class="input-group-text">{{currency.prefix}}</div>
+    					</div>
+						<input required="true" type="number" [(ngModel)]="addDebtModel.amount" 
+						min="0" max="99999999999" step="1000" class="form-control" placeholder="value" />
+						<div class="input-group-append">
+      						<div class="input-group-text">{{currency.suffix}}</div>
+    					</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<button type="button" class="btn btn-primary" (click)="addDebt()">Add Debt</button>
+			</div>
 		</div>
-		<div class="col-md-2">
-			<button type="button" class="btn btn-primary" (click)="addDebt()">Add Debt</button>
-		</div>
+	</div>
 </div>
 <div class="row zakat-due">
 	<table class="table table-striped">

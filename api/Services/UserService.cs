@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -45,7 +45,7 @@ namespace Services
 
             VerifyProfile(auth0UserProfile, claimsIdentity);
             var user =
-                _dependencies.StorageService.SetOf<Auth0User>().FirstOrDefault(x => x.Id == auth0UserProfile.user_id);
+                _dependencies.StorageService.SetOf<Auth0User>().FirstOrDefault(x => x.Id == auth0UserProfile.sub);
             if (user == null)
             {
                 user = BuildAuth0User(auth0UserProfile);
@@ -80,7 +80,7 @@ namespace Services
         public virtual Auth0User BuildAuth0User(Auth0UserProfile auth0Profile)
         {
             var user = _dependencies.StorageService.SetOf<Auth0User>().Create();
-            user.Id = auth0Profile.user_id;
+            user.Id = auth0Profile.sub;
             user.PictureUrl = auth0Profile.Picture;
             user.Name = auth0Profile.Name;
             return user;
@@ -89,7 +89,7 @@ namespace Services
         public virtual void VerifyProfile(Auth0UserProfile auth0Profile, ClaimsIdentity claimsIdentity)
         {
             var authenticatedUserId = GetLoggedInUserId(claimsIdentity);
-            if (authenticatedUserId != null && authenticatedUserId == auth0Profile.user_id)
+            if (authenticatedUserId != null && authenticatedUserId == auth0Profile.sub)
             {
                 return;
             }

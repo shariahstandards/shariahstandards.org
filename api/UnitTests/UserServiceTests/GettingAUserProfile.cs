@@ -51,7 +51,7 @@ namespace UnitTests
                     var auth0Profile = new Auth0UserProfile
                     {
                         Name = "someone",
-                        user_id = "something from facebookand auth0",
+                        sub = "something from facebookand auth0",
                         Picture = "some url - maybe just a fake pic"
                     };
                     var fakeSet = A.Fake<IDbSet<Auth0User>>();
@@ -61,7 +61,7 @@ namespace UnitTests
 
                     var result = service.BuildAuth0User(auth0Profile);
 
-                    Assert.AreEqual(auth0Profile.user_id, result.Id);
+                    Assert.AreEqual(auth0Profile.sub, result.Id);
                     Assert.AreEqual(auth0Profile.Picture, result.PictureUrl);
                     Assert.AreEqual(auth0Profile.Name, result.Name);
                     Assert.AreSame(user, result);
@@ -78,7 +78,7 @@ namespace UnitTests
                 MethodToTest(() => service.GetUserProfile(A<Auth0UserProfile>.Ignored, A<IPrincipal>.Ignored));
 
                 var user = new Auth0User {Id = "someId"};
-                var auth0Profile = new Auth0UserProfile {user_id = user.Id};
+                var auth0Profile = new Auth0UserProfile {sub = user.Id};
                 var auth0UserSet = new FakeDbSet<Auth0User> {user};
                 A.CallTo(() => dependencies.StorageService.SetOf<Auth0User>()).Returns(auth0UserSet);
                 A.CallTo(() => service.BuildAuth0User(auth0Profile)).Returns(user);
@@ -106,9 +106,9 @@ namespace UnitTests
                 {
                     MethodToTest(()=>service.VerifyProfile(A<Auth0UserProfile>.Ignored,A<ClaimsIdentity>.Ignored));
 
-                    var profile = new Auth0UserProfile {user_id = "someUserId"};
+                    var profile = new Auth0UserProfile {sub = "someUserId"};
                     var claimsIdentity = A.Fake<ClaimsIdentity>();
-                    A.CallTo(() => service.GetLoggedInUserId(claimsIdentity)).Returns(profile.user_id);
+                    A.CallTo(() => service.GetLoggedInUserId(claimsIdentity)).Returns(profile.sub);
                     //A.CallTo(()=> claimsIdentity.Claims).Returns(
                     //    new[] { new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",profile.user_id) });
                     A.CallTo(() => claimsIdentity.IsAuthenticated).Returns(true);
@@ -123,7 +123,7 @@ namespace UnitTests
                 {
                     MethodToTest(() => service.VerifyProfile(A<Auth0UserProfile>.Ignored, A<ClaimsIdentity>.Ignored));
 
-                    var profile = new Auth0UserProfile {user_id = "someUserId"};
+                    var profile = new Auth0UserProfile {sub = "someUserId"};
                     var claimsIdentity = A.Fake<ClaimsIdentity>();
                     A.CallTo(() => service.GetLoggedInUserId(claimsIdentity)).Returns(null);
                     //A.CallTo(() => claimsIdentity.Claims).Returns(

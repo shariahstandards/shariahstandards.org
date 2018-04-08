@@ -20,14 +20,14 @@ export class ShurahNavigationComponent implements OnInit {
     {
       return false
     }
-    console.log(JSON.stringify(this.organisation));
+    // console.log(JSON.stringify(this.organisation));
     return this.organisation.permissions.indexOf(permission)>=0
   }
   organisation:any
   ngOnInit(){
     if(this.organisationId){
        this.shurahService.getOrganisationSummary(this.organisationId).subscribe(result=>{
-          this.organisation=result.json();
+          this.organisation=result;
          })
      }
   }

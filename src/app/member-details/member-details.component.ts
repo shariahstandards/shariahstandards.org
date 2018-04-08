@@ -37,7 +37,7 @@ export class MemberDetailsComponent implements OnInit {
   }
    refresh(){
  	this.shurahService.memberDetails(this.memberId).subscribe(response=>{
- 		var model=response.json();
+ 		var model=response;
  		if(model.hasError){
  			alert(model.error);
  		}else{
@@ -47,7 +47,7 @@ export class MemberDetailsComponent implements OnInit {
  }
  follow(){
    this.shurahService.follow(this.memberId).subscribe(r=>{
-     var response = r.json();
+     var response = r;
      if(response.hasError){
        alert(response.error);
      }else{
@@ -57,7 +57,7 @@ export class MemberDetailsComponent implements OnInit {
  }
  unfollow(){
    this.shurahService.unfollow(this.organisationId).subscribe(r=>{
-     var response = r.json();
+     var response = r;
      if(response.hasError){
        alert(response.error);
      }else{
