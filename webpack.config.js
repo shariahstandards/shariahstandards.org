@@ -13,12 +13,17 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ProgressPlugin = require('webpack/lib/ProgressPlugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
+
 const rxPaths = require('rxjs/_esm5/path-mapping');
 const autoprefixer = require('autoprefixer');
 const postcssUrl = require('postcss-url');
 const postcssImports = require('postcss-import');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var CompressionPlugin = require("compression-webpack-plugin");
+// const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
+// const webpackAngularExternals = require('webpack-angular-externals');
+
 //var webpack = require('webpack');
 const { SourceMapDevToolPlugin, NamedModulesPlugin } = require('webpack');
 const { 
@@ -401,9 +406,7 @@ module.exports = {
   "mode":'development',
   // "devtool":'cheap-module-source-map',
   //"devtool":'source-map',
-  "externals":{
-    "@angular":"@angular"
-  },
+ 
   optimization: {
       minimize: false,
       splitChunks: {
@@ -412,6 +415,9 @@ module.exports = {
           }
       }
   },
+  //  externals: [
+  //   webpackAngularExternals()
+  // ],
   "plugins": [
     new CompressionPlugin({
       asset: "[path].gz[query]",
@@ -506,6 +512,20 @@ module.exports = {
     //     }
     // }
     }),
+    // new HtmlWebpackExternalsPlugin({
+    //   externals: [
+    //     {
+    //       module: 'jquery',
+    //       entry: 'https://unpkg.com/jquery@3.2.1/dist/jquery.min.js',
+    //       global: 'jQuery',
+    //     }
+    //     // ,{
+    //     //   module:'@angular/core',
+    //     //   entry:'https://unpkg.com/@angular/core@5.2.9/bundles/core.umd.js'
+    //     // }
+    //   ],
+    // }),
+//    new DynamicCdnWebpackPlugin(),
     new BaseHrefWebpackPlugin({}),
     // new CommonsChunkPlugin({
     //   "name": [

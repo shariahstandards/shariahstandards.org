@@ -213,7 +213,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="LoginCallback.ashx" />
     <None Include="Properties\PublishProfiles\ReleaseFolder.pubxml" />
     <Content Include="shariahstandards.cer" />
     <None Include="Web.Debug.config">
@@ -232,7 +231,6 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\UnityWebApiActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\BatchJobController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
     <Compile Include="Controllers\MembershipCancellationController.cs" />
     <Compile Include="Controllers\MembershipApplicationController.cs" />
@@ -242,9 +240,6 @@
     <Compile Include="Controllers\SuggestionController.cs" />
     <Compile Include="Controllers\TermDefinitionController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
-    <Compile Include="LoginCallback.ashx.cs">
-      <DependentUpon>LoginCallback.ashx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

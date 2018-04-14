@@ -14,10 +14,13 @@
       <img *ngIf="auth.userProfile.pictureUrl!=null" [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"/>
       
       {{auth.userProfile.name}}
+       <span *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && organisation.hasPendingApplication"  >
+    (awaiting acceptance)
+  </span>
       <a class="btn btn-default" (click)="auth.logout()" *ngIf="auth.isAuthenticated()">Log Out</a>
     </div>
     <div *ngIf="!auth.isAuthenticated()" class="user-profile">
-      <a class="btn btn-default" (click)="auth.login()">Log In</a>
+      <a class="btn btn-default" (click)="auth.login()">Log In / sign up</a>
     </div>
   </div>
 </div>
@@ -28,10 +31,75 @@
   [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
   <a routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
   <a routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>
-  <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a>
+  <!-- <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a> -->
   <a routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
   <!-- <a routerLinkActive="active-route" [routerLink]="'/shurah'">Shurah</a> -->
     <!-- <a routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a> -->
+
+  <a (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)" *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && !organisation.hasPendingApplication"  >
+    Introduce yourself
+  </a>
+
+    
+  <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null"  [routerLink]="'/members/'+organisationId">
+    Members
+  </a>
+  <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null" [routerLink]="'/suggestions/'+organisationId">
+    Suggestions
+  </a>
+  <a routerLinkActive="active-route" *ngIf="hasPermission('AcceptMembershipApplication')" 
+    [routerLink]="'/membership-applications/organisation/'+organisationId">
+    Membership Applications
+  </a>
 </nav>
+
 <router-outlet></router-outlet>
 <ng-template ngbModalContainer></ng-template>
+
+
+<ng-template #applyToJoinOrganisationModal let-c="close" let-d="dismiss">
+   <form #applyToJoinOrganisationModalForm="ngForm" (ngSubmit)="applyToJoin()">
+      <div class="modal-header">
+        <div class="modal-title">Introduce yourself to get started</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Please give us your full name and if you like, a short description of yourself for all other members to see.</p>
+        <div class="form-group">
+            <label for="publicName">Full Name</label>
+            <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.publicName" required maxlength="100" id="publicName" name="publicName">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input class="form-control" type="email" [(ngModel)]="applyToJoinOrganisationModel.emailAddress" required maxlength="100" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Phone</label>
+            <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.phoneNumber" required maxlength="20" id="phoneNumber" name="phoneNumber">
+        </div>
+      <!--   <div class="form-check">
+            <label class="form-check-label">
+            <input class="form-check-input"  type="checkbox" [(ngModel)]="rulesAgreedTo" name="rulesAgreedTo" required>
+            I agree to hold to the rules of this organisation and to become a member.</label>
+        </div> -->
+        <div class="form-group">
+          <label for="publicProfileStatement"> Message to application reviewer  </label>
+          <textarea rows="2" class="form-control" required maxlength="1000"  id="publicProfileStatement" name="publicProfileStatement"
+           col="100" [(ngModel)]="applyToJoinOrganisationModel.publicProfileStatement">
+          </textarea>
+        </div>
+        <ul>
+          <li class="error" *ngFor="let error of applyToJoinOrganisationModel.errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Apply</button>
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</ng-template>

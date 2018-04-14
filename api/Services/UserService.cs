@@ -93,6 +93,10 @@ namespace Services
             {
                 return;
             }
+            if (!claimsIdentity.IsAuthenticated)
+            {
+              throw new AccessViolationException("Not authenticated");
+            }
             throw new AccessViolationException("Not authenticated for the identified user");
         }
 

@@ -36,3 +36,6 @@ pie-chart{
 .clickable{
 	cursor: pointer;
 }
+.smaller{
+	font-size: 0.5em;
+}

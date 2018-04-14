@@ -57,6 +57,7 @@
     <Compile Include="ContactDetailType.cs" />
     <Compile Include="ContactDetail.cs" />
     <Compile Include="DelegatedPermission.cs" />
+    <Compile Include="dialog\DecisionTree.cs" />
     <Compile Include="JoiningPolicy.cs" />
     <Compile Include="LeaderRecognition.cs" />
     <Compile Include="Mappings\ActionUpdateMapping.cs" />

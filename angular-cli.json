@@ -62,7 +62,7 @@
       "spec": true,
       "inlineStyle": false,
       "inlineTemplate": false
-    }
+    },
     "inline": {
       "style": false,
       "template": false

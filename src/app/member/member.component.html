@@ -7,14 +7,26 @@
 	<div *ngIf="searchResultPages[0].members.length==0">
 		No members found
 	</div>
-	<div *ngFor="let searchResults of searchResultPages">
-		<div class="card" *ngFor="let member of searchResults.members">
-			<div class="card-header">
-				<a [routerLink]="'/members/'+organisationId+'/details/'+member.id">{{member.publicName}}</a>
+	<div class="card-group" *ngFor="let searchResults of searchResultPages">
+
+		<div class="card" [ngClass]="{'text-white bg-success':member.isLeader}" 
+			*ngFor="let member of searchResults.members" style="min-width:200px">
+			<div *ngIf="member.isLeader" class="card-header">
+				Leader
 			</div>
-			<div class="card-block">
-				<img width="100" [src]="member.pictureUrl" title="picture of member"/>
-				<p>{{member.followers}} followers</p>
+			<div *ngIf="!member.isLeader" class="card-header">
+				Member
+			</div>
+
+			<div class="card-body">
+				<div class="card-text">
+					<a [routerLink]="'/members/'+organisationId+'/details/'+member.id">
+						<img width="100" [src]="member.pictureUrl" title="picture of member"/>
+						<br/>
+						<span class="text-white">{{member.publicName}}</span>
+					</a>
+					<p>{{member.followers}} followers <br/>(as of {{member.lastCalculated}})</p>
+				</div>
 			</div>
 		</div>
 	</div>

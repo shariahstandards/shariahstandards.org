@@ -17,19 +17,19 @@ import { StandardsComponent } from './standards/standards.component';
 import { PrayerTimesComponent } from './prayer-times/prayer-times.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 // import { AUTH_PROVIDERS }      from 'angular2-jwt';
-import {routing,appRoutingProviders} from './routes';
-import { Routes, RouterModule,RouterLinkActive,RouterLink} from '@angular/router';
+import { routing,appRoutingProviders } from './routes';
+import { Routes, RouterModule,RouterLinkActive,RouterLink } from '@angular/router';
 // import { ArabicKeyboardComponent } from './arabic-keyboard/arabic-keyboard.component';
 import { AuthService} from './auth.service'
-import {ShurahService} from './shurah.service'
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
+import { ShurahService} from './shurah.service'
+import { NgbModule} from '@ng-bootstrap/ng-bootstrap'
 // import {NgBootstrapModule} from './ng-bootstrap-module'
-import {UserProfileRegistrationService} from './user-profile-registration.service'
-import {AuthenticatedHttpService} from './authenticated-http.service';
+import { UserProfileRegistrationService } from './user-profile-registration.service'
+import { AuthenticatedHttpService } from './authenticated-http.service';
 import { ShurahComponent } from './shurah/shurah.component'
-import {OrganisationComponent} from './organisation/organisation.component';
-import {RegisterComponent} from './register/register.component';
-import {SuggestionDetailComponent} from './suggestion-detail/suggestion-detail.component';
+import { OrganisationComponent } from './organisation/organisation.component';
+import { RegisterComponent } from './register/register.component';
+import { SuggestionDetailComponent } from './suggestion-detail/suggestion-detail.component';
 import { MembershipRuleSectionComponent } from './shurah/membership-rule-section.component';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { SuggestionDetailsComponent } from './suggestion-details/suggestion-details.component';
@@ -106,7 +106,7 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: ['localhost:4500']
+        whitelistedDomains: ['localhost:4500','shariahstandards.org']
         // blacklistedRoutes: ['localhost:3001/auth/']
       }
     })

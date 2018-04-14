@@ -21,6 +21,9 @@ namespace WebApiResources
         public string PublicName { get; set; }
         public string PictureUrl { get; set; }
         public int Followers { get; set; }
-    }
+        public string Introduction { get; set; }
+        public string LastCalculated { get; set; }
+        public bool IsLeader { get; set; }
+  }
     
 }

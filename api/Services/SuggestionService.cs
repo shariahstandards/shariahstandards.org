@@ -235,6 +235,7 @@ namespace Services
             resource.PublicNameOfCommentAuthor = comment.CommentingMember.PublicName;
             resource.IsSupportive = comment.CommentIsSupportingSuggestion;
             resource.Censored = comment.IsCensored;
+            resource.PictureUrl = comment.CommentingMember.MemberAuth0Users.First().Auth0User.PictureUrl;
             return resource;
         }
 

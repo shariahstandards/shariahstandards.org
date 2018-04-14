@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -115,10 +115,15 @@ namespace Services
             {
                 draggedSection.ParentMembershipRuleSection = new MembershipRuleSectionRelationship();
             }
+           
             if (draggedSection.ParentMembershipRuleSection!=null && droppedOnSection.ParentMembershipRuleSection != null)
             {
                 draggedSection.ParentMembershipRuleSection.ParentMembershipRuleSectionId
                     = droppedOnSection.ParentMembershipRuleSection.ParentMembershipRuleSectionId;
+            }
+            if(HasNoRootSection(droppedOnSection))
+            {
+              return new ResponseResource { HasError = true, Error = "cannot paste section on itself" };
             }
             if (draggedSection.ParentMembershipRuleSection != null && droppedOnSection.ParentMembershipRuleSection == null)
             {
@@ -129,7 +134,23 @@ namespace Services
             return new ResponseResource();
         }
 
-        public virtual ResponseResource DeleteRuleSection(IPrincipal principal, DeleteMembershipRuleSectionRequest request)
+    public virtual bool HasNoRootSection(MembershipRuleSection droppedSection)
+    {
+        var sectionIds = new List<int>();
+        sectionIds.Add(droppedSection.Id);
+        while (droppedSection.ParentMembershipRuleSection != null)
+        {
+            if (sectionIds.Contains(droppedSection.ParentMembershipRuleSection.ParentMembershipRuleSectionId))
+            {
+              return true;
+            }
+            sectionIds.Add(droppedSection.ParentMembershipRuleSection.ParentMembershipRuleSectionId);
+            droppedSection = droppedSection.ParentMembershipRuleSection.ParentMembershipRuleSection;
+        }
+        return false;
+    }
+
+    public virtual ResponseResource DeleteRuleSection(IPrincipal principal, DeleteMembershipRuleSectionRequest request)
         {
             var user = _dependencies.UserService.GetAuthenticatedUser(principal);
             var sectionToDelete= GetMembershipRuleSection(request.MembershipRuleSectionId);

@@ -1,6 +1,8 @@
 import { Component, OnInit ,Input, ChangeDetectorRef} from '@angular/core';
 import {Suggestion} from './suggestion.interface';
 import { ShurahService} from '../shurah.service';
+import { Router, ActivatedRoute }       from '@angular/router';
+import { AuthService } from '../auth.service'
 
 import 'moment';
 declare var moment: any;
@@ -13,16 +15,27 @@ declare var moment: any;
 })
 export class SuggestionDetailComponent implements OnInit {
 
-	constructor( private changeDetectorRef:ChangeDetectorRef, 	
-		private shurahService:ShurahService
+	constructor( 
+		private changeDetectorRef:ChangeDetectorRef, 	
+		private shurahService:ShurahService,
+		private route:ActivatedRoute,
+    	private router:Router,
+    	private auth: AuthService,
 	){
 
 	}
-
+    private getRouteParamsSubscribe:any;
+	suggestion:Suggestion
+  	suggestionId:number
+  	organisationId:number
 	ngOnInit() {
+		this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
+        this.suggestionId=params['id'];
+      	this.organisationId=params['organisationId'];
+      	this.refresh();
+     });
 	}
 	@Input("suggestion")
-	suggestion:Suggestion
 	@Input("has-edit-permissions")
 	hasEditPermissions:boolean
 	addCommentModel:any={};
@@ -30,19 +43,19 @@ export class SuggestionDetailComponent implements OnInit {
 		return moment(dateText,"YYYYMMDDTHH:mm:ss").format("ddd Do MMM HH:mm:ss");
 	}
 	addComment(){
-		// this.shurahService.commentOnSuggestion(this.addCommentModel,this.suggestion.id).subscribe(r=>
-		// 	{
-		// 		var response = r.json();
-		// 		if(response.hasError){
-		// 			alert(response.error);
-		// 		}
-		// 		else{
-		// 			this.refresh();
-		// 			this.addCommentModel={};
-		// 		}
-		// 	});
+		this.shurahService.commentOnSuggestion(this.addCommentModel,this.suggestion.id).subscribe(r=>
+			{
+				var response = r;
+				if(response.hasError){
+					alert(response.error);
+				}
+				else{
+					this.refresh();
+					this.addCommentModel={};
+				}
+			});
 	}
-	showingComments:boolean=false;
+	showingComments:boolean=true;
 	toggleShowComments(){
 		this.showingComments=!this.showingComments;
 		if(this.comments==null && this.showingComments){
@@ -93,19 +106,34 @@ export class SuggestionDetailComponent implements OnInit {
 		})
 	}
 	comments:any[]
+	
 	refresh(){
-	 	this.shurahService.suggestionDetails(this.suggestion.id).subscribe(response=>{
+		this.shurahService.suggestionDetails(this.suggestionId).subscribe(response=>{
 	 		var model=response;
 	 		if(model.hasError){
-	 			alert(model.error);
+	 			this.suggestion=null;
 	 		}else{
 	 			this.suggestion=model.suggestionSummary;
-	 			this.comments = model.comments;
+	  			this.comments = model.comments;
+	  			this.hasEditPermissions = model.usersOwnSuggestion || model.memberPermissions.indexOf("RemoveSuggestion")>=0;
+	  			this.changeDetectorRef.detectChanges();
+
 	 		}
-	 	})
+	 	})  	
 	}
+	// refresh(){
+	//  	this.shurahService.suggestionDetails(this.suggestion.id).subscribe(response=>{
+	//  		var model=response;
+	//  		if(model.hasError){
+	//  			alert(model.error);
+	//  		}else{
+	//  			this.suggestion=model.suggestionSummary;
+	//  			this.comments = model.comments;
+	//  		}
+	//  	})
+	// }
 	canDelete(){
-		return this.hasEditPermissions || this.suggestion.userIsSuggestionAuthor;
+		return this.hasEditPermissions || (this.suggestion!=null && this.suggestion.userIsSuggestionAuthor);
 	}
 	deleted:boolean=false;
 	deleteSuggestion(){

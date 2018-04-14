@@ -105,6 +105,12 @@ export class ShurahService {
 			votingInSupport:inFavour
 		});
 	}
+	commentOnSuggestion( model:any,suggestionId:number):Observable<StandardApiResponse>{
+		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"CommentOnSuggestion",{
+			suggestionId:suggestionId,
+			comment:model.commentText
+		});
+	}
 	removeVoteOnSuggestion(voteId:number):Observable<StandardApiResponse>{
 		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"RemoveVote",{
 			voteId:voteId

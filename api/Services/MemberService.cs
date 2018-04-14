@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -50,11 +50,11 @@ namespace Services
         {
             var member = _dependencies.OrganisationService.GetGuaranteedMember(principal, request.OrganisationId);
             var response = new SearchMemberResponse();
-            var members = member.Organisation.Members.Where(m=>!m.Removed);
+            var members = member.Organisation.Members.Where(m=>!m.Removed).OrderByDescending(x=>x.FollowerCount).ThenBy(x=>x.PublicName);
             response.OrganisationId = request.OrganisationId;
             response.OrganisationName = member.Organisation.Name;
-            response.PageCount = (int)Math.Ceiling(members.Count()/10.0);
-            response.Members = members.Skip(((request.Page ?? 1) - 1)*10).Take(10).Select(BuildSearchedMemberResource).ToList();
+            response.PageCount = (int)Math.Ceiling(members.Count()/100.0);
+            response.Members = members.Skip(((request.Page ?? 1) - 1)*100).Take(100).Select(BuildSearchedMemberResource).ToList();
             return response;
         }
 
@@ -143,7 +143,7 @@ namespace Services
         public virtual MemberDetailsResource BuildMemberDetailsResource(Member member, Member currentUserMember)
         {
             var resource = new MemberDetailsResource();
-
+     
             resource.MemberId = member.Id;
             resource.PublicName = member.PublicName;
             resource.PictureUrl = member.MemberAuth0Users.First().Auth0User.PictureUrl;
@@ -172,10 +172,13 @@ namespace Services
         {
             return new SearchedMemberResource
             {
-                Id = member.Id,
-                PublicName = member.PublicName,
-                PictureUrl = member.MemberAuth0Users.First().Auth0User.PictureUrl,
-                Followers = member.FollowerCount
+              Id = member.Id,
+              PublicName = member.PublicName,
+              PictureUrl = member.MemberAuth0Users.First().Auth0User.PictureUrl,
+              Followers = member.FollowerCount,
+              Introduction = member.Introduction,
+              LastCalculated = member.Organisation.OrganisationLeader?.LastUpdateDateTimeUtc.ToString("dd MMM yyy"),
+              IsLeader = member.Id==member.Organisation.OrganisationLeader?.LeaderMemberId
             };
         }
     }

@@ -12,6 +12,8 @@ namespace deployViaFtp
     {
         static void Main(string[] args)
         {
+            Console.Write("press any key to continue");
+            Console.Read();
             if (args.Length < 5)
             {
                 Console.WriteLine("You need 5 arguments: ");

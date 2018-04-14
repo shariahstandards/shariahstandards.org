@@ -22,7 +22,7 @@ namespace Services
     }
     public interface IBatchJobService
     {
-        void RunCounts(string key);
+        void RunCounts();
     }
     public class BatchJobService: IBatchJobService
     {
@@ -33,10 +33,8 @@ namespace Services
             _dependencies = dependencies;
         }
 
-        public void RunCounts(string key)
+        public void RunCounts()
         {
-            if (key != "lkjglyrelbztglbjflgyaedfevuvsglstflr") { return;}
-
             _dependencies.StorageService.SetOf<ShurahBasedOrganisation>().ToList().ForEach(RunOrganisationCounts);
         }
 

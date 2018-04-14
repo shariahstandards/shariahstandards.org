@@ -14,5 +14,6 @@ namespace WebApiResources
         public string PublicNameOfCommentAuthor { get; set; }
         public bool? IsSupportive { get; set; }
         public bool Censored { get; set; }
-    }
+    public string PictureUrl { get; set; }
+  }
 }

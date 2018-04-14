@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public HttpResponseMessage SearchForMembers(SearchMemberRequest request)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _service.SearchForMembers(User, request));
+          return Request.CreateResponse(HttpStatusCode.OK, _service.SearchForMembers(User, request));
         }
         [Route("MemberDetails/{memberId}")]
         [HttpGet]

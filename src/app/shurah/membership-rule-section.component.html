@@ -22,21 +22,18 @@
 			<div *ngIf="allowEdit" class="buttons">
 				<button (click)="deleteRule(rule)" title="delete rule">x</button>
 				<button (click)="cutRule(rule)" title="cut rule">&#9986;</button>
-		 		<button *ngIf="enablePasteRule" (click)="pasteRule(rule)" title="paste after this rule">
-			 		<i class="fa fa-clipboard" aria-hidden="true"></i>
-			 	</button>
 			 	<button (click)="updateRule(rule)" title="update rule">
 			 		<i class="fa fa-pencil" aria-hidden="true"></i>
 			 	</button>
-		 		
+		 		<button *ngIf="enablePasteRule" (click)="pasteRule(rule)" title="paste after this rule">
+			 		<i class="fa fa-clipboard" aria-hidden="true"></i>
+			 	</button>
 		 	</div>
 			<div>
 				<span *ngFor="let fragment of rule.ruleFragments">
 					<span *ngIf="fragment.isPlainText">{{fragment.text}}</span>
 					<span *ngIf="fragment.isTerm">
-						<term [term-id]="fragment.termId" [term]="fragment.text" [organisation-id]="section.organisationId">{{fragment.text}}</term>
-					</span>
-					<span *ngIf="fragment.quranReference!=null">
+						<term [term-id]="fragment.termId" [term]="fragment.text" [organisation-id]="section.organisationId">{{fragment.text}}</term></span><span *ngIf="fragment.quranReference!=null">
 						<a routerLinkActive="active-route" [routerLink]="'/quran/surah/'+fragment.quranReference.surah+'/verse/'+fragment.quranReference.verse">
 							{{fragment.quranReference.surah}}:{{fragment.quranReference.verse}}
 						</a>

@@ -15,7 +15,7 @@ import {memberRoutes} from './member/member.component.routes'
 const appRoutes: Routes = [
   ...termDefinitionsRoutes,
   // ...standardsRoutes,
-  ...shurahRoutes,
+  // ...shurahRoutes,
   ...zakatRoutes,
   ...inheritanceRoutes,
   ...suggestionRoutes,

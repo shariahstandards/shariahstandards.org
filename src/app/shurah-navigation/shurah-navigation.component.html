@@ -1,4 +1,4 @@
-<nav *ngIf="organisation!=null">
+<ng-template *ngIf="organisation!=null">
   <a routerLinkActive="active-route" [routerLink]="'/rules/'+organisationId">
   	Rules
   </a>
@@ -16,4 +16,4 @@
   	[routerLink]="'/membership-applications/organisation/'+organisationId">
   	Membership Applications
   </a>
-</nav>
+</ng-template>

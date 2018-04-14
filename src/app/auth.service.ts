@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output,EventEmitter } from '@angular/core';
 import { AUTH_CONFIG } from './auth0-variables';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -22,6 +22,7 @@ export class AuthService {
     scope: this.requestedScopes,
     leeway: 30
   });
+ @Output() loggedIn:EventEmitter<boolean>=new EventEmitter<boolean>();
 
   constructor(private userProfileService:UserProfileRegistrationService,public router: Router) { }
   public static token:string;
@@ -79,7 +80,10 @@ export class AuthService {
     localStorage.setItem('expires_at', expiresAt);
     localStorage.setItem('scopes', JSON.stringify(scopes));
     this.scheduleRenewal();
-    this.getProfile(()=>{});
+    this.getProfile(()=>{
+        console.log("session set and logged in")
+        this.loggedIn.emit(true);
+    });
   }
   public logout(): void {
 
@@ -92,6 +96,9 @@ export class AuthService {
     this.unscheduleRenewal();
     // Go back to the home route
     this.router.navigate(['/']);
+    console.log("logged out")
+
+    this.loggedIn.emit(false);
   }
 
   public isAuthenticated(): boolean {

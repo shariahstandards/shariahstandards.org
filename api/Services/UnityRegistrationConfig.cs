@@ -39,7 +39,7 @@ namespace Services
         {
             RegisterAllUniqueServices(container);
             container.RegisterType<IStorageService, StorageService>(new PerRequestLifetimeManager());
-
+            
         }
     }
 }

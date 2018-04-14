@@ -58,7 +58,7 @@ interface FileReaderEvent extends Event {
 		private myElement: ElementRef) {
 		if(!moment){return;}
 		var now = moment();
-		this.date={year: now.year(), month: now.month(), day: now.date()}
+		this.date={year: now.year(), month: now.month()+1, day: now.date()}
 		this.latitude = 53.482863;
 		this.longitude = -2.3459968;
 		//this.utcOffset=moment().utcOffset()/60.0;

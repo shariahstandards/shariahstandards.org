@@ -7,17 +7,17 @@
   <span *ngIf="auth.isAuthenticated()">
       <button (click)="openModalToAddSuggestion(addSuggestionModal)" title="Add suggestion">Add new suggestion*</button>
   </span>
-  <div *ngIf="searchResultPages[0].memberSearchedFor">
-    Searching for suggestions by <img [src]="searchResultPages[0].memberSearchedFor.pictureUrl" title="author picture" width="50"/> {{searchResultPages[0].memberSearchedFor.publicName}}   <a [routerLink]="'/suggestions/'+organisationId">Show all</a>   
-  </div>
-  <div *ngIf="sortingByMostRecentFirst">Showing most recent results first <button (click)="showMostSupportedSuggestionsFirst()">Show most supported suggestions first</button></div>
-  <div *ngIf="!sortingByMostRecentFirst">Showing most supported results first <button (click)="showMostRecentSuggestionsFirst()">Show most recent suggestions first</button></div>
- 
   <div *ngIf="searchResultPages.length>0">
-     	<span *ngIf="searchResultPages[0].suggestions.length==0">
-    		No suggestions found.
-    	</span>
-      <br/>
+    <div *ngIf="searchResultPages[0].memberSearchedFor">
+      Searching for suggestions by <img [src]="searchResultPages[0].memberSearchedFor.pictureUrl" title="author picture" width="50"/> {{searchResultPages[0].memberSearchedFor.publicName}}   <a [routerLink]="'/suggestions/'+organisationId">Show all</a>   
+    </div>
+    <span *ngIf="searchResultPages[0].suggestions.length==0">
+      No suggestions found.
+    </span>
+    <div *ngIf="searchResultPages[0].suggestions.length>0">
+      <div *ngIf="sortingByMostRecentFirst">Showing most recent results first <button (click)="showMostSupportedSuggestionsFirst()">Show most supported suggestions first</button></div>
+      <div *ngIf="!sortingByMostRecentFirst">Showing most supported results first <button (click)="showMostRecentSuggestionsFirst()">Show most recent suggestions first</button></div>
+    </div>
     	<ul *ngIf="searchResultPages.length>0 && searchResultPages[0].suggestions.length>0" class="list-unstyled">
         <ng-container *ngFor="let searchResults of searchResultPages">
         	<li *ngFor="let suggestion of searchResults.suggestions">
@@ -84,11 +84,11 @@
       </div>
       <div class="modal-body">
       	<div class="form-group">
-          <label for="subject">Subject</label>
+          <label for="subject">Title</label>
           <input type="text" [(ngModel)]="addSuggestionModel.subject" required maxlength="100" id="subject" name="subject" class="form-control">
         </div>
       	<div class="form-group">
-          <label for="suggestion">Suggestion</label>
+          <label for="suggestion">Detail</label>
           <textarea rows="2" required maxlength="1000"  id="suggestion" name="suggestion"
            class="form-control"
            col="100" [(ngModel)]="addSuggestionModel.suggestion">
