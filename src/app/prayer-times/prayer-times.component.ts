@@ -2,7 +2,6 @@ import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef,ChangeDet
 import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
 import { Observable} from "rxjs/Observable"; 
-import { Subscription} from "rxjs/Subscription"; 
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router'
 import {NgbModule,NgbDateStruct} from '@ng-bootstrap/ng-bootstrap'
@@ -26,7 +25,7 @@ interface FileReaderEvent extends Event {
 @Component({
 //  moduleId: module.id,
 	templateUrl: './prayer-times.component.html',
-  styleUrls: ['./prayer-times.component.css'],
+  styleUrls: ['./prayer-times.component.scss'],
   selector: 'prayer-times',
  // directives: [DATEPICKER_DIRECTIVES, MODAL_DIRECTVES, ROUTER_DIRECTIVES],
   providers: [PrayerTimesCalculatorService]
