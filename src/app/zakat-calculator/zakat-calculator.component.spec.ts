@@ -2,7 +2,7 @@
 
 // import { By }           from '@angular/platform-browser';
 // import { DebugElement } from '@angular/core';
-// import { addProviders, async, inject } from '@angular/core/testing';
+import { addProviders, async, inject } from 'jasmine-core';
 // import { ZakatCalculatorComponent } from './zakat-calculator.component';
 
 // describe('Component: ZakatCalculator', () => {

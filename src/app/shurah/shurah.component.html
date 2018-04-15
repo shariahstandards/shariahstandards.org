@@ -1,0 +1,249 @@
+<app-shurah-navigation *ngIf="organisation!=null" [organisation-id]="organisation.id"></app-shurah-navigation>
+
+<div *ngIf="organisation!=null">
+  <h2>
+    Membership Rules of {{organisation.name}}  
+  </h2>
+
+ 
+ <!--  <pre>
+    {{expandedSections|json}}
+
+  </pre> -->
+    <div *ngIf="organisation.ruleSections.length==0">
+    <p>No rules have been set for this organisation</p>
+  </div>
+  <span *ngIf="auth.isAuthenticated() && allow('EditMembershipRules')">
+      <button (click)="openModalToAddMembershipRuleSection(addSectionModal)" title="add top level membership rule section">&sect;*</button>
+  </span>
+  <div>
+    <div class="section" *ngFor="let section of organisation.ruleSections" [id]="section.uniqueName">
+      <membership-rule-section 
+      (cutSection)="cutSection($event)"
+      (deleteSection)="deleteSection($event)"
+      (addSection)="openModalToAddMembershipRuleSection(addSectionModal,$event)" 
+      (pasteInto)="pasteIntoSection($event)"
+      (updateSection)="openModalToUpdateMembershipRuleSection(updateSectionModal,$event)"
+      (createRuleInSection)="openModalToCreateRuleInSection(addMembershipRuleModal,$event)"
+      (cutRuleOut)="cutRule($event)"
+      (pasteRuleIn)="pasteRule($event)"
+      (onDeleteRule)="deleteRule($event)"
+      (onUpdateRule)="openModalToUpdateMembershipRule(updateMembershipRuleModal,$event)"
+      [section]="section" 
+      [sub-sections]="section.subSections" 
+      [expanded-sections]="expandedSections" 
+      [allow-edit]="auth.isAuthenticated() && allow('EditMembershipRules')"
+      [enable-paste]="sectionToDrop!=null"
+      (onSectionExpanded)="setActiveSection($event)"
+      [enable-paste-rule]="ruleToDrop!=null">
+      </membership-rule-section>
+    </div>
+  </div>
+ 
+</div>
+<br/>
+<div class="card">
+  <div class="card-header">
+    <h4>Membership Status</h4>
+  </div>
+  <div class="card-block">
+    <p *ngIf="!auth.isAuthenticated()">
+      Log in above to see membership status
+    </p>
+    <p *ngIf="organisation && organisation.member==null && auth.isAuthenticated() && !hideButtons">
+      <!--has pending application logic missing-->
+      You are currently not a member of this organisation.
+      <button (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)"> Apply to join </button>
+    </p>
+    <p *ngIf="organisation && organisation.member!=null && auth.isAuthenticated() && !hideButtons">
+    You are a now member of this organisation, agreeing to these membership rules. You may choose to terminate this agreement at any time and leave by clicking this button:<br/><br/>
+  
+      <button class="btn btn-danger" (click)="leave()"> Leave </button>
+    </p>
+ <!--    <p *ngIf="organisation && organisation.hasPendingApplication">
+      You are currently not a member of this organisation.<br/>
+      Your application for membership has been submitted and is waiting for approval
+    </p> -->
+  </div>
+</div>
+
+  <div class="card"*ngIf="organisation!=null && organisation.leaderMember!=null">
+    <div class="card-header">
+     <h4> Organisation leader</h4> 
+    </div>
+    <div class="card-block">
+     <img [src]="organisation.leaderMember.pictureUrl" title="leader picture" width="50"/> 
+       {{organisation.leaderMember.publicName}} 
+     </div>
+  </div>
+
+<ng-template #addSectionModal let-c="close" let-d="dismiss">
+   <form>
+      <div class="modal-header">
+        <div class="modal-title">Add Membership Rules Section
+        <span *ngIf="addMembershipRuleSectionModel.parentSection!=null">
+          within "{{addMembershipRuleSectionModel.parentSection.title}}"
+        </span>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <label for="sectionName">Section Name</label>
+          <input type="text" [(ngModel)]="addMembershipRuleSectionModel.name" required maxlength="100" id="sectionName" name="name">
+          <div>
+            Url Id: {{addMembershipRuleSectionModel.urlSlug()}}
+          </div>
+        <ul>
+          <li class="error" *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="beginAddRuleSection()">Add</button>
+
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</ng-template>
+
+<ng-template #updateSectionModal let-c="close" let-d="dismiss">
+  <form>
+    <div class="modal-header">
+      <div class="modal-title">Edit Membership Rules Section
+      <span *ngIf="updateMembershipRuleSectionModel.membershipRuleSectionModel.parentSection!=null">
+        within "{{updateMembershipRuleSectionModel.membershipRuleSectionModel.parentSection.title}}"
+      </span>
+      </div>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <label for="sectionName">Section Name</label>
+      <input type="text" [(ngModel)]="updateMembershipRuleSectionModel.membershipRuleSectionModel.title" required maxlength="100" id="sectionName" name="name">
+      <div>
+        Url Id: {{updateMembershipRuleSectionModel.urlSlug()}}
+      </div>
+    <ul>
+      <li class="error" *ngFor="let error of errors">
+        {{error}}
+      </li>
+    </ul>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" (click)="beginUpdateMembershipRuleSection()">Update</button>
+
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    </div>
+  </form>
+
+</ng-template>
+
+<ng-template #addMembershipRuleModal let-c="close" let-d="dismiss">
+   <form>
+      <div class="modal-header">
+        <div class="modal-title">Add Membership Rule
+          within "{{addMembershipRuleModel.section.title}}"
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <label for="ruleStatement">Rule</label>
+          <textarea rows="2" required maxlength="1000"  id="ruleStatement" name="ruleStatement"
+           col="100" [(ngModel)]="addMembershipRuleModel.ruleStatement">
+          </textarea>
+        <ul>
+          <li class="error" *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="addRule()">Add Rule</button>
+
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</ng-template>
+
+<ng-template #updateMembershipRuleModal let-c="close" let-d="dismiss">
+   <form>
+      <div class="modal-header">
+        <div class="modal-title">Update Membership Rule</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <label for="ruleStatement">Rule</label>
+          <textarea rows="2" required maxlength="1000"  id="ruleStatement" name="ruleStatement"
+           col="100" [(ngModel)]="updateMembershipRuleModel.membershipRuleModel.ruleStatement">
+          </textarea>
+        <ul>
+          <li class="error" *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="updateRule()">Update</button>
+
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</ng-template>
+
+
+<ng-template #applyToJoinOrganisationModal let-c="close" let-d="dismiss">
+   <form #applyToJoinOrganisationModalForm="ngForm" (ngSubmit)="applyToJoin()">
+      <div class="modal-header">
+        <div class="modal-title">Apply to join {{applyToJoinOrganisationModel.organisationName}}</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="publicName">Full Name (visible to public)</label>
+            <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.publicName" required maxlength="100" id="publicName" name="publicName">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input class="form-control" type="email" [(ngModel)]="applyToJoinOrganisationModel.emailAddress" required maxlength="100" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Phone</label>
+            <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.phoneNumber" required maxlength="20" id="phoneNumber" name="phoneNumber">
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+            <input class="form-check-input"  type="checkbox" [(ngModel)]="rulesAgreedTo" name="rulesAgreedTo" required>
+            I agree to hold to the rules of this organisation and to become a member.</label>
+        </div>
+        <div class="form-group">
+          <label for="publicProfileStatement">Application Supporting Statement</label>
+          <textarea rows="2" class="form-control" required maxlength="1000"  id="publicProfileStatement" name="publicProfileStatement"
+           col="100" [(ngModel)]="applyToJoinOrganisationModel.publicProfileStatement">
+          </textarea>
+        </div>
+        <ul>
+          <li class="error" *ngFor="let error of applyToJoinOrganisationModel.errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="!rulesAgreedTo">Apply</button>
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</ng-template>

@@ -1,5 +1,5 @@
 <h2> Inheritance Calculator </h2>
-	<a [routerLink]="['/standards/inheritance-rules']">Details of the Standard</a>
+	<!-- <a [routerLink]="['/standards/inheritance-rules']">Details of the Standard</a> -->
 
 
 <div class="row">
@@ -125,29 +125,8 @@
 	</div>
 	<div class="col-lg-8">
 		<div class="pie-chart-holder">
-			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-				[style.width]="pieChartSize+'px'" [style.height]="pieChartSize+'px'">
-				<template ngFor [ngForOf]="calculateSectors()" let-sector>
-					<circle [attr.cx]="sector.L" [attr.cy]="sector.L" [attr.r]="sector.L" 
-					[attr.fill]="sector.color" *ngIf="sector.percentage==1"/>
-
-				   	<path xmlns="http://www.w3.org/2000/svg" *ngIf="sector.percentage!=1"
-				   	 [attr.fill]="sector.color" 
-				   	[attr.d]="'M' + sector.L + ',' + sector.L + ' L' + sector.L*2 +',' + sector.L + ' A' + sector.L + ',' + sector.L + ' 0 '+sector.largeArc+','+sector.arcSweep+' ' + sector.X + ', ' + sector.Y "
-				   	[attr.transform]="'rotate(' + sector.R + ', '+ sector.L+', '+ sector.L+')'"
-				   	/>
-				
-				</template>
-		 	</svg>
+			<pie-chart [data]="getPieChartData()" [size]="300"></pie-chart>
 	 	</div>
-		<!-- <base-chart class="chart"
-			           [data]="pieChartData"
-			           [labels]="pieChartLabels"
-			           [chartType]="pieChartType"
-			           [options]="pieChartOptions"
-			           [colors]="pieChartColors"
-			           >
-			    </base-chart> -->
 	</div>
 </div>
 <div class="row">
@@ -163,7 +142,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			<template ngFor [ngForOf]="model.shares" let-share>
+			<ng-template ngFor [ngForOf]="model.shares" let-share>
 				<tr>
 					<td [style.background-color]="getColour(share)">
 						&nbsp;
@@ -178,7 +157,7 @@
 						{{share.fraction.top}} / {{share.fraction.bottom}}
 					</td>
 				</tr>
-			</template>
+			</ng-template>
 			</tbody>
 		</table> 
 	</div>
@@ -201,7 +180,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<template ngFor [ngForOf]="exampleSituations" let-situation>
+		<ng-template ngFor [ngForOf]="exampleSituations" let-situation>
 			<tr>
 				<td>
 					<span *ngIf="situation.hasMother">Y</span>
@@ -239,7 +218,7 @@
 					{{situation.allocatedShare.toPrecision(5)*100}} %
 				</td>
 			</tr>			
-		</template>
+		</ng-template>
 	</tbody>
 </table>	
 </div>

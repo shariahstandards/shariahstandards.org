@@ -1,4 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+.modal-title{
+	font-size: 14pt;
+	font-weight: bold;
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~font-awesome/css/font-awesome.css";
 
@@ -9,3 +19,13 @@
 button{
 	cursor: pointer;
 }
+	float: left;
+}
+/* .modal-backdrop.fade
+   {
+     opacity: 0.5;
+   }
+   .modal-open .modal
+   {
+     opacity: 1;
+   }*/

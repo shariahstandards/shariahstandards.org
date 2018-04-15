@@ -1,178 +1,144 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy,Input,forwardRef, Injectable} from '@angular/core';
 import { Router, ActivatedRoute }       from '@angular/router';
 import { TermComponent } from '../term/term.component';
+import { ShurahService} from '../shurah.service';
+import { addTermDefinitionModel} from './add-term-definition.model'
+import {termDefinitionModel} from './term-definition.model'
+import { AuthService } from '../auth.service';
+import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {updateTermDefinitionModel} from './update-term-definition.model'
 import {DefinitionText} from './definition-text.interface';
 import {TermDefinition} from './term-definition.interface';
-
 @Component({
   //moduleId: module.id,
   selector: 'app-term-definitions',
   templateUrl: './term-definitions.component.html',
   styleUrls: ['./term-definitions.component.css'],
+  providers:[ShurahService]
 //  directives:[TermComponent]
 })
 export class TermDefinitionsComponent implements OnInit, OnDestroy  {
-  public term:string;
-  public definition:DefinitionText;
   //private route:ActivatedRoute;
   constructor( 
   	private route:ActivatedRoute,
-    private router:Router
-  	) {
-    this.termChanged();
+    public auth: AuthService,
+    private modalService: NgbModal,
+    private router:Router,
+    // @Inject(forwardRef(() => ShurahService)) 
+    private shurahService:ShurahService
+   	) {
   }
- ;
-
+  termDefinitionModel:termDefinitionModel
+  addTermDefinitionModel:addTermDefinitionModel
+  permissions:string[]=[]
   private getRouteParamsSubscribe:any;
+  allow(action:string)
+  {
+    if(this.permissions.some(p=>{
+      return p==action;
+    })){
+      return true;
+    }
+    return false;
+  }
+  organisationId:number
   ngOnInit() {
-  	 this.definitions=[
-  	 { term:"Allah",
-       definition:{
-         contents:[{
-           text:"God, the all caring the all giving, the lord of everyone, the master of the day of judgement",
-           isADefinedTerm:false
-         }]
-       },
-       relatedTerms:[]
-     },
-    { term:"Muslim",
-       definition:{
-         contents:[{
-           text:"A human being who is freely following the religion of",
-           isADefinedTerm:false
-         },
-         {
-           text:"Islam",
-           isADefinedTerm:true
-         }
-         ,
-         {
-           text:"by declaring the",
-           isADefinedTerm:false
-         },,
-         {
-           text:"Shahada",
-           isADefinedTerm:true
-         }]
-       },
-     relatedTerms:[]},
-    { term:"Islam",
-       definition:{
-         contents:[{
-           text:"To be in a state of surrender to the will of",
-           isADefinedTerm:false
-         },
-          {
-           text:"Allah",
-           isADefinedTerm:true
-         },]
-       },relatedTerms:[]},
-       ,
-    { term:"Shahada",
-       definition:{
-         contents:[{
-           text:"A declaration made by an",
-           isADefinedTerm:false
-         },
-         {
-           text:"adult",
-           isADefinedTerm:true
-         },
-         {
-           text:"in front of at least 2 witnesses free from any coersion with the following words 'I see that there is no god except",
-           isADefinedTerm:false
-         },
-         {
-           text:"Allah",
-           isADefinedTerm:true
-         },
-         {
-           text:"and I see that Muhammad is the messenger of",
-           isADefinedTerm:false
-         }
-         ,
-         {
-           text:"Allah",
-           isADefinedTerm:true
-         }
-         ]
-       },
-       relatedTerms:[]},
-    { term:"Adult",
-       definition:{
-         contents:[{
-           text:"A human being over the age of 18 years",
-           isADefinedTerm:false
-         }]
-       }
-     ,relatedTerms:[]},
-      { term:"Man",
-       definition:{
-         contents:[{
-           text:"A male human being having reached the age of sexual maturity capable of having children",
-           isADefinedTerm:false
-         }]
-       }
-     ,relatedTerms:[]},
-     { term:"Woman",
-       definition:{
-         contents:[{
-           text:"A female human being having reached the age of sexual maturity capable of having children"
-           +"and being fully physically developed",
-           isADefinedTerm:false
-         }]
-       }
-     ,relatedTerms:[]},
-      { term:"Guardian",
-       definition:{
-         contents:[{
-           text:"An adult with responsibility to act in the best interest of a another human being on their behalf",
-           isADefinedTerm:false
-         }]
-       }
-     ,relatedTerms:[]},
-     ]
 
-  	  this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
-  	  	this.term=params['term'];
-  	  	this.termChanged();
-  	 });
+    
+	  this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
+	    if(params['organisationId']!=null){
+        this.organisationId=params['organisationId'];
+      }else{
+        this.organisationId=1;
+      }
+    	this.termId=params['termId'];
+      this.shurahService.getPermissionsForOrganisation(this.organisationId).subscribe(res=>{
+        this.permissions = res;
+      });
+	  	this.refresh();
+	 });
   }
-  termChanged(){
-  	if(!this.term || this.term==''){
-  		this.definition={
-        contents:[{
-          text:"no term specified",
-          isADefinedTerm:false
-        }]
-      };
-  	}else{
-  		if(this.definitions.some((defn)=>{
-  			return this.term && defn.term.toLowerCase()==this.term.toLowerCase()
-  		})){
-  			this.definition = this.definitions.filter((defn)=>{
-  					return this.term && defn.term.toLowerCase()==this.term.toLowerCase()
-  				})[0].definition;
-          this.router.navigate(["/terms/"+this.term]);
-     	}else{
-		  	this.definition=
-        {
-          contents:[{
-            text: "'"+this.term+"' is not defined",
-            isADefinedTerm:false
-          }]
-        };
-       ;
-  		}
-  	}
+  private activeModal:NgbModalRef
+  
+  openModalToAddTermDefinition(content) {
+   this.addTermDefinitionModel= new addTermDefinitionModel();
+   this.activeModal= this.modalService.open(content);
+   document.getElementById('term').focus();
+   this.activeModal.result.then(()=>{
+     this.ngOnInit();
+   })
   }
-  goToTerm(text:string){
-    this.term=text;
-    this.termChanged();
+  addTermDefinition(){
+    this.addTermDefinitionModel.errors=[];
+    this.shurahService.createTermDefinition(this.addTermDefinitionModel,this.organisationId).subscribe(result=>{
+      var response = result;
+      if(response.hasError){
+       this.addTermDefinitionModel.errors.push(response.error);
+      }
+      else{
+        this.activeModal.close('term added');
+        this.router.navigateByUrl("/terms/"+response.id+"/"+response.term);
+      }
+    })
+  }
+  updateTermDefinitionModel:updateTermDefinitionModel
+  openModalToUpdateTermDefinition(content,definitionModel:any) {
+   this.updateTermDefinitionModel= new updateTermDefinitionModel(definitionModel);
+   this.activeModal= this.modalService.open(content);
+   document.getElementById('term').focus();
+   this.activeModal.result.then(()=>{
+     this.refresh();
+   })
+  }
+  deleteTerm(termId:number){
+     this.shurahService.deleteTermDefinition(termId).subscribe(result=>{
+      var response = result;
+      if(response.hasError){
+         alert(response.error);
+      }
+      else{
+        this.router.navigateByUrl("/terms/"+this.organisationId);
+      }
+    }) 
+  }
+  updateTermDefinition(){
+    this.updateTermDefinitionModel.errors=[];
+    this.shurahService.updateTermDefinition(this.updateTermDefinitionModel).subscribe(result=>{
+      var response = result;
+      if(response.hasError){
+       this.updateTermDefinitionModel.errors.push(response.error);
+      }
+      else{
+        this.activeModal.close('term updater');
+        this.router.navigateByUrl("/terms/"+this.organisationId+"/"
+          +response.termId+"/"+response.term);
+      }
+    }) 
+  }
+  termId:number
+  termList:any[]
+  refresh(){
+    if(this.termId!=null){
+      this.shurahService.getTermDefinition(this.termId,this.organisationId).subscribe(result=>{
+        var response = result;
+        if(response.hasError){
+         alert(response.error);
+        }else{
+          this.termDefinitionModel=response
+        }
+      })
+    }
+    this.shurahService.getTermList(this.organisationId).subscribe(result=>{
+      var response = result;
+      if(response.hasError){
+       alert(response.error);
+      }else{
+        this.termList=response
+      }
+    })
+  
   }
   ngOnDestroy() {
   	this.getRouteParamsSubscribe.unsubscribe();
   }
-  public definitions:[TermDefinition];
-
 }

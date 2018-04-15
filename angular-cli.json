@@ -1,7 +1,7 @@
 {
   "project": {
-    "version": "1.0.0-beta.28.3",
-    "name": "shariahstandards"
+    "name": "shariahstandards",
+    "ejected": true
   },
   "apps": [
     {
@@ -9,6 +9,9 @@
       "outDir": "dist",
       "assets": [
         "assets",
+        "libraries",
+        "site.css",
+        "styles.css",
         "favicon.ico"
       ],
       "index": "index.html",
@@ -16,6 +19,7 @@
       "polyfills": "polyfills.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.json",
+      "testTsconfig": "tsconfig.json",
       "prefix": "app",
       "styles": [
         "styles.css"
@@ -51,6 +55,14 @@
   "defaults": {
     "styleExt": "css",
     "prefixInterfaces": false,
+    "class": {
+      "spec": false
+    },
+    "component": {
+      "spec": true,
+      "inlineStyle": false,
+      "inlineTemplate": false
+    },
     "inline": {
       "style": false,
       "template": false

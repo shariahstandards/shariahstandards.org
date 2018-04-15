@@ -1,3 +1,2 @@
-export * from './environments/environment';
 export * from './shariah-standards.component';
-//export * from './app.component';
+export * from './shariah-standards.module';

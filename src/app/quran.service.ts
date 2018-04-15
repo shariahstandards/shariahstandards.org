@@ -97,7 +97,7 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 		return output;
 	}
 
-	arabicIndex:any[]
+	arabicIndex:{}
 	arabicWords:any[]
 	buildArabicIndex(){
 		this.arabicIndex=[];
@@ -124,6 +124,9 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 			}
 		}
 	}
+	removePunctuation(text:string){
+		return text.replace(/[\W ]+/g,"");
+	}
   	englishSearch(text:string){
 	  	var results=[];
 	  	var lowerCaseText=text.toLowerCase();
@@ -131,10 +134,13 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 		var englishQuranVerseNumbers = Object.keys(verses);
 		var matchingVerseNumbers =englishQuranVerseNumbers.filter(verseNum=>{
 	  		var verse=verses[verseNum];
-	  		return verse.verse.toLowerCase().indexOf(lowerCaseText)>=0; 
+	  		var cleanerLowercaseVerseText=this.removePunctuation(verse.verse).toLowerCase();
+	  		var cleanerLowerCaseText = this.removePunctuation(lowerCaseText);
+	  		return cleanerLowercaseVerseText.indexOf(cleanerLowerCaseText)>=0; 
 	  	});
 	  	matchingVerseNumbers.forEach(verseNumber=>{
 	  		var verse=verses[verseNumber];
+
 			results.push({surah:verse.surah,verse:verse.ayah,searchText:text});
 
 			// results.push(verse.surah+":"+verse.ayah);

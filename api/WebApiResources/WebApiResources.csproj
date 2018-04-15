@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CF85AA30-A954-4889-80A3-E3885111F72C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebApiResources</RootNamespace>
+    <AssemblyName>WebApiResources</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AllOrganisationPermissionsResource.cs" />
+    <Compile Include="CreateMembershipRuleRequest.cs" />
+    <Compile Include="CreateMembershipRuleSectionRequest.cs" />
+    <Compile Include="CreateSugestionRequest.cs" />
+    <Compile Include="CreateTermDefinitionRequest.cs" />
+    <Compile Include="DragDropMembershipRuleSectionRequest.cs" />
+    <Compile Include="GetOrganisationSummaryRequest.cs" />
+    <Compile Include="LeaveOrganisationRequest.cs" />
+    <Compile Include="MemberDetailsResource.cs" />
+    <Compile Include="MembershipApplicationrequest.cs" />
+    <Compile Include="MembershipCancellationResponseResource.cs" />
+    <Compile Include="MembershipApplicationResponseResource.cs" />
+    <Compile Include="MembershipRuleSectionResource.cs" />
+    <Compile Include="OrganisationResource.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Auth0UserProfile.cs" />
+    <Compile Include="ResponseResource.cs" />
+    <Compile Include="RuleFragmentResource.cs" />
+    <Compile Include="SearchMemberRequest.cs" />
+    <Compile Include="SearchSugestionsRequest.cs" />
+    <Compile Include="SuggestionCommentResource.cs" />
+    <Compile Include="TermDefinitionResource.cs" />
+    <Compile Include="TermListResource.cs" />
+    <Compile Include="UpdateMembershipRuleSectionRequest.cs" />
+    <Compile Include="UserProfileResource.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

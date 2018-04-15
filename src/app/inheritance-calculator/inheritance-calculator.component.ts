@@ -129,79 +129,16 @@ export class InheritanceCalculatorComponent implements OnInit,OnChanges {
 	}
 	pieChartSize:number=300;
 	
-	// from https://danielpataki.com/svg-pie-chart-javascript/
-	calculateSectors(  ) {
-		var data = {
-			size:this.pieChartSize,
-			sectors:this.model.shares.map(s=>{
-				return {
-					percentage:s.share,
-					label:s.relationshipToDeceased+" "+s.counter
-				}
-			})
-		};
-	    var sectors = [];
-	    // var colors = [
-	    //     "#61C0BF", "#DA507A", "#BB3D49", "#DB4547"
-	    // ];
-	    var colors=this.model.shares.map(s=>{
-	    	return this.getColour(s);
-	    })
-	    var l = data.size / 2
-	    var a = 0 // Angle
-	    var aRad = 0 // Angle in Rad
-	    var z = 0 // Size z
-	    var x = 0 // Side x
-	    var y = 0 // Side y
-	    var X = 0 // SVG X coordinate
-	    var Y = 0 // SVG Y coordinate
-	    var R = 0 // Rotation
-	    var aCalc,arcSweep;
 
-	    data.sectors.map( function(item, key ) {
-	        //a = 360 * ;
-	       // aCalc = ( a > 180 ) ? 360 - a : a;
-	        aRad = item.percentage * 2 * Math.PI;
-	        y=l*Math.sin(aRad);
-	        x=l*Math.cos(aRad);
-	        //z = Math.sqrt( 2*l*l - ( 2*l*l*Math.cos(aRad) ) );
-	        // if( aCalc <= 90 ) {
-	        //     x = l*Math.sin(aRad);
-	        // }
-	        // else {
-	        //     x = l*Math.sin((180 - aCalc) * Math.PI/180 );
-	        // }
-	        
-	        // y = Math.sqrt( z*z - x*x );
-	        // // if(isNaN(y)){
-	        // // 	y=0;
-	        // // }
-	        // Y = y;
-            X = l + x;
-            var largeArc=0;
-            var arcSweep=1;
-	        if( aRad > Math.PI ) {
-	         	largeArc=1
-	        }
-	        Y = l + y;
-	        sectors.push({
-	            percentage: item.percentage,
-	            label: item.label,
-	            color: colors[key],
-	            arcSweep: arcSweep,
-	            largeArc:largeArc,
-	            L: l,
-	            X: X,
-	            Y: Y,
-	            R: R
-	        });
-
-	        R = R + aRad*180/Math.PI;
-	    })
-
-    	return sectors
+	getPieChartData(){
+		return this.model.shares.map(s=>{
+			return {
+				percentage:s.share*100.0,
+				label:s.relationshipToDeceased+" "+s.counter,
+				colour:this.getColour(s)
+			}
+		});
 	}
-
 	pieChartColors:{}
 	ngOnChanges(changes) {
       console.log(changes);

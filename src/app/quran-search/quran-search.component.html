@@ -79,7 +79,7 @@
 			<div *ngIf="!searchResults.hasEnglishResults && !searchResults.hasArabicResults">
 				<p>No results</p>
 			</div>
-			<div *ngIf="searchResults.hasEnglishResults">
+			<div *ngIf="searchResults.hasEnglishResults" class="heightLimited">
 			<label>{{searchResults.results.length}} English phrase matches</label>
 				<ul class="list-inline">
 					<li  *ngFor="let result of searchResults.results">
@@ -128,5 +128,8 @@
 			</div>
 		</div>
 	</div>
+</div>
+<div *ngFor="let entry of quranService.arabicIndex">
+{{entry}}
 </div>
 

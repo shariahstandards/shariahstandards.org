@@ -8,7 +8,7 @@
 //   describe, xdescribe,
 //   expect, it, xit,
 //   async, inject
-// } from '@angular/core/testing';
+} from 'jasmine-core';
 
 // import { TermDefinitionsComponent } from './term-definitions.component';
 

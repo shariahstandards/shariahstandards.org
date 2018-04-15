@@ -1,8 +1,7 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import {ShariahStandardsModule} from './app/shariah-standards.module'
 import { enableProdMode } from '@angular/core';
 import { environment } from './environments/environment';
-import {ShariahStandardsModule} from './app/app.module'
-
 if (environment.production) {
   enableProdMode();
 }

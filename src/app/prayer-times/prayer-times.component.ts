@@ -6,6 +6,7 @@ import { Subscription} from "rxjs/Subscription";
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router'
 import {NgbModule,NgbDateStruct} from '@ng-bootstrap/ng-bootstrap'
+import {Subscription} from 'rxjs/Subscription'
 import 'moment';
 import 'moment-timezone'
 declare var $: any;
@@ -56,8 +57,8 @@ interface FileReaderEvent extends Event {
 		private ngZone: NgZone,private changeDetectorRef:ChangeDetectorRef,
 		private myElement: ElementRef) {
 		if(!moment){return;}
-		var now=new Date();
-		this.date={year: now.getFullYear(), month: now.getMonth()+1, day: now.getDate()}
+		var now = moment();
+		this.date={year: now.year(), month: now.month()+1, day: now.date()}
 		this.latitude = 53.482863;
 		this.longitude = -2.3459968;
 		//this.utcOffset=moment().utcOffset()/60.0;
@@ -90,6 +91,7 @@ interface FileReaderEvent extends Event {
 		this.changeDetectorRef.detectChanges();
 		console.log("the date is"+this.getFullDate());
 	}
+
 	getWeekDay() {
 		if(!moment){return "";}
 		return moment(this.getDate()).format("dddd");
@@ -214,7 +216,7 @@ interface FileReaderEvent extends Event {
 		}
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
 	}
-	getDate(){
+	getDate(){//NgbDateStruct uses sane month number need tp convert to javascript insane standard
 		return new Date(this.date.year,this.date.month-1,this.date.day);
 	}
 	getPrayerTimeTableForTimeZone(days:number,initialTimeZone:timeZoneInfo){
@@ -332,8 +334,8 @@ interface FileReaderEvent extends Event {
 				resolve();
 			}
 			var reader = new FileReader();
-			reader.onload = (event:FileReaderEvent) =>{
-				self.headerImageData.src = event.target.result;
+			reader.onloadend = () =>{
+				self.headerImageData.src = reader.result;
 
 				// we need this to get img dimensions in points
 				var user_img = new Image();

@@ -9,6 +9,7 @@
 
 # IDEs and editors
 /.idea
+/.vscode
 .project
 .classpath
 .c9/
@@ -55,3 +56,26 @@ src/deployment/FtpDeployment/bin/*
 **/bin/*.xml
 **/.vs/*
 **/obj/*
+api/WebApi/bin/*
+api/WebApi/obj/*
+**/obj/*
+**/bin/*
+**/*.ncrunchsolution
+**/*.ncrunchproject
+
+api/*/bin/*
+api/*/obj/*
+src/deployment/FtpDeployment/obj/*
+src/deployment/FtpDeployment/bin/*
+*NCrunch*
+*/.vs/*
+*.user
+**NCrunch*
+api/_NCrunch*/*
+**/.suo
+**/*.user
+/cordova sample/
+/distunoptimised/
+/api/.vs/
+
+*.orig

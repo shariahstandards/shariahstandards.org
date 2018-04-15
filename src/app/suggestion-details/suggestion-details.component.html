@@ -1,0 +1,28 @@
+<app-shurah-navigation [organisation-id]="organisationId"></app-shurah-navigation>
+<p *ngIf="suggestion==null">
+	loading...
+</p>
+<div class="container">
+	<div *ngIf="suggestion!=null">
+	<h3>Suggestion</h3>
+		<div>From: <img [src]="suggestion.suggestionSummary.authorPictureUrl" title="author picture" width="50"/> 
+				{{suggestion.suggestionSummary.authorPublicName}}   
+			<br/>
+			    {{formatDate(suggestion.suggestionSummary.dateTimeText)}}
+			<br/>
+			<div class="card">
+				<div class="card-header">
+					Subject: {{suggestion.suggestionSummary.subject}}
+				</div>
+				<div class="card-block">
+					{{suggestion.suggestion}}
+					
+				</div>
+			</div>
+			<span *ngIf="suggestion.usersOwnSuggestion || (suggestion.memberPermissions.indexOf('RemoveSuggestion')>=0)">
+				<button class="btn btn-danger" (click)="deleteSuggestion()">Delete Suggestion</button>
+			</span>
+		</div>
+			<a [routerLink]="'/suggestions/'+suggestion.organisationId">back to suggestion list</a> 
+	</div>
+</div>

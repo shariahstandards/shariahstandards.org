@@ -5,8 +5,8 @@
 //   expect,
 //   it,
 //   inject,
-// } from '@angular/core/testing';
-// import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
+// } from 'jasmine-core';
+// import { ComponentFixture, TestComponentBuilder } from '@angular/core/testing';
 // import { Component } from '@angular/core';
 // import { By } from '@angular/platform-browser';
 // import { PrayerTimesComponent } from './prayer-times.component';
@@ -38,8 +38,7 @@
 //   selector: 'test',
 //   template: `
 //     <app-prayer-times></app-prayer-times>
-//   `,
-//   directives: [PrayerTimesComponent]
+//   `,  
 // })
 // class PrayerTimesComponentTestController {
 // }

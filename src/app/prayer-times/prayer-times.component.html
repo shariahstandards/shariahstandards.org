@@ -1,6 +1,6 @@
    <h2>Worldwide Muslim Prayer Times and Direction</h2>
    <p>
-	<a [routerLink]="['/standards/prayer-times-rules']">Details of the Standard</a>
+	<!-- <a [routerLink]="['/standards/prayer-times-rules']">Details of the Standard</a> -->
 	<div class="row"  *ngIf="!calendar || calendar.length==0">
 	    <div class="col-sm-6">
 	    	<div class="row">
@@ -217,7 +217,7 @@
 				  		</tr>
 				  	</thead>
 					<tbody>
-						<template ngFor [ngForOf]="calendar" let-day>
+						<ng-template ngFor [ngForOf]="calendar" let-day>
 						<tr *ngIf="day.timeZoneChange">
 							<td colspan="8">
 								<div style="text-align:center">
@@ -259,7 +259,7 @@
 								There is a new moon visible before isha on {{day.formatedDate}}
 							</td>
 						</tr> -->
-						</template>
+						</ng-template>
 					</tbody>
 			  	</table>
 		  	</div>

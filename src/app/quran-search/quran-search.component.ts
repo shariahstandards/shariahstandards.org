@@ -32,7 +32,7 @@ interface searchType{
 })
 export class QuranSearchComponent implements OnInit {
 
-	constructor(private quranService:QuranService,
+	constructor(public quranService:QuranService,
 		private route:ActivatedRoute,
 		private router:Router,
 		private changeDetectorRef:ChangeDetectorRef) {
@@ -69,7 +69,6 @@ export class QuranSearchComponent implements OnInit {
   	  		}
   	  		
   	  		self.changeDetectorRef.detectChanges(); 
-  	  		console.log("initialising-"+surahNumber+":"+verseNumber);
 	  	});
 	}
 	toggleKeyboard(arabicKeyboard){
