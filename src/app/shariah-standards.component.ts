@@ -14,7 +14,7 @@ declare var shariahStandardsApiUrlBase:string;
 @Component({
   selector: 'shariah-standards-app',
   templateUrl: './shariah-standards.component.html',
-  styleUrls: ['./shariah-standards.component.css'],
+  styleUrls: ['./shariah-standards.component.scss'],
   // directives: [PrayerTimesComponent, MODAL_DIRECTVES, CORE_DIRECTIVES,ROUTER_DIRECTIVES],
   // viewProviders: [BS_VIEW_PROVIDERS]
 

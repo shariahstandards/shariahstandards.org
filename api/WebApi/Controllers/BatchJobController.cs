@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -20,7 +20,10 @@ namespace WebApi.Controllers
         [Route("RunDailyCounts/{key}")]
         public HttpResponseMessage Get(string key)
         {
-            _service.RunCounts(key);
+            if (key == "bbhrglkjgilksgyw798987874865211642")
+            {
+              _service.RunCounts();
+            }
             return Request.CreateResponse(HttpStatusCode.OK);
         }
     }

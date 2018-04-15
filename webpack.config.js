@@ -172,8 +172,8 @@ module.exports = {
   },
   "output": {
     "path": path.join(process.cwd(), "dist"),
-    "filename": "[name].bundle.js",
-    "chunkFilename": "[name].bundle.js",
+    "filename": "[name].bundle[hash:6].js",
+    "chunkFilename": "[name].bundle[hash:6].js",
     "crossOriginLoading": false
   },
   "module": {
