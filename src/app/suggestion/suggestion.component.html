@@ -1,0 +1,111 @@
+<app-shurah-navigation [organisation-id]="organisationId"></app-shurah-navigation>
+<p *ngIf="searchResultPages.length==0">
+  loading...
+</p>
+<div class="container" *ngIf="searchResultPages.length>0" infinite-scroll (scrolled)="showMore()">
+  <h2>Suggestions for {{searchResultPages[0].organisationName}}</h2>
+  <span *ngIf="auth.isAuthenticated()">
+      <button class="btn btn-primary" (click)="openModalToAddSuggestion(addSuggestionModal)" title="Add suggestion">Add new suggestion*</button>
+  </span>
+  <div *ngIf="searchResultPages.length>0">
+    <div *ngIf="searchResultPages[0].memberSearchedFor">
+      Searching for suggestions by <img [src]="searchResultPages[0].memberSearchedFor.pictureUrl" title="author picture" width="50"/> {{searchResultPages[0].memberSearchedFor.publicName}}   <a [routerLink]="'/suggestions/'+organisationId">Show all</a>   
+    </div>
+    <span *ngIf="searchResultPages[0].suggestions.length==0">
+      No suggestions found.
+    </span>
+    <div *ngIf="searchResultPages[0].suggestions.length>0">
+      <div *ngIf="sortingByMostRecentFirst">Showing most recent results first <button class="btn btn-outline-primary" (click)="showMostSupportedSuggestionsFirst()">Show most supported suggestions first</button></div>
+      <div *ngIf="!sortingByMostRecentFirst">Showing most supported results first <button class="btn btn-outline-primary" (click)="showMostRecentSuggestionsFirst()">Show most recent suggestions first</button></div>
+    </div>
+    	<ul *ngIf="searchResultPages.length>0 && searchResultPages[0].suggestions.length>0" class="list-unstyled">
+        <ng-container *ngFor="let searchResults of searchResultPages">
+        	<li *ngFor="let suggestion of searchResults.suggestions">
+            <div class="card">
+              <div class="card-header">
+                <div class="pull-left">
+                  <a [routerLink]="'/suggestions/'+organisationId+'/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a>
+                </div>
+                <div class="pull-right" >
+                {{formatDate(suggestion.dateTimeText)}} 
+                <span *ngIf="searchResultPages[0].memberSearchedFor==null">
+                  <img [src]="suggestion.authorPictureUrl" title="author picture" width="30"/> {{suggestion.authorPublicName}} 
+                  </span>
+                </div>
+              </div>
+              <div class="card-body">
+                <p>{{suggestion.fullText}}</p>
+                
+             
+              <!-- <div class="voting" [style.width]="suggestion.votingPercent+'%'"></div> -->
+
+                <div class="suggestion-vote-with-pie-chart">
+                  <div class="pie-chart-of-vote"> 
+                    <pie-chart [size]="50" [data]="getPieChartData(suggestion)"></pie-chart>
+                  </div>
+                  <div class="vote-info">
+                    {{suggestion.for}} for, {{suggestion.against}} against, {{suggestion.abstaining}} abstaining, {{suggestion.votingPercent}}% voting
+                  </div>
+                  <div *ngIf="suggestion.userVoteId==null">
+                    Add your vote:
+                    <button class="btn btn-success" (click)="vote(suggestion.id, true)">Agree</button>
+                    <button class="btn btn-warning" (click)="vote(suggestion.id, null)">Abstain</button>
+                    <button class="btn btn-danger" (click)="vote(suggestion.id, false)">Oppose</button>
+                  </div>
+                  <div *ngIf="suggestion.userVoteId!=null">
+                    You currently are 
+                    <span *ngIf="suggestion.userVoteIsSupporting===true">agreeing to</span>
+                    <span *ngIf="suggestion.userVoteIsSupporting===false">opposing</span> 
+                    <span *ngIf="suggestion.userVoteIsSupporting===null">abstaining on</span> 
+                    this suggestion
+                    <p *ngIf="suggestion.voteByLeader">
+                      Your vote was cast on your behalf by someone you delegated the right to do so
+                    </p>
+                    <button class="btn btn-default" (click)="removeVote(suggestion.userVoteId)">Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        	</li>
+        </ng-container>
+        <li *ngIf="lastPageShown<searchResultPages[0].pageCount">
+          <button class="btn btn-default" (click)="showMore()"> show more </button>
+        </li>
+    	</ul> 
+  </div>
+</div>
+<ng-template #addSuggestionModal let-c="close" let-d="dismiss">
+   <form>
+      <div class="modal-header">
+        <div class="modal-title">Add Suggestion</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="form-group">
+          <label for="subject">Title</label>
+          <input type="text" [(ngModel)]="addSuggestionModel.subject" required maxlength="100" id="subject" name="subject" class="form-control">
+        </div>
+      	<div class="form-group">
+          <label for="suggestion">Detail</label>
+          <textarea rows="2" required maxlength="1000"  id="suggestion" name="suggestion"
+           class="form-control"
+           col="100" [(ngModel)]="addSuggestionModel.suggestion">
+          </textarea>
+    	</div>
+        <ul>
+          <li class="error" *ngFor="let error of errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="AddSuggestion()">Add</button>
+
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</ng-template>
+

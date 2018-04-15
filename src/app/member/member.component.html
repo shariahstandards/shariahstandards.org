@@ -1,0 +1,35 @@
+<app-shurah-navigation [organisation-id]="organisationId"></app-shurah-navigation>
+<p *ngIf="searchResultPages.length==0">
+  loading...
+</p>
+<div class="container" *ngIf="searchResultPages.length>0" infinite-scroll (scrolled)="showMore()">
+	<h2>Members of {{searchResultPages[0].organisationName}}</h2>
+	<div *ngIf="searchResultPages[0].members.length==0">
+		No members found
+	</div>
+	<div class="card-group" *ngFor="let searchResults of searchResultPages">
+
+		<div class="card" [ngClass]="{'text-white bg-success':member.isLeader}" 
+			*ngFor="let member of searchResults.members" style="min-width:200px">
+			<div *ngIf="member.isLeader" class="card-header">
+				Leader
+			</div>
+			<div *ngIf="!member.isLeader" class="card-header">
+				Member
+			</div>
+
+			<div class="card-body">
+				<div class="card-text">
+					<a [routerLink]="'/members/'+organisationId+'/details/'+member.id">
+						<img width="100" [src]="member.pictureUrl" title="picture of member"/>
+						<br/>
+						<span  [ngClass]="{'text-white':member.isLeader}" 
+						>{{member.publicName}}</span>
+					</a>
+					<p>{{member.followers}} followers <br/>(as of {{member.lastCalculated}})</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

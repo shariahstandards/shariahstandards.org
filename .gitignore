@@ -47,3 +47,11 @@ src/deployment/FtpDeployment/bin/*
 *NCrunch*
 */.vs/*
 *.user
+/cordova sample
+/distunoptimised
+*.orig
+*/.vs/*
+**/bin/*.dll
+**/bin/*.xml
+**/.vs/*
+**/obj/*

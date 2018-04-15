@@ -1,0 +1,73 @@
+<br/>
+<div class="card" *ngIf="suggestion!=null">
+	<div class="card-header">
+		<div class="pull-left">
+			<a [routerLink]="'/suggestions/'+organisationId+'/details/'+suggestion.id"> <h4>{{suggestion.subject}}</h4></a>
+		</div>
+		<div class="pull-right" >
+			<button *ngIf="canDelete()" class="btn btn-danger" (click)="deleteSuggestion()">Delete</button>
+			{{formatDate(suggestion.dateTimeText)}} 
+			<img [src]="suggestion.authorPictureUrl" title="author picture" width="30"/> {{suggestion.authorPublicName}} 
+		</div>
+	</div>
+	<div class="card-body" *ngIf="deleted">
+		This suggestion has been deleted. 
+	</div>
+	<div class="card-body" *ngIf="!deleted ">
+		<p>{{suggestion.fullText}}</p>  
+		<div class="suggestion-vote-with-pie-chart">
+			<div class="pie-chart-of-vote"> 
+				<pie-chart [size]="50" [data]="getPieChartData(suggestion)"></pie-chart>
+			</div>
+			<div class="vote-info">
+				{{suggestion.for}} for, {{suggestion.against}} against, {{suggestion.abstaining}} abstaining, {{suggestion.votingPercent}}% voting
+			</div>
+			<div *ngIf="suggestion.userVoteId==null">
+				Add your vote:
+				<button class="btn btn-success" (click)="vote(suggestion.id, true)">Agree</button>
+				<button class="btn btn-warning" (click)="vote(suggestion.id, null)">Abstain</button>
+				<button class="btn btn-danger" (click)="vote(suggestion.id, false)">Oppose</button>
+			</div>
+			<div class="vote-buttons" *ngIf="suggestion.userVoteId!=null">
+				You currently are 
+				<span *ngIf="suggestion.userVoteIsSupporting===true">agreeing to</span>
+				<span *ngIf="suggestion.userVoteIsSupporting===false">opposing</span> 
+				<span *ngIf="suggestion.userVoteIsSupporting===null">abstaining on</span> 
+				this suggestion
+				<p *ngIf="suggestion.voteByLeader">
+					Your vote was cast on your behalf by someone you delegated the right to do so
+				</p>
+				<button class="btn btn-default" (click)="removeVote(suggestion.userVoteId)">Remove</button>
+			</div>
+			
+		</div>
+		<div>
+			<div class="row">
+				<div class="col-md-10">
+				<textarea style="width:100%" rows="1" placeholder="Add comment" [(ngModel)]="addCommentModel.commentText">
+				</textarea>
+				</div>
+				<div class="col-md-2">
+				<button (click)="addComment()">Add</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<a (click)="toggleShowComments()" class="clickable"> {{suggestion.commentCount}} comment<span *ngIf="suggestion.commentCount!=1">s</span></a>
+			</div>
+		</div>
+		<div *ngIf="showingComments" class="container">
+			<div class="row" *ngFor="let comment of comments">
+				<div class="col-md-12">
+					<span class="comment-author">
+						<img [src]="comment.pictureUrl" [title]="comment.publicNameOfCommentAuthor" width="30"/>  
+					</span>
+					<span>
+						{{comment.comment}}
+						<span class="smaller">- {{formatDate(comment.dateTimeText)}}</span>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
