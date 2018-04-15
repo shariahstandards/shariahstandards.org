@@ -85,7 +85,7 @@
 						<input [startDate]="date" class="form-control" placeholder="yyyy-mm-dd" name="dp"  
 						[(ngModel)]="date" ngbDatepicker #d="ngbDatepicker" (ngModelChange)="dateChanged()"/>
              			<div class="input-group-append">
-		        			<button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+		        			<button class="btn btn-outline-primary" (click)="d.toggle()" type="button">
 		        				<i class="fa fa-calendar"></i>
 		        			</button>
 		      			</div>
@@ -99,7 +99,7 @@
 					<div class="input-group">
 		        		<input class="form-control" type="number" min="1" max="31" placeholder="Number of Days" 
 		        		 [(ngModel)]="numberOfDaysInCalendar" value="7"/>
-		    			<span class="input-group-btn">
+		    			<span class="input-group-append">
 					      	<button class="btn btn-outline-primary" type="button" 
 								[disabled]="numberOfDaysInCalendar==null"
 		    				   	(click)="buildCalendar()">

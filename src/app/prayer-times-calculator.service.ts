@@ -280,9 +280,9 @@ export class PrayerTimesCalculatorService {
 		
 		//1 day old moon at isha is deemed 100% visible
 		var moonVisibilityAtIsha = Math.min(0.5,moonAtIsha.phase*29.5306);
-		var moonVisibilityAtIshaYesterday = Math.min(1.0,moonAtPreviousIsha1DaysAgo.phase*29.5306);
+		var moonVisibilityAtIshaYesterday = Math.min(0.5,moonAtPreviousIsha1DaysAgo.phase*29.5306);
 		var isStartOfLunarMonthYesterday=(moonAtPreviousIsha3DaysAgo.phase>moonAtPreviousIsha1DaysAgo.phase 
-			&& moonVisibilityAtIshaYesterday==1.0);
+			&& moonVisibilityAtIshaYesterday==0.5);
 		var startOfLunarMonthToday=(!isStartOfLunarMonthYesterday &&
 			moonAtPreviousIsha2DaysAgo.phase>moonAtIsha.phase && moonVisibilityAtIsha==0.5);
 				
