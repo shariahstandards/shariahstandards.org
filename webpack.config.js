@@ -14,7 +14,7 @@ const ProgressPlugin = require('webpack/lib/ProgressPlugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
-
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const rxPaths = require('rxjs/_esm5/path-mapping');
 const autoprefixer = require('autoprefixer');
 const postcssUrl = require('postcss-url');
@@ -419,6 +419,7 @@ module.exports = {
   //   webpackAngularExternals()
   // ],
   "plugins": [
+    new CleanWebpackPlugin(['dist']),
     new CompressionPlugin({
       asset: "[path].gz[query]",
       algorithm: "gzip",

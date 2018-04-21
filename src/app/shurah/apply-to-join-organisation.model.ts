@@ -8,5 +8,5 @@ export class applyToJoinOrganisationModel
     public phoneNumber:string
     public publicName:string
     public publicProfileStatement:string
-    public rulesAgreedTo:boolean
+    public agreesToTermsAndConditions:boolean
 }

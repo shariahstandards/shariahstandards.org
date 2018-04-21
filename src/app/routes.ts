@@ -12,6 +12,8 @@ import {inheritanceRoutes} from './inheritance-calculator/inheritance-calculator
 import {suggestionRoutes} from './suggestion/suggestion.component.routes'
 import {membershipApplicationRoutes} from './membership-application/membership-application.component.routes'
 import {memberRoutes} from './member/member.component.routes'
+import {PrivacyTermsComponent} from './privacy-terms/privacy-terms.component'
+import {TermsAndConditionsComponent} from './terms-and-conditions/terms-and-conditions.component'
 const appRoutes: Routes = [
   ...termDefinitionsRoutes,
   // ...standardsRoutes,
@@ -23,6 +25,8 @@ const appRoutes: Routes = [
   ...memberRoutes,
   { path: '', component: PrayerTimesComponent },
   { path: 'about-us', component: AboutUsComponent },
+  { path: 'privacy', component: PrivacyTermsComponent },
+  { path: 'ts-and-cs', component: TermsAndConditionsComponent },
   { path: 'quran', loadChildren: './quran.module#QuranModule'}
 ];
 export const appRoutingProviders: any[] = [

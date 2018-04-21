@@ -13,6 +13,7 @@ namespace WebApiResources
         public string PhoneNumber { get; set; }
         public string PublicName { get; set; }
         public string PublicProfileStatement { get; set; }
+        public bool AgreesToTermsAndConditions { get; set; }
     }
 
 

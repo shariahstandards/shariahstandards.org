@@ -1,65 +1,78 @@
-<div class="logobar"> 
-  <img class="logobar__logo" title="logo" src="/assets/content/images/logo.svg" s>
-  <div class="logobar__user pull-right">
-    <a class="btn btn-primary text-white" *ngIf="!auth.isAuthenticated()" (click)="auth.login()">Log In / sign up</a>
-    <div  *ngIf="auth.userProfile && auth.isAuthenticated()">
-      <div ngbDropdown>
-        <button class="btn btn-outline-primary" id="userMenuLink"  ngbDropdownToggle>
-          <img *ngIf="auth.userProfile.picture!=null" [src]="auth.userProfile.picture" width="50" alt="" class="profile-img"/>
-          <img *ngIf="auth.userProfile.pictureUrl!=null" [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"/>
-          {{auth.userProfile.name}}          
-          <span class="logobar__user-caption-note" 
-            *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && organisation.hasPendingApplication"  >
-            <br/>  (awaiting acceptance)
-          </span>
-        </button>
-        <div ngbDropdownMenu aria-labelledby="userMenuLink">
-          <button class="dropdown-item"  (click)="auth.logout()">Log Out</button>
+<div class="container">
+  <div class="logobar"> 
+    <img class="logobar__logo" title="logo" src="/assets/content/images/logo.svg" s>
+    <div class="logobar__user pull-right">
+      <a class="btn btn-primary text-white" *ngIf="!auth.isAuthenticated()" (click)="auth.login()">Log In / sign up</a>
+      <div  *ngIf="auth.userProfile && auth.isAuthenticated()">
+        <div ngbDropdown>
+          <button class="btn btn-outline-primary" id="userMenuLink"  ngbDropdownToggle>
+            <img *ngIf="auth.userProfile.picture!=null" [src]="auth.userProfile.picture" width="50" alt="" class="profile-img"/>
+            <img *ngIf="auth.userProfile.pictureUrl!=null" [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"/>
+            {{auth.userProfile.name}}          
+            <span class="logobar__user-caption-note" 
+              *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && organisation.hasPendingApplication"  >
+              <br/>  (awaiting acceptance)
+            </span>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="userMenuLink">
+            <button class="dropdown-item"  (click)="auth.logout()">Log Out</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="logobar__title">
-    <div class="logobar__title-main">
-      ShariahStandards.org
+    <div class="logobar__title">
+      <div class="logobar__title-main">
+        ShariahStandards.org
+      </div>
+      <div class="logobar__subtitle">
+        Developing a global open standard interpretation of Islamic law in English
+      </div>
     </div>
-    <div class="logobar__subtitle">
-      Developing a global open standard interpretation of Islamic law in English
-    </div>
-  </div>
-  
-</div>
- 
-<div class="clearfix"></div>
- 
-<nav>
-  <a routerLinkActive="active-route" 
-  [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
-  <a routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
-  <a routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>
-  <!-- <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a> -->
-  <a routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
-  <!-- <a routerLinkActive="active-route" [routerLink]="'/shurah'">Shurah</a> -->
-    <!-- <a routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a> -->
-  <a (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)" *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && !organisation.hasPendingApplication"  >
-    Apply to Join
-  </a>
-
     
-  <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null"  [routerLink]="'/members/'+organisationId">
-    Members
-  </a>
-  <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null" [routerLink]="'/suggestions/'+organisationId">
-    Suggestions
-  </a>
-  <a routerLinkActive="active-route" *ngIf="hasPermission('AcceptMembershipApplication')" 
-    [routerLink]="'/membership-applications/organisation/'+organisationId">
-    Membership Applications
-  </a>
-</nav>
+  </div>
+   
+  <div class="clearfix"></div>
+   
+  <nav>
+    <a routerLinkActive="active-route" 
+    [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
+    <a routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
+    <a routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>
+    <!-- <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a> -->
+    <a routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
+    <!-- <a routerLinkActive="active-route" [routerLink]="'/shurah'">Shurah</a> -->
+    <a (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)" *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && !organisation.hasPendingApplication"  >
+      Apply to Join
+    </a>
+    <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null"  [routerLink]="'/members/'+organisationId">
+      Members
+    </a>
+    <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null" [routerLink]="'/suggestions/'+organisationId">
+      Suggestions
+    </a>
+    <a routerLinkActive="active-route" *ngIf="hasPermission('AcceptMembershipApplication')" 
+      [routerLink]="'/membership-applications/organisation/'+organisationId">
+      Membership Applications
+    </a>
+    <a routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a>
 
-<router-outlet></router-outlet>
+  </nav>
+
+  <router-outlet></router-outlet>
+</div>
+<!-- <div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ul class="nav">
+          <li class="nav-item"> <a class="nav-link disabled" href > &copy; 2018 Lamaan Ball </a></li>
+          <li class="nav-item"> <a class="nav-link" [routerLink]="'/ts-and-cs'">terms and conditions</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div> -->
 <ng-template ngbModalContainer></ng-template>
 
 
@@ -78,20 +91,21 @@
             <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.publicName" required maxlength="100" id="publicName" name="publicName">
         </div>
         <div class="form-group">
-            <label for="email">Email (visible to leader)</label>
+            <label for="email">Email (not visible to public)</label>
             <input class="form-control" type="email" [(ngModel)]="applyToJoinOrganisationModel.emailAddress" required maxlength="100" id="email" name="email">
         </div>
         <div class="form-group">
-            <label for="phoneNumber">Phone (visible to leader)</label>
+            <label for="phoneNumber">Phone (not visible to public)</label>
             <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.phoneNumber" required maxlength="20" id="phoneNumber" name="phoneNumber">
         </div>
-      <!--   <div class="form-check">
+        <div class="form-check">
             <label class="form-check-label">
-            <input class="form-check-input"  type="checkbox" [(ngModel)]="rulesAgreedTo" name="rulesAgreedTo" required>
-            I agree to hold to the rules of this organisation and to become a member.</label>
-        </div> -->
+              <input class="form-check-input"  type="checkbox" [(ngModel)]="applyToJoinOrganisationModel.agreesToTermsAndConditions" name="agreesToTermsAndConditions" required>
+              I am a Muslim and I agree to hold to the terms and conditions (see "about us")
+            </label>
+        </div>
         <div class="form-group">
-          <label for="publicProfileStatement"> Message to leader</label>
+          <label for="publicProfileStatement"> Other info </label>
           <textarea rows="2" class="form-control" required maxlength="1000"  id="publicProfileStatement" name="publicProfileStatement"
            col="100" [(ngModel)]="applyToJoinOrganisationModel.publicProfileStatement">
           </textarea>

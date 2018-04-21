@@ -70,7 +70,8 @@ export class ShurahService {
 			emailAddress:model.emailAddress,
 			phoneNumber:model.phoneNumber,
 			publicName:model.publicName,
-			publicProfileStatement:model.publicProfileStatement
+			publicProfileStatement:model.publicProfileStatement,
+			agreesToTermsAndConditions:model.agreesToTermsAndConditions
 		});
 	}
 	searchSuggestions(organisationId:number,page:number,mostRecentFirst:boolean,memberId?:number):Observable<StandardApiResponse>{

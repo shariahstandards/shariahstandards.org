@@ -120,9 +120,9 @@ export class AuthService {
       usePostMessage: true
     }, (err, result) => {
       if (err) {
-        //alert(`Could not get a new token using silent authentication (${err.error}).`);
+        alert(`Could not get a new token using silent authentication (${err.error}).`);
       } else {
-        //alert(`Successfully renewed auth!`);
+        alert(`Successfully renewed auth!`);
         this.setSession(result);
       }
     });

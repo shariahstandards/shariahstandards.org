@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -50,6 +50,10 @@ namespace Services
 
         public virtual ResponseResource ApplyToJoin(IPrincipal principal, MembershipApplicationrequest request)
         {
+            if (!request.AgreesToTermsAndConditions)
+            {
+              return new ResponseResource { HasError = true, Error = "You must agree to the terms and conditions" };
+            }
             var user = _dependencies.UserService.GetGuaranteedAuthenticatedUser(principal);
 
             var existingMemberWithSameEmailAddress = _dependencies.StorageService.SetOf<Member>()

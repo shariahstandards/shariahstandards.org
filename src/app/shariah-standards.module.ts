@@ -41,6 +41,8 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
 //import { AuthHttp, AuthConfig } from 'angular2-jwt';
 import { JwtModule } from '@auth0/angular-jwt';
 import { HttpClientModule } from '@angular/common/http';
+import { PrivacyTermsComponent } from './privacy-terms/privacy-terms.component';
+import { TermsAndConditionsComponent } from './terms-and-conditions/terms-and-conditions.component';
 //export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   
   //return new AuthenticatedHttpService(new (),options)
@@ -90,7 +92,9 @@ export function tokenGetter() {
     MemberDetailsComponent,
     PieChartComponent,
     RegisterComponent,
-    SuggestionDetailComponent
+    SuggestionDetailComponent,
+    PrivacyTermsComponent,
+    TermsAndConditionsComponent
       ],
   imports: [
     BrowserModule,
