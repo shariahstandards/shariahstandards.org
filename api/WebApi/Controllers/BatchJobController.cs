@@ -22,9 +22,9 @@ namespace WebApi.Controllers
         {
             if (key == "bbhrglkjgilksgyw798987874865211642")
             {
-              _service.RunCounts();
+              return Request.CreateResponse(HttpStatusCode.OK, _service.RunCounts());
             }
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return Request.CreateResponse(HttpStatusCode.BadRequest);
         }
     }
 }

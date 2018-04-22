@@ -1,17 +1,31 @@
 <div class="container">
   <div class="logobar"> 
-    <img class="logobar__logo" title="logo" src="/assets/content/images/logo.svg" s>
+    <img class="logobar__logo" title="logo" src="/assets/content/images/logo.svg" title="ShariahStandards.org - Developing a global open standard interpretation of Islamic law in English" (click)="showTitleToggle()">
+   
+   
+    <div class="burger-button pull-right"  (click)="showNavigationToggle()">
+      <i class="fa fa-bars"></i>
+    </div>
     <div class="logobar__user pull-right">
-      <a class="btn btn-primary text-white" *ngIf="!auth.isAuthenticated()" (click)="auth.login()">Log In / sign up</a>
+      <a class="btn btn-primary text-white log-in" *ngIf="!auth.isAuthenticated()" (click)="auth.login()">
+        <i class="fa fa-user"></i>
+        <span class="logobar__anon-title">Log In / sign up</span>
+      </a>
       <div  *ngIf="auth.userProfile && auth.isAuthenticated()">
         <div ngbDropdown>
           <button class="btn btn-outline-primary" id="userMenuLink"  ngbDropdownToggle>
-            <img *ngIf="auth.userProfile.picture!=null" [src]="auth.userProfile.picture" width="50" alt="" class="profile-img"/>
-            <img *ngIf="auth.userProfile.pictureUrl!=null" [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"/>
-            {{auth.userProfile.name}}          
-            <span class="logobar__user-caption-note" 
-              *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && organisation.hasPendingApplication"  >
-              <br/>  (awaiting acceptance)
+            <img *ngIf="auth.userProfile.picture!=null" [src]="auth.userProfile.picture" width="50" alt="" class="profile-img"
+            [title]="auth.userProfile.name"
+            />
+            <img *ngIf="auth.userProfile.pictureUrl!=null" [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"
+            [title]="auth.userProfile.name"
+            />
+            <span class="logobar__user-caption">
+              {{auth.userProfile.name}}          
+              <span class="logobar__user-caption-note" 
+                *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && organisation.hasPendingApplication"  >
+                <br/>  (awaiting acceptance)
+              </span>
             </span>
           </button>
           <div ngbDropdownMenu aria-labelledby="userMenuLink">
@@ -21,7 +35,8 @@
       </div>
     </div>
 
-    <div class="logobar__title">
+    <div [ngClass]="{'mobile-expanded':showTitleInMobile,'mobile-collapsed':!showTitleInMobile}"
+      class="logobar__title">
       <div class="logobar__title-main">
         ShariahStandards.org
       </div>
@@ -33,31 +48,51 @@
   </div>
    
   <div class="clearfix"></div>
-   
-  <nav>
-    <a routerLinkActive="active-route" 
-    [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
-    <a routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
-    <a routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>
-    <!-- <a routerLinkActive="active-route" [routerLink]="'/standards'">Standards</a> -->
-    <a routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
-    <!-- <a routerLinkActive="active-route" [routerLink]="'/shurah'">Shurah</a> -->
-    <a (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)" *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && !organisation.hasPendingApplication"  >
-      Apply to Join
-    </a>
-    <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null"  [routerLink]="'/members/'+organisationId">
-      Members
-    </a>
-    <a routerLinkActive="active-route" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null" [routerLink]="'/suggestions/'+organisationId">
-      Suggestions
-    </a>
-    <a routerLinkActive="active-route" *ngIf="hasPermission('AcceptMembershipApplication')" 
-      [routerLink]="'/membership-applications/organisation/'+organisationId">
-      Membership Applications
-    </a>
-    <a routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a>
-
-  </nav>
+   <div [ngClass]="{'mobile-expanded':showMobileNavigation,'mobile-collapsed':!showMobileNavigation}">
+    <nav class="navbar navbar-expand-md bg-light">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a  class="nav-link" routerLinkActive="active-route" 
+            [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>         
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
+        </li>
+        <li class="nav-item" *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && !organisation.hasPendingApplication" >
+          <a class="nav-link" (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)">
+            Apply to Join
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null">
+          <a class="nav-link" routerLinkActive="active-route"  [routerLink]="'/members/'+organisationId">
+            Members
+          </a>
+          
+        </li>
+        <li class="nav-item" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null">
+          <a class="nav-link" routerLinkActive="active-route"  [routerLink]="'/suggestions/'+organisationId">
+            Suggestions
+          </a>
+          
+        </li>
+        <li class="nav-item" *ngIf="hasPermission('AcceptMembershipApplication')">
+          <a class="nav-link" routerLinkActive="active-route"  
+            [routerLink]="'/membership-applications/organisation/'+organisationId">
+            Membership Applications
+          </a>          
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a>          
+        </li>
+      </ul>
+    </nav>
+</div>
 
   <router-outlet></router-outlet>
 </div>

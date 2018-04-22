@@ -5,7 +5,7 @@ import { ShurahService} from './shurah.service';
 import {organisationModel} from './shurah/organisation.model'
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {applyToJoinOrganisationModel} from './shurah/apply-to-join-organisation.model'
-
+import { Router, NavigationStart } from '@angular/router';
 // import { Routes, RouterModule,RouterLinkActive,RouterLink, } from '@angular/router';
 
 // import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
@@ -23,6 +23,7 @@ export class ShariahStandardsAppComponent {
   title = 'Muslim Prayer Times and Directions';
   organisationId=1;
   public constructor(
+    private _router: Router,
     private viewContainerRef: ViewContainerRef,
     private changeDetectorRef:ChangeDetectorRef,
     private shurahService:ShurahService,
@@ -39,7 +40,28 @@ export class ShariahStandardsAppComponent {
     	auth.getProfile(()=>{
     		this.refresh();
     	});
+    }else{
+      let status;
+      const token = localStorage.getItem('access_token');
+      const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+      const isExpired= new Date().getTime() > expiresAt;
+      if(token!=null && isExpired){
+        auth.renewToken(false);
+      }
     }
+    _router.events.subscribe ( event => {
+      if( event instanceof NavigationStart ){
+        this.showMobileNavigation=false;
+      }
+    } );
+  }
+  showMobileNavigation:boolean=false;
+  showNavigationToggle(){
+    this.showMobileNavigation=!this.showMobileNavigation;
+  }
+  showTitleInMobile:boolean=false;
+  showTitleToggle(){
+    this.showTitleInMobile=!this.showTitleInMobile;
   }
   onLoggedInUpdated(loggedIn){
     console.log("event received")

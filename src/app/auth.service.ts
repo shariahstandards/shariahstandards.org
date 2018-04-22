@@ -32,6 +32,7 @@ export class AuthService {
   }
 
   public handleAuthentication(): void {
+    this.handlingAuthentication=true;
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         window.location.hash = '';
@@ -42,6 +43,7 @@ export class AuthService {
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
+      this.handlingAuthentication=false;
     });
   }
 
@@ -112,20 +114,35 @@ export class AuthService {
     const grantedScopes = JSON.parse(localStorage.getItem('scopes')).split(' ');
     return scopes.every(scope => grantedScopes.includes(scope));
   }
-
-  public renewToken() {
-    this.auth0.renewAuth({
-      audience: AUTH_CONFIG.audience,
-      redirectUri: AUTH_CONFIG.silentCallbackURL,
-      usePostMessage: true
-    }, (err, result) => {
-      if (err) {
-        alert(`Could not get a new token using silent authentication (${err.error}).`);
-      } else {
-        alert(`Successfully renewed auth!`);
-        this.setSession(result);
-      }
-    });
+  handlingAuthentication:boolean=false;
+  public renewToken(authorizeOnError:boolean) {
+    if(!this.handlingAuthentication){
+      var self=this;
+      this.auth0.checkSession({
+        }, function (err, result) {
+          if (err) {
+            if(authorizeOnError){
+          //    alert(`Could not get a new token using silent authentication (${err.error}). Redirecting to login page...`);
+              self.auth0.authorize();
+            }
+          } else {
+              self.setSession(result);
+          }
+      });
+      
+      // this.auth0.renewAuth({
+      //   audience: AUTH_CONFIG.audience,
+      //   redirectUri: AUTH_CONFIG.silentCallbackURL,
+      //   usePostMessage: true
+      // }, (err, result) => {
+      //   if (err) {
+      //     //alert(`Could not get a new token using silent authentication (${err.error}).`);
+      //   } else {
+      //     //alert(`Successfully renewed auth!`);
+      //     this.setSession(result);
+      //   }
+      // });
+    }
   }
 
   public scheduleRenewal() {
@@ -148,7 +165,7 @@ export class AuthService {
     // reached, get a new JWT and schedule
     // additional refreshes
     this.refreshSubscription = source.subscribe(() => {
-      this.renewToken();
+      this.renewToken(true);
     });
   }
 

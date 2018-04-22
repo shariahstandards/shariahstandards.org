@@ -1,2 +1,2 @@
-var shariahStandardsApiUrlBase="https://shariahStandards.org/api/";
-var shariahStandardsUrlBase="https://shariahStandards.org/"
+var shariahStandardsApiUrlBase="https://shariahstandards.org/api/";
+var shariahStandardsUrlBase="https://shariahstandards.org/"

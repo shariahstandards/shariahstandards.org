@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllOrganisationPermissionsResource.cs" />
+    <Compile Include="BatchJobResultResource.cs" />
     <Compile Include="CreateMembershipRuleRequest.cs" />
     <Compile Include="CreateMembershipRuleSectionRequest.cs" />
     <Compile Include="CreateSugestionRequest.cs" />
