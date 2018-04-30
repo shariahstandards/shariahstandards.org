@@ -14,33 +14,32 @@ export class QuranReferenceComponent implements OnInit {
 	@Input('verse') verse:number;
 	@Input('firstWord') firstWord:number;
 	@Input('wordCount') wordCount:number;
-  	ngOnInit() {
-  	
-  }
+ 	ngOnInit() {
+    if(this.surah && this.verse){
+      this.quranService.getVerse(this.surah,this.verse).subscribe((verse)=>{
+     
+        var words=[];
+        if(this.firstWord!=null && this.wordCount!=null){
+          var startIndex=Number(this.firstWord)-1;
+          var endIndex=Number(this.wordCount)+Number(this.firstWord)-1;
+          words=verse.slice(startIndex,endIndex);
+          console.log("words="+words.join(" "));
+        
+          console.log("word",this.firstWord);
+          console.log("word count",this.wordCount);
+          console.log("start",startIndex);
+          console.log("end",endIndex);
+        }
+        else{
+          words=verse;
+        }
+        this.arabicText= words.join(" ");
+          
+      })
+    }
  
-  arabicText(){
-  	var quranSurahs=this.quranService.getSurahs()
-  	if(this.surah && this.verse){
-  	var verse=quranSurahs[this.surah-1][this.verse-1];
-  		var words=[];
-  		if(this.firstWord!=null && this.wordCount!=null){
-  			var startIndex=Number(this.firstWord)-1;
-  			var endIndex=Number(this.wordCount)+Number(this.firstWord)-1;
-  			words=verse.slice(startIndex,endIndex);
-  			console.log("words="+words.join(" "));
-  		
-  			console.log("word",this.firstWord);
-  			console.log("word count",this.wordCount);
-  			console.log("start",startIndex);
-  			console.log("end",endIndex);
-  		}
-  		else{
-  			words=verse;
-  		}
-  		return words.join(" ");
-  	}
-  	return "...";
   }
+  arabicText:string
 
   url(){
   	return 'http://www.recitequran.com/'+this.surah+':'+this.verse;

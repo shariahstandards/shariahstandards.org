@@ -1,6 +1,8 @@
-﻿using System;
+using StoredObjects.Migrations;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +22,9 @@ namespace StoredObjects
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+          //modelBuilder.Conventions.Add(new AttributeToColumnAnnotationConvention<CaseSensitiveAttribute, bool>(
+          //     "CaseSensitive",
+          //     (property, attributes) => attributes.Single().IsEnabled));
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Auth0User>().HasKey(x => x.Id);
             modelBuilder.Entity<Auth0User>().Property(x => x.Name).IsRequired().HasMaxLength(100);

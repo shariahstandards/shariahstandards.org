@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
@@ -15,7 +15,7 @@ namespace Services
         IDbSet<TEntity> SetOf<TEntity>() where TEntity:class;
         int SaveChanges();
     }
-    public class StorageService: IStorageService
+    public class StorageService: IStorageService,IDisposable
     {
         private readonly ApplicationContext _context;
 
@@ -52,5 +52,10 @@ namespace Services
                 throw;
             }
         }
+
+    public void Dispose()
+    {
+      this._context.Dispose();
     }
+  }
 }

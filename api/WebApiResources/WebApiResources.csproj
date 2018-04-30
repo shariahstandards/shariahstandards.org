@@ -58,6 +58,8 @@
     <Compile Include="OrganisationResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Auth0UserProfile.cs" />
+    <Compile Include="QuranSearchRequest.cs" />
+    <Compile Include="QuranSearchResult.cs" />
     <Compile Include="ResponseResource.cs" />
     <Compile Include="RuleFragmentResource.cs" />
     <Compile Include="SearchMemberRequest.cs" />

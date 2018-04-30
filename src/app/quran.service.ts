@@ -1,14 +1,17 @@
 import { Injectable, Inject } from '@angular/core';
 import { QuranDataService,surahSelection } from './quran-data.service'
+import {HttpClient } from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
+declare var shariahStandardsApiUrlBase:string;
+
 @Injectable()
 export class QuranService {
 
-constructor(@Inject(QuranDataService) private quranDataService:QuranDataService) {
+constructor(@Inject(QuranDataService) private quranDataService:QuranDataService,private http: HttpClient) {
 
-	this.buildArabicIndex();
 }
-  	search(text:string){
-	  	var lowerCaseText=text.toLowerCase();
+	containsEnglish(text:string){
+		var lowerCaseText=text.toLowerCase();
 	  	var englishChars="abcdefghijklmnopqrstuvwxyz";
 	  	var englishSearch=false;
 	  	for(var i=0;i<lowerCaseText.length;i++){
@@ -17,10 +20,11 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 	  			break;
 	  		}
 	  	}
-	  	if(englishSearch){
-	  		return this.englishSearch(text)
-	  	}
-	  	return this.arabicSearch(text);
+	  	return englishSearch;
+	}
+  	
+	getVerse(surah:number,verse:number):Observable<string[]>{
+		return <Observable<string[]>>this.http.get(shariahStandardsApiUrlBase+"QuranVerse/"+surah+"/"+verse);
 	}
 	getSurahsForSelection():surahSelection[]{
 		return this.quranDataService.getSurahsForSelection();
@@ -34,7 +38,19 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 		};
 		return result;
 	}
-	arabicSearch(searchText:string){
+	arabicSearch(searchText:string):Observable<any>{
+		return <Observable<string>>this.http.post(shariahStandardsApiUrlBase+"SearchQuran",{searchText:searchText});
+	}
+	getVerseCount(surahNumber:number):number{
+	 	var verses=this.quranDataService.quranRaw.quran['en.yusufali'];
+		var verseNumbers = Object.keys(verses);
+		var versesInSurah =verseNumbers.filter(verseNum=>{
+	  		var verse=verses[verseNum];
+			return verse.surah==surahNumber;
+	  	});
+		return versesInSurah.length;
+	}
+	oldarabicSearch(searchText:string){
 		var results=[];
 		if(searchText=="") {
 		return {
@@ -99,31 +115,7 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 
 	arabicIndex:{}
 	arabicWords:any[]
-	buildArabicIndex(){
-		this.arabicIndex=[];
-		this.arabicWords=[]; 
-		var surahs=this.getSurahs();
-
-		var wordCount=0;
-		for(var s=1;s<=114;s++){
-			for(var v=1;v<=surahs[s-1].length;v++){
-				for(var w=1;w<=surahs[s-1][v-1].length;w++){
-					var indexKey = surahs[s-1][v-1][w-1];
-					if(this.arabicIndex[indexKey]==null){
-						this.arabicIndex[indexKey]=[];							
-						this.arabicWords[wordCount]=indexKey;
-						wordCount++;
-					}
-					var ref={
-						surah:s,
-						verse:v,
-						word:w
-						};	
-					this.arabicIndex[indexKey].push(ref);
-				}
-			}
-		}
-	}
+	
 	removePunctuation(text:string){
 		return text.replace(/[\W ]+/g,"");
 	}
@@ -152,9 +144,7 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService)
 	  		results:results
 	  	};
 	}
-	getSurahs(){
-		return this.quranDataService.surahs;
-	}
+	
 	  //englishQuran:string[][]
 	translation(surah:string,ayah:string){
 	  	var verses=this.quranDataService.quranRaw.quran['en.yusufali'];

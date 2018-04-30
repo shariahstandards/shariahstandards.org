@@ -59,6 +59,25 @@
     <Compile Include="DelegatedPermission.cs" />
     <Compile Include="JoiningPolicy.cs" />
     <Compile Include="LeaderRecognition.cs" />
+    <Compile Include="Mappings\PrefixMapping.cs" />
+    <Compile Include="Mappings\UnmodifiedWordUsageMapping.cs" />
+    <Compile Include="Mappings\UnmodifiedWordMapping.cs" />
+    <Compile Include="Mappings\RootMapping.cs" />
+    <Compile Include="Mappings\PrefixUsageMapping.cs" />
+    <Compile Include="Mappings\RootUsageMapping.cs" />
+    <Compile Include="Mappings\WordPartPositionTypeMapping.cs" />
+    <Compile Include="Mappings\WordPartTypeMapping.cs" />
+    <Compile Include="Mappings\WordPartFormMapping.cs" />
+    <Compile Include="Mappings\WordPartMapping.cs" />
+    <Compile Include="Mappings\WordMapping.cs" />
+    <Compile Include="Mappings\VerseMapping.cs" />
+    <Compile Include="Mappings\SurahMapping.cs" />
+    <Compile Include="Mappings\UserPhotographMapping.cs" />
+    <Compile Include="Mappings\UserMobilePhoneMapping.cs" />
+    <Compile Include="Mappings\UserFathersFirstNameMapping.cs" />
+    <Compile Include="Mappings\UserBirthLocationMapping.cs" />
+    <Compile Include="Mappings\UserEmailMapping.cs" />
+    <Compile Include="Mappings\UserFirstNameMapping.cs" />
     <Compile Include="Mappings\ActionUpdateMapping.cs" />
     <Compile Include="Mappings\ActionMapping.cs" />
     <Compile Include="Mappings\ContactDetailMapping.cs" />
@@ -97,6 +116,7 @@
     <Compile Include="OrganisationLeader.cs" />
     <Compile Include="OrganisationRelationship.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quran.cs" />
     <Compile Include="QuranComment.cs" />
     <Compile Include="Shahada.cs" />
     <Compile Include="ShurahBasedOrganisation.cs" />
@@ -114,6 +134,7 @@
     <Compile Include="Suggestion.cs" />
     <Compile Include="SuggestionVote.cs" />
     <Compile Include="SuggestionVoteSummary.cs" />
+    <Compile Include="UserFirstName.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

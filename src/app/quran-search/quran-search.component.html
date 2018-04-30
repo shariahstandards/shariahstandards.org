@@ -1,5 +1,5 @@
 <h2>Qur'an Search</h2>
-
+<!-- Arabic Quran text provided by http://corpus.quran.com  -->
 <div class="row" >
 	<div class="col-lg-5">
 		<label>Surah</label>
@@ -49,19 +49,54 @@
 </div>
 <div class="row">
 	<div class="col-md-6">
+		<h4>Search Results</h4>
+	</div>
+	<div class="col-md-6">
+		<div *ngIf="searchResults.hasSearched">
+			<div *ngIf="!searchResults.hasEnglishResults && !searchResults.hasArabicResults">
+				<p>No results</p>
+			</div>
+			<div *ngIf="searchResults.hasEnglishResults" class="heightLimited">
+				<label>{{searchResults.results.length}} English phrase matches</label>
+				<select [(ngModel)]="selectedSearchRouteUrl" (change)="searchRouteSelected()" class="form-control">
+					<option *ngFor="let result of searchResults.results" [value]="'/quran/surah/' + result.surah + '/verse/' + result.verse + '/'+searchText"> 
+						{{result.surah}}:{{result.verse}}
+					</option>
+					
+				</select>
+
+ 			</div>
+			<div *ngIf="searchResults.hasArabicResults" class="form-group">
+				<select [(ngModel)]="selectedSearchRouteUrl" (change)="searchRouteSelected()" class="form-control">
+					<optgroup *ngFor="let result of searchResults.results" [label]="result.match +' '+result.results.length" >
+						<option *ngFor="let reference of result.results" [value]="'/quran/surah/' + reference.surahNumber + '/verse/' + reference.verseNumber + '/'+searchText+'/' + reference.wordNumber"> 
+							{{reference.surahNumber}}:{{reference.verseNumber}}:{{reference.wordNumber}}
+						</option>
+					</optgroup> 
+					
+				</select>			
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
 		<div *ngIf="selectedSurah!=null">
 		<!-- 	<div>Surah {{selectedSurah.number}} {{selectedSurah.englishName}} - {{selectedSurah.arabicName}}</div>
 			<div>Verse {{selectedVerseNumber}}</div> -->
 			<div *ngIf="selectedVerseResult!=null">
 				<div class="row">
-					<div class="col-md-6">
+					 <div class="col-md-6">
 						<blockquote class="arabic-large">
-							<span *ngFor="let word of selectedVerseResult.text"
-								[ngClass]="{highlight:word==wordToHighlight}">
+							<span *ngFor="let word of currentVerse;let i=index"
+								[ngClass]="{'highlight':(i+1)==wordToHighlight}">
 								{{word}}
 							</span>
-							
 						</blockquote> 
+						 
+						<!-- <blockquote class="arabic-large">
+							{{currentVerse}}
+						</blockquote> -->
 					</div>
 					<div class="col-md-6">
 						<blockquote>
@@ -73,61 +108,7 @@
 			</div>
 		</div>	
 	</div>
-	<div class="col-md-6">
-		<div *ngIf="searchResults.hasSearched">
-			<h4>Search Results</h4>
-			<div *ngIf="!searchResults.hasEnglishResults && !searchResults.hasArabicResults">
-				<p>No results</p>
-			</div>
-			<div *ngIf="searchResults.hasEnglishResults" class="heightLimited">
-			<label>{{searchResults.results.length}} English phrase matches</label>
-				<ul class="list-inline">
-					<li  *ngFor="let result of searchResults.results">
-						<a routerLinkActive="active-route"
-						[routerLink]="'/quran/surah/' + result.surah + '/verse/' + result.verse + '/' + result.searchText"
-						>
-							{{result.surah}}:{{result.verse}}
-						</a>
-					</li>
-				</ul>
-			</div>
-			<div *ngIf="searchResults.hasArabicResults" class="heightLimited">
-				<ul class="list-inline">
-					<li  *ngFor="let result of searchResults.results">
-						<h4>{{result.category}} </h4>
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th>Word</th>
-									<th>Count</th>
-									<th>Instances</th>
-								</tr>	
-							</thead>
-							<tbody>
-								<tr *ngFor="let match of result.matches">
-									<td class="arabic-large">
-										{{match.word}}
-									</td>
-									<td>
-										{{match.occurenceCount}}
-									</td>
-									<td>
-									<ul class="list-inline">
-										<li *ngFor="let occurence of match.occurences">
-											<a [routerLink]="'/quran/surah/' + occurence.surah + '/verse/' + occurence.verse + '/' + match.searchText+'/'+match.word">
-												{{occurence.surah}}:{{occurence.verse}}
-											</a>
-										</li>
-									</ul>
-									</td>
-								</tr>		
-							</tbody>
-						</table>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+	
 </div>
 <div *ngFor="let entry of quranService.arabicIndex">
 {{entry}}
