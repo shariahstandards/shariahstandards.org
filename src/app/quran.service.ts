@@ -22,8 +22,13 @@ constructor(@Inject(QuranDataService) public quranDataService:QuranDataService,p
 	  	}
 	  	return englishSearch;
 	}
+	surahInformationSubscription:Observable<surahSelection[]>
   	getSurahInformation():Observable<surahSelection[]>{
-  		return <Observable<surahSelection[]>>this.http.get(shariahStandardsApiUrlBase+"Surahs");
+  		if(this.surahInformationSubscription!=null){
+  			return this.surahInformationSubscription;
+  		}
+  		return this.surahInformationSubscription=<Observable<surahSelection[]>>this.http.get(shariahStandardsApiUrlBase+"Surahs")
+  			.publishReplay(1).refCount();
   	}
 	getVerse(surah:number,verse:number):Observable<quranVerse>{
 		return <Observable<quranVerse>>this.http.get(shariahStandardsApiUrlBase+"QuranVerse/"+surah+"/"+verse);
@@ -40,8 +45,15 @@ constructor(@Inject(QuranDataService) public quranDataService:QuranDataService,p
 		};
 		return result;
 	}
-	arabicSearch(searchText:string):Observable<any>{
-		return <Observable<string>>this.http.post(shariahStandardsApiUrlBase+"SearchQuran",{searchText:searchText});
+	arabicSearchresults:Observable<any>[]=[]
+	arabicSearch(searchText:string):any{
+		var self=this;
+		if(self.arabicSearchresults[searchText]!=null){
+			return self.arabicSearchresults[searchText];
+		}
+		return self.arabicSearchresults[searchText]=
+			self.http.post(shariahStandardsApiUrlBase+"SearchQuran",{searchText:searchText})
+			.publishReplay(1).refCount();
 	}
 	getVerseCount(surahNumber:number):number{
 	 	var verses=this.quranDataService.quranRaw.quran['en.yusufali'];

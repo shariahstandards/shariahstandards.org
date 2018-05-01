@@ -1,111 +1,116 @@
 <h2>Qur'an Search</h2>
 <!-- Arabic Quran text provided by http://corpus.quran.com  -->
-<div class="row" >
-	<div class="col-lg-5">
-		<label>Surah</label>
-		<select class="form-control" (ngModelChange)="gotoSurah($event)" 
-			[(ngModel)]="selectedSurah">
-			<option *ngFor="let surah of surahsForSelection" [ngValue]="surah">{{surah.number}} - {{surah.englishName}} - {{surah.arabicName}}</option>
-		</select>
-			
-	</div>
-	<div class="col-lg-2">
-		<label>Verse</label>
-		<select class="form-control" (ngModelChange)="gotoVerse($event)" 
-			[(ngModel)]="selectedVerseNumber">
-			<option *ngFor="let verse of verseSelectionItems" [ngValue]="verse">{{verse}}</option>
-		</select>
-	</div>
-	<div class="col-lg-5">
-		<label>Search text</label>
-		<div class="input-group">
-		 	<span class="input-group-prepend">
-		 		<button class="btn btn-outline-primary" type="button" (click)="toggleKeyboard(arabicKeyboard)">ع</button>
-		 	</span>
-			<input class="form-control searchTextBox" type="text"
-			 	[(ngModel)]="searchText" (keyup)="searchTextChanged()" >
-			 <span class="input-group-append">
-			 	<button class="btn btn-primary"  [disabled]="searchText==null || searchText.length<3" type="button" (click)="gotoSearch()">Search</button>
-			 </span>
-		</div>
-	</div>
-</div>
-<!-- <div class="row" *ngIf="searchResults.hasEnglishResults">
-	<div class="col-5">
-		<label>{{searchResults.results.length}} English phrase matches</label>
-	</div>
-	<div class="col-2">
-		<select class="form-control" (ngModelChange)="gotoEnglishSearchResult($event)" 
-			[(ngModel)]="selectedEnglishSearchResult">
-			<option *ngFor="let result of searchResults.results" [ngValue]="result">								
-				{{result.surah}}:{{result.verse}}
-			</option>
-		</select>
-	</div>
-</div> -->
-<arabic-keyboard #arabicKeyboard (onValueChanged)="arabicKeyboardValueChanged($event)"></arabic-keyboard>
-<div class="clearfix">
-	<br/>
-</div>
-<div class="row">
-	<div class="col-md-6">
-		<h4>Search Results</h4>
-	</div>
-	<div class="col-md-6">
-		<div *ngIf="searchResults.hasSearched">
-			<div *ngIf="!searchResults.hasEnglishResults && !searchResults.hasArabicResults">
-				<p>No results</p>
-			</div>
-			<div *ngIf="searchResults.hasEnglishResults" class="heightLimited">
-				<label>{{searchResults.results.length}} English phrase matches</label>
-				<select [(ngModel)]="selectedSearchRouteUrl" (change)="searchRouteSelected()" class="form-control">
-					<option *ngFor="let result of searchResults.results" [value]="'/quran/surah/' + result.surah + '/verse/' + result.verse + '/'+searchText"> 
-						{{result.surah}}:{{result.verse}}
-					</option>
-					
-				</select>
-
- 			</div>
-			<div *ngIf="searchResults.hasArabicResults" class="form-group">
-				<select [(ngModel)]="selectedSearchRouteUrl" (change)="searchRouteSelected()" class="form-control">
-					<optgroup *ngFor="let result of searchResults.results" [label]="result.match +' '+result.results.length" >
-						<option *ngFor="let reference of result.results" [value]="'/quran/surah/' + reference.surahNumber + '/verse/' + reference.verseNumber + '/'+searchText+'/' + reference.wordNumber"> 
-							{{reference.surahNumber}}:{{reference.verseNumber}}:{{reference.wordNumber}}
-						</option>
-					</optgroup> 
-					
-				</select>			
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-12">
-		<div *ngIf="selectedSurah!=null">
-		<!-- 	<div>Surah {{selectedSurah.number}} {{selectedSurah.englishName}} - {{selectedSurah.arabicName}}</div>
-			<div>Verse {{selectedVerseNumber}}</div> -->
-			<div *ngIf="currentVerse!=null">
-				<div class="row">
-					 <div class="col-md-6">
-						<blockquote class="arabic-large">
-							<span *ngFor="let word of currentVerse.arabicWords;let i=index"
-								[ngClass]="{'highlight':(i+1)==wordToHighlight}">
-								{{word}}
-							</span>
-						</blockquote> 
-					</div>
-					<div class="col-md-6">
-						<blockquote>
-							<span>{{currentVerse.englishText}}</span>
-						</blockquote> 
-					</div>
-				</div>
-			</div>
-		</div>	
-	</div>
+<div *ngIf="loading">
+	Loading .... 
 	
 </div>
+<div *ngIf="!loading">
+	<div class="row" >
+		<div class="col-lg-5">
+			<label>Surah</label>
+			<select class="form-control" (ngModelChange)="gotoSurah($event)" 
+				[(ngModel)]="selectedSurah">
+				<option *ngFor="let surah of surahsForSelection" [ngValue]="surah">{{surah.number}} - {{surah.englishName}} - {{surah.arabicName}}</option>
+			</select>
+				
+		</div>
+		<div class="col-lg-2">
+			<label>Verse</label>
+			<select class="form-control" (ngModelChange)="gotoVerse($event)" 
+				[(ngModel)]="selectedVerseNumber">
+				<option *ngFor="let verse of verseSelectionItems" [ngValue]="verse">{{verse}}</option>
+			</select>
+		</div>
+		<div class="col-lg-5">
+			<label>Search text</label>
+			<div class="input-group">
+			 	<span class="input-group-prepend">
+			 		<button class="btn btn-outline-primary" type="button" (click)="toggleKeyboard(arabicKeyboard)">ع</button>
+			 	</span>
+				<input class="form-control searchTextBox" type="text"
+				 	[(ngModel)]="searchText" (keyup)="searchTextChanged()" >
+				 <span class="input-group-append">
+				 	<button class="btn btn-primary"  [disabled]="searchText==null || searchText.length<3" type="button" (click)="gotoSearch()">Search</button>
+				 </span>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="row" *ngIf="searchResults.hasEnglishResults">
+		<div class="col-5">
+			<label>{{searchResults.results.length}} English phrase matches</label>
+		</div>
+		<div class="col-2">
+			<select class="form-control" (ngModelChange)="gotoEnglishSearchResult($event)" 
+				[(ngModel)]="selectedEnglishSearchResult">
+				<option *ngFor="let result of searchResults.results" [ngValue]="result">								
+					{{result.surah}}:{{result.verse}}
+				</option>
+			</select>
+		</div>
+	</div> -->
+	<arabic-keyboard #arabicKeyboard (onValueChanged)="arabicKeyboardValueChanged($event)"></arabic-keyboard>
+	<div class="clearfix">
+		<br/>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<h4>Search Results</h4>
+		</div>
+		<div class="col-md-6">
+			<div *ngIf="searchResults.hasSearched">
+				<div *ngIf="!searchResults.hasEnglishResults && !searchResults.hasArabicResults">
+					<p>No results</p>
+				</div>
+				<div *ngIf="searchResults.hasEnglishResults" class="heightLimited">
+					<label>{{searchResults.results.length}} English phrase matches</label>
+					<select [(ngModel)]="selectedSearchRouteUrl" (change)="searchRouteSelected()" class="form-control">
+						<option *ngFor="let result of searchResults.results" [value]="'/quran/surah/' + result.surah + '/verse/' + result.verse + '/'+searchText"> 
+							{{result.surah}}:{{result.verse}}
+						</option>
+						
+					</select>
 
-<pre>
-	{{generatedScript}}
-</pre>
+	 			</div>
+				<div *ngIf="searchResults.hasArabicResults" class="form-group">
+					<select [(ngModel)]="selectedSearchRouteUrl" (change)="searchRouteSelected()" class="form-control">
+						<optgroup *ngFor="let result of searchResults.results" [label]="result.match +' '+result.results.length" >
+							<option *ngFor="let reference of result.results" [value]="'/quran/surah/' + reference.surahNumber + '/verse/' + reference.verseNumber + '/'+searchText+'/' + reference.wordNumber"> 
+								{{reference.surahNumber}}:{{reference.verseNumber}}:{{reference.wordNumber}}
+							</option>
+						</optgroup> 
+						
+					</select>			
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div *ngIf="selectedSurah!=null">
+			<!-- 	<div>Surah {{selectedSurah.number}} {{selectedSurah.englishName}} - {{selectedSurah.arabicName}}</div>
+				<div>Verse {{selectedVerseNumber}}</div> -->
+				<div *ngIf="currentVerse!=null">
+					<div class="row">
+						 <div class="col-md-6">
+							<blockquote class="arabic-large">
+								<span *ngFor="let word of currentVerse.arabicWords;let i=index"
+									[ngClass]="{'highlight':(i+1)==wordToHighlight}">
+									{{word}}
+								</span>
+							</blockquote> 
+						</div>
+						<div class="col-md-6">
+							<blockquote>
+								<span>{{currentVerse.englishText}}</span>
+							</blockquote> 
+					</div>
+				</div>
+			</div>	
+		</div>
+		
+	</div>
+
+	<pre>
+		{{generatedScript}}
+	</pre>
+</div>

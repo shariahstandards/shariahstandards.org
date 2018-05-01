@@ -77,9 +77,8 @@ export class QuranSearchComponent implements OnInit {
 		  	  			self.searchText=searchText;
 		  	  			self.search();
 		  	  		}
-
-	  	  			self.changeDetectorRef.detectChanges(); 
 					self.loading=false;
+	  	  			self.changeDetectorRef.detectChanges(); 
 					//self.buildCode();
 				})				
 			});
