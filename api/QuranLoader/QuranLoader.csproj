@@ -91,6 +91,10 @@
       <Project>{6b415193-2523-4498-900e-0d1f550f2c34}</Project>
       <Name>StoredObjects</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebApiResources\WebApiResources.csproj">
+      <Project>{CF85AA30-A954-4889-80A3-E3885111F72C}</Project>
+      <Name>WebApiResources</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

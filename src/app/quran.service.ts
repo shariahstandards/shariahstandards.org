@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { QuranDataService,surahSelection } from './quran-data.service'
+import { QuranDataService,surahSelection ,quranVerse} from './quran-data.service'
 import {HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 declare var shariahStandardsApiUrlBase:string;
@@ -7,7 +7,7 @@ declare var shariahStandardsApiUrlBase:string;
 @Injectable()
 export class QuranService {
 
-constructor(@Inject(QuranDataService) private quranDataService:QuranDataService,private http: HttpClient) {
+constructor(@Inject(QuranDataService) public quranDataService:QuranDataService,private http: HttpClient) {
 
 }
 	containsEnglish(text:string){
@@ -22,9 +22,11 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService,
 	  	}
 	  	return englishSearch;
 	}
-  	
-	getVerse(surah:number,verse:number):Observable<string[]>{
-		return <Observable<string[]>>this.http.get(shariahStandardsApiUrlBase+"QuranVerse/"+surah+"/"+verse);
+  	getSurahInformation():Observable<surahSelection[]>{
+  		return <Observable<surahSelection[]>>this.http.get(shariahStandardsApiUrlBase+"Surahs");
+  	}
+	getVerse(surah:number,verse:number):Observable<quranVerse>{
+		return <Observable<quranVerse>>this.http.get(shariahStandardsApiUrlBase+"QuranVerse/"+surah+"/"+verse);
 	}
 	getSurahsForSelection():surahSelection[]{
 		return this.quranDataService.getSurahsForSelection();
@@ -117,7 +119,7 @@ constructor(@Inject(QuranDataService) private quranDataService:QuranDataService,
 	arabicWords:any[]
 	
 	removePunctuation(text:string){
-		return text.replace(/[\W ]+/g,"");
+		return text.replace(/[\W ]+/g," ");
 	}
   	englishSearch(text:string){
 	  	var results=[];

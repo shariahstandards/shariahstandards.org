@@ -23,6 +23,7 @@ namespace StoredObjects
     public int VerseNumber { get; set; }
     public virtual List<Word> Words { get; set; }
     public virtual List<WordPart> WordParts { get; set; }
+    public virtual VerseTranslation Translation { get; set; }
   }
   public class Word
   {
@@ -49,7 +50,6 @@ namespace StoredObjects
     public WordPartPositionType WordPartPositionType { get; set; }
     public virtual RootUsage RootUsage { get; set; }
     public virtual PrefixUsage PrefixUsage { get; set; }
-    public virtual UnmodifiedWordPartUsage UnmodifiedWordPartUsage { get; set; }
     public string Text { get; set; }
   }
   public class WordPartPositionType
@@ -105,24 +105,5 @@ namespace StoredObjects
     public string Text { get; set; }
     public virtual List<PrefixUsage> PrefixUsages { get; set; }
 
-  }
-
-  public class UnmodifiedWordPart
-  {
-    public string Text { get; set; }
-    public virtual List<UnmodifiedWordPartUsage> Usages { get; set; }
-  }
-  public class UnmodifiedWordPartUsage
-  {
-    public virtual Surah Surah { get; set; }
-    public int SurahNumber { get; set; }
-    public virtual Verse Verse { get; set; }
-    public int VerseNumber { get; set; }
-    public virtual Word Word { get; set; }
-    public int WordNumber { get; set; }
-    public virtual WordPart WordPart { get; set; }
-    public int WordPartNumber { get; set; }
-    public virtual UnmodifiedWordPart UnmodifiedWord { get; set; }
-    public string Text { get; set; }
   }
 }

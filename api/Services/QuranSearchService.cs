@@ -10,18 +10,22 @@ namespace Services
 {
   public interface IQuranSearchService
   {
-    List<string> GetVerse(int surahNumber, int verseNumber);
+    VerseResponse GetVerse(int surahNumber, int verseNumber);
     QuranSearchResult Search(string searchText);
+    List<SurahInformationResponse> GetSurahs();
   }
   public class QuranSearchService: IQuranSearchService
   {
-    public List<string> GetVerse(int surahNumber, int verseNumber)
+    public VerseResponse GetVerse(int surahNumber, int verseNumber)
     {
+      var verseResponse = new VerseResponse();
       var s = new StorageService();
       var verse  = s.SetOf<Verse>().Single(v => v.SurahNumber == surahNumber && v.VerseNumber == verseNumber);
       var words = verse.Words.Select(w => BuildWord(w)).ToList();
+      verseResponse.ArabicWords= words;
+      verseResponse.EnglishText = verse.Translation.Text;
       s.Dispose();
-      return words;
+      return verseResponse;
     }
 
 
@@ -64,6 +68,14 @@ namespace Services
         Results = g.Select(r => new VerseResult { SurahNumber = r.SurahNumber, VerseNumber = r.VerseNumber, WordNumber = r.WordNumber, WordPartNumber = r.WordPartNumber }).ToList()
       });
       return categories.OrderBy(x=>x.Match).ToList();
+    }
+
+    public List<SurahInformationResponse> GetSurahs()
+    {
+      var storageService = new StorageService();
+      var results = storageService.SetOf<Surah>().Select(s=>new SurahInformationResponse { ArabicName=s.ArabicName,EnglishName=s.EnglishName,Number=s.SurahNumber,VerseCount=s.Verses.Count}).ToList();
+      storageService.Dispose();
+      return results;
     }
 
     public static Dictionary<char, char> Transliteration = new Dictionary<char, char> {

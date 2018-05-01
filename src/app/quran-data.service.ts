@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 export interface surahSelection{
 	number:number,
 	arabicName:string,
-	englishName:string
+	englishName:string,
+	verseCount:number
+}
+export interface quranVerse{
+	arabicWords:string[],
+	englishText:string
 }
 @Injectable()
 export class QuranDataService {
@@ -131,7 +136,8 @@ export class QuranDataService {
 			return {
 				number:Number(parts[0].replace('.','')),
 				arabicName:parts[2],
-				englishName:parts[1]
+				englishName:parts[1],
+				verseCount:0
 			};
 		});
 		return results;

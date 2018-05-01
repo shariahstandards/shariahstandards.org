@@ -22,7 +22,7 @@ export class QuranReferenceComponent implements OnInit {
         if(this.firstWord!=null && this.wordCount!=null){
           var startIndex=Number(this.firstWord)-1;
           var endIndex=Number(this.wordCount)+Number(this.firstWord)-1;
-          words=verse.slice(startIndex,endIndex);
+          words=verse.arabicWords.slice(startIndex,endIndex);
           console.log("words="+words.join(" "));
         
           console.log("word",this.firstWord);
@@ -31,7 +31,7 @@ export class QuranReferenceComponent implements OnInit {
           console.log("end",endIndex);
         }
         else{
-          words=verse;
+          words=verse.arabicWords;
         }
         this.arabicText= words.join(" ");
           

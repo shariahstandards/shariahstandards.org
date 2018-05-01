@@ -26,6 +26,12 @@ namespace WebApi.Controllers
     {
       return Request.CreateResponse(HttpStatusCode.OK, _service.GetVerse(surahNumber,verseNumber));
     }
+    [Route("Surahs")]
+    [HttpGet]
+    public HttpResponseMessage GetSurahs()
+    {
+      return Request.CreateResponse(HttpStatusCode.OK, _service.GetSurahs());
+    }
     [Route("SearchQuran")]
     [HttpPost]
     public HttpResponseMessage Search(QuranSearchRequest request)

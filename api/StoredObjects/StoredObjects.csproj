@@ -60,11 +60,10 @@
     <Compile Include="JoiningPolicy.cs" />
     <Compile Include="LeaderRecognition.cs" />
     <Compile Include="Mappings\PrefixMapping.cs" />
-    <Compile Include="Mappings\UnmodifiedWordUsageMapping.cs" />
-    <Compile Include="Mappings\UnmodifiedWordMapping.cs" />
     <Compile Include="Mappings\RootMapping.cs" />
     <Compile Include="Mappings\PrefixUsageMapping.cs" />
     <Compile Include="Mappings\RootUsageMapping.cs" />
+    <Compile Include="Mappings\VerseTranslationMapping.cs" />
     <Compile Include="Mappings\WordPartPositionTypeMapping.cs" />
     <Compile Include="Mappings\WordPartTypeMapping.cs" />
     <Compile Include="Mappings\WordPartFormMapping.cs" />
@@ -135,6 +134,7 @@
     <Compile Include="SuggestionVote.cs" />
     <Compile Include="SuggestionVoteSummary.cs" />
     <Compile Include="UserFirstName.cs" />
+    <Compile Include="VerseTranslation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

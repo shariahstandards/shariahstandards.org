@@ -84,24 +84,19 @@
 		<div *ngIf="selectedSurah!=null">
 		<!-- 	<div>Surah {{selectedSurah.number}} {{selectedSurah.englishName}} - {{selectedSurah.arabicName}}</div>
 			<div>Verse {{selectedVerseNumber}}</div> -->
-			<div *ngIf="selectedVerseResult!=null">
+			<div *ngIf="currentVerse!=null">
 				<div class="row">
 					 <div class="col-md-6">
 						<blockquote class="arabic-large">
-							<span *ngFor="let word of currentVerse;let i=index"
+							<span *ngFor="let word of currentVerse.arabicWords;let i=index"
 								[ngClass]="{'highlight':(i+1)==wordToHighlight}">
 								{{word}}
 							</span>
 						</blockquote> 
-						 
-						<!-- <blockquote class="arabic-large">
-							{{currentVerse}}
-						</blockquote> -->
 					</div>
 					<div class="col-md-6">
 						<blockquote>
-							<span *ngFor="let part of selectedVerseResult.englishTranslation"
-								[ngClass]="{highlight:part.highlight}">{{part.text}}</span>
+							<span>{{currentVerse.englishText}}</span>
 						</blockquote> 
 					</div>
 				</div>
@@ -110,7 +105,7 @@
 	</div>
 	
 </div>
-<div *ngFor="let entry of quranService.arabicIndex">
-{{entry}}
-</div>
 
+<pre>
+	{{generatedScript}}
+</pre>
