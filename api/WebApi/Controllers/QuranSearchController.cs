@@ -36,7 +36,7 @@ namespace WebApi.Controllers
     [HttpPost]
     public HttpResponseMessage Search(QuranSearchRequest request)
     {
-      return Request.CreateResponse(HttpStatusCode.OK, _service.Search(request.SearchText));
+      return Request.CreateResponse(HttpStatusCode.OK, _service.Search(request));
     }
   }
 }

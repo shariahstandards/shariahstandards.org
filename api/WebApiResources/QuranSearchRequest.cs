@@ -9,5 +9,6 @@ namespace WebApiResources
   public class QuranSearchRequest
   {
     public string SearchText { get; set; }
+    public bool SearchInEnglish { get; set; }
   }
 }

@@ -11,7 +11,7 @@ namespace Services
   public interface IQuranSearchService
   {
     VerseResponse GetVerse(int surahNumber, int verseNumber);
-    QuranSearchResult Search(string searchText);
+    QuranSearchResult Search(QuranSearchRequest reques);
     List<SurahInformationResponse> GetSurahs();
   }
   public class QuranSearchService: IQuranSearchService
@@ -37,15 +37,26 @@ namespace Services
 
    
 
-    public QuranSearchResult Search(string searchText)
+    public QuranSearchResult Search(QuranSearchRequest request)
     {
-      var reverseTransliterateDictionary = Transliteration.ToDictionary(x => x.Value, y => y.Key);
-      var words = searchText.Split(' ');
+      if (request.SearchInEnglish)
+      {
+        return SearchInEnglish(request.SearchText);
+      }
+      //var reverseTransliterateDictionary = Transliteration.ToDictionary(x => x.Value, y => y.Key);
 
+      var searchText = request.SearchText;
+
+      return SearchInArabic(searchText);
+    }
+
+    public virtual QuranSearchResult SearchInArabic(string searchText)
+    {
+      var words = searchText.Split(' ');
       var s = new StorageService();
-      var roots = s.SetOf<Root>().Where(r => words.Any(w=>w==r.Text)).ToList();
+      var roots = s.SetOf<Root>().Where(r => words.Any(w => w == r.Text)).ToList();
       var resource = new QuranSearchResult();
-      var rootResults = roots.SelectMany(r => BuildSearchCategories(r.RootUsages.Select(u=>u.WordPart),"Root match")).ToList();
+      var rootResults = roots.SelectMany(r => BuildSearchCategories(r.RootUsages.Select(u => u.WordPart), "Root match")).ToList();
       //var exactUnmodifiedFormMatches = s.SetOf<UnmodifiedWordPart>().Where(r => words.Any(w => w == r.Text)).ToList();
       //var exactUnmodifiedResults = exactUnmodifiedFormMatches.SelectMany(e => BuildSearchCategories(e.Usages.Select(u => u.WordPart),"Form match")).ToList();
       var exactWholeFormMatches = s.SetOf<WordPart>().Where(r => words.Any(w => w == r.Text)).ToList();
@@ -56,6 +67,37 @@ namespace Services
       resource.SearchText = searchText;
       s.Dispose();
       return resource;
+    }
+
+    public virtual QuranSearchResult SearchInEnglish(string searchText)
+    {
+      var s = new StorageService();
+      var verseTranslations = s.SetOf<VerseTranslation>().Where(r => r.Text.Contains(searchText)).ToList();
+      var resource = new QuranSearchResult();
+      resource.ResultCategories = new List<SearchResultCategory>
+      {
+        new SearchResultCategory
+        {
+          MatchType="English verse matches",
+          Match = "\""+searchText+"\"",
+          Results = verseTranslations.Select(v=>BuildVerseResult(v)).ToList()
+        }
+      };
+      resource.SearchText = searchText;
+      s.Dispose();
+      return resource;
+    }
+
+    private VerseResult BuildVerseResult(VerseTranslation v)
+    {
+      return new VerseResult
+      {
+        SurahNumber = v.SurahNumber,
+        VerseNumber = v.VerseNumber,
+        WordNumber = 0,
+        WordPartNumber = 0,
+      };
+      throw new NotImplementedException();
     }
 
     private List<SearchResultCategory> BuildSearchCategories(IEnumerable<WordPart> wordParts,string matchType)

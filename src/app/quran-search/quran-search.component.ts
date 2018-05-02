@@ -1,6 +1,6 @@
 import { Component, OnInit ,OnDestroy, Input,ChangeDetectorRef} from '@angular/core';
 import { QuranService } from '../quran.service';
-import { QuranDataService,quranVerse,surahSelection } from '../quran-data.service';
+import { quranVerse,surahSelection } from '../quran-data.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ArabicKeyboardComponent } from '../arabic-keyboard/arabic-keyboard.component'
 import {NgClass} from '@angular/common';
@@ -26,7 +26,7 @@ interface searchType{
   selector: 'app-quran-search',
   templateUrl: './quran-search.component.html',
   styleUrls: ['./quran-search.component.css'],
-  providers:[QuranService,QuranDataService]
+  providers:[QuranService]
 //  directives:[NgClass]
 })
 export class QuranSearchComponent implements OnInit {
@@ -50,7 +50,6 @@ export class QuranSearchComponent implements OnInit {
 	ngOnInit() {
 		var self=this;
 		self.loading=true;
-		self.surahsForSelection=self.quranService.getSurahsForSelection();
 		
 		self.getRouteParamsSubscribe=self.route.params.subscribe(params=>{
 			self.quranService.getSurahInformation().subscribe(surahs=>{
@@ -58,6 +57,11 @@ export class QuranSearchComponent implements OnInit {
 	  	  		var verseNumber=params['verseNumber'];
 				self.wordToHighlight=params["wordToHighlight"];
 				var searchText=params['searchText'];
+				var routeBitForWord="";
+				if(self.wordToHighlight!=null){
+					routeBitForWord="/"+self.wordToHighlight;
+				}
+			
 				self.surahsForSelection = surahs;
 				if(surahNumber!=null && verseNumber!=null){
 					self.selectedSurah=self.surahsForSelection[Number(surahNumber)-1];
@@ -79,28 +83,11 @@ export class QuranSearchComponent implements OnInit {
 		  	  		}
 					self.loading=false;
 	  	  			self.changeDetectorRef.detectChanges(); 
-					//self.buildCode();
 				})				
 			});
 	  	});
 	}
-	buildCode(){
-		var self = this;
-		var verses=self.quranService.quranDataService.quranRaw.quran['en.yusufali'];
-
-		var verseNumbers = Object.keys(verses);
-		// var cSharpCodeLines =verseNumbers.map(verseNum=>{
-	 //  		var verse=verses[verseNum];
-		// 	return "insert into VerseTranslations (SurahNumber,VerseNumber,Text) values ("+verse.surah+","+verse.ayah+",'"+verse.verse.replace(/'/g,"''")+"')";
-	 //  	});
-	  	var surahInfoLines = self.quranService.getSurahsForSelection().map(s=>{
-//	  		return "update surahs set arabicName='"+s.arabicName.replace(/'/g,"''")+"', englishName='"+s.englishName.replace(/'/g,"''")+"' where surahNumber="+s.number
-	  		return "update surahs set arabicname= N'"+s.arabicName.replace(/'/g,"''")+"' where surahNumber="+s.number;
-
-	  	})
-//		self.cSharpCode=cSharpCodeLines.join("\r\n");
-		self.generatedScript=surahInfoLines.join("\r\n");
-	}
+	
 	generatedScript:string="";
 	toggleKeyboard(arabicKeyboard){
 		arabicKeyboard.toggleShow(this.searchText);
@@ -131,7 +118,7 @@ export class QuranSearchComponent implements OnInit {
 	currentVerse:quranVerse;
 	
 	// @Input() 
-	selectedSearchRouteUrl:string
+	selectedSearchRouteUrl:string=null
 	searchRouteSelected(){
 		this.onSearchResultSelected(this.selectedSearchRouteUrl);
 	}
@@ -174,7 +161,8 @@ export class QuranSearchComponent implements OnInit {
 		this.router.navigateByUrl(referenceUrl);
 	}
 	getSearchResult(searchText:string){
-		this.searchResults = 
+		var self=this;
+		self.searchResults = 
 	  	{
 	  			hasSearched:false,
 	  			hasEnglishResults:false,
@@ -184,24 +172,29 @@ export class QuranSearchComponent implements OnInit {
 	  	};
 		if(searchText!=null){
 	  		if(searchText.length>2){
-	  			if(this.quranService.containsEnglish(searchText)){
-	  				var searchresponse = this.quranService.englishSearch(searchText);
-	  				this.searchResults.hasEnglishResults=true;		
-	  				this.searchResults.hasArabicResults=false;
-	  				this.searchResults.results=searchresponse.results;
-	  				this.searchResults.hasSearched=true;
+	  			var searchInEnglish=self.quranService.containsEnglish(searchText);
+  				var searchresponse = self.quranService.search(searchText,searchInEnglish).subscribe(res=>{
+  					var hasResults=res.resultCategories.filter(cat=>{
+  						return cat.results.length>0;
+  					}).length>0;
+	  				self.searchResults.hasEnglishResults=searchInEnglish && hasResults;		
+	  				self.searchResults.hasArabicResults=!searchInEnglish && hasResults;
+	  				self.searchResults.results=res.resultCategories;
+	  				self.searchResults.hasSearched=true;
+	  				self.wordToHighlight=null;
+	  	  			self.changeDetectorRef.detectChanges(); 
+	  				self.selectCurrentResult();
+  				})
 
-	  			}
-	  			else{
-	  				this.quranService.arabicSearch(searchText).subscribe(res=>{
-						this.searchResults.hasEnglishResults=false;		
-		  				this.searchResults.hasArabicResults=true;
-		  				this.searchResults.results=res.resultCategories;
-		  				this.searchResults.hasSearched=true;
-	  				})
-	  			}
 			}
 		}
+	}
+	selectCurrentResult(){
+		this.selectedSearchRouteUrl = '/quran/surah/'+ this.selectedSurah.number + '/verse/' + this.selectedVerseNumber + '/' 
+		 + this.searchText
+		 + (this.wordToHighlight!=null?("/"+this.wordToHighlight):"/0")
+
+
 	}
 	gotoSearch(){
 		this.router.navigate(["/quran/search/"+ this.searchText]);
