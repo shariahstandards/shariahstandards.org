@@ -15,12 +15,23 @@
 				
 		</div>
 		<div class="col-lg-6">
+			
 			<label>Verse</label>
-			<select class="form-control" (ngModelChange)="gotoVerse($event)" 
-				[(ngModel)]="selectedVerseNumber">
-				<option *ngFor="let verse of verseSelectionItems" [ngValue]="verse">{{verse}}</option>
-			</select>
+			<div class="input-group">
+				<select class="form-control" (ngModelChange)="gotoVerse($event)" 
+					[(ngModel)]="selectedVerseNumber">
+					<option *ngFor="let verse of verseSelectionItems" [ngValue]="verse">{{verse}}</option>
+				</select>
+				<div *ngIf="enableNextVerse" class="input-group-append">
+					<button id="nextVerse" class="btn btn-outline-primary" (click)="nextVerse()">
+						<span>next</span>&gt;
+					</button>					
+				</div>
+			</div>
 		</div>
+
+
+		
 	</div>
 	<!-- <div class="row" *ngIf="searchResults.hasEnglishResults">
 		<div class="col-5">
@@ -35,7 +46,7 @@
 			</select>
 		</div>
 	</div> -->
-
+<br/>
 	<div class="row">
 		<div class="col-lg-6">
 			<label>Search text</label>
@@ -49,25 +60,37 @@
 				 	<button class="btn btn-primary"  [disabled]="searchText==null || searchText.length<3" type="button" (click)="gotoSearch()">Search</button>
 				 </span>
 			</div>
+			<div class="form-check">
+				<input id="linkOnArabicWords" class="form-check-input" type="checkbox" [(ngModel)]="linkOnArabicWords">
+				<label  class="form-check-label" for="linkOnArabicWords">Search links in text	</label>
+			</div>
+
 		</div>
 		<div class="col-md-6">
-			<label>Results</label>
 			<div *ngIf="searchResults.hasSearched">
 				<div *ngIf="!searchResults.hasEnglishResults && !searchResults.hasArabicResults">
-					<p>No results</p>
+					<label>No results</label>
 				</div>
-			
-				<div class="form-group">
-					<select  
-						[(ngModel)]="selectedSearchRouteUrl" (change)="searchRouteSelected()" class="form-control">
-						<option [ngValue]="null" selected disabled hidden>Select a result</option>
-						<optgroup *ngFor="let result of searchResults.results" [label]="result.match +' '+result.results.length" >
-							<option *ngFor="let reference of result.results" [ngValue]="'/quran/surah/' + reference.surahNumber + '/verse/' + reference.verseNumber + '/'+searchText+'/' + reference.wordNumber"> 
-								{{reference.surahNumber}}:{{reference.verseNumber}}:{{reference.wordNumber}}
-							</option>
-						</optgroup> 
-						
-					</select>			
+				<div class="form-group" *ngIf="searchResults.hasEnglishResults || searchResults.hasArabicResults">
+					<label>Results</label>
+					<div class="input-group">
+						<select  
+							[(ngModel)]="selectedSearchRouteUrl" (change)="searchRouteSelected()" class="form-control">
+							<option [ngValue]="null" selected disabled hidden>Select a result</option>
+							<optgroup *ngFor="let result of searchResults.results" 
+							[label]="result.matchType+' '+ result.match +' '+result.results.length" >
+								<option *ngFor="let reference of result.results" [ngValue]="'/quran/surah/' + reference.surahNumber + '/verse/' + reference.verseNumber + '/'+searchText"> 
+									{{reference.surahNumber}}:{{reference.verseNumber}}
+								</option>
+							</optgroup> 
+							
+						</select>	
+						<div *ngIf="enableNextResult" class="input-group-append">
+							<button id="nextResult" class="btn btn-outline-primary" (click)="nextResult()">
+								<span>next</span>&gt;
+							</button>					
+						</div>		
+					</div>
 				</div>
 			</div>
 		</div>
@@ -85,10 +108,22 @@
 				<div *ngIf="currentVerse!=null">
 					<div class="row">
 						 <div class="col-md-6">
-							<blockquote class="arabic-large">
+							<blockquote class="arabic-large" style="text-align: right">
 								<span *ngFor="let word of currentVerse.arabicWords;let i=index"
-									[ngClass]="{'highlight':(i+1)==wordToHighlight}">
-									{{word}}
+									[ngClass]="{'highlight':highlightWord(word)}">
+									<span *ngIf="word.root!=null && linkOnArabicWords">
+										<a [routerLink]="'/quran/search/'+word.root">
+											{{word.text}}
+										</a>
+									</span>
+									<span *ngIf="word.root==null && linkOnArabicWords">
+										<a [routerLink]="'/quran/search/'+word.stem">
+											{{word.text}}
+										</a>
+									</span>
+									<span *ngIf="!linkOnArabicWords">
+										{{word.text}}									
+									</span>
 								</span>
 							</blockquote> 
 						</div>

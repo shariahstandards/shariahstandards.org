@@ -47,7 +47,7 @@ namespace StoredObjects
     public string WordPartTypeCode { get; set; }
     public virtual WordPartType WordPartType { get; set; }
     public string WordPartPositionTypeCode { get; set; }
-    public WordPartPositionType WordPartPositionType { get; set; }
+    public virtual WordPartPositionType WordPartPositionType { get; set; }
     public virtual RootUsage RootUsage { get; set; }
     public virtual PrefixUsage PrefixUsage { get; set; }
     public string Text { get; set; }

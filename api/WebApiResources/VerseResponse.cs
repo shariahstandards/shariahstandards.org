@@ -8,7 +8,15 @@ namespace WebApiResources
 {
   public class VerseResponse
   {
-    public List<string> ArabicWords { get; set; }
+    public List<ArabicWordResource> ArabicWords { get; set; }
     public string EnglishText { get; set; }
+  }
+  public class ArabicWordResource
+  {
+    public string Text { get; set; }
+    public List<string> Prefixes { get; set; }
+    public List<string> Suffixes { get; set; }
+    public string Stem { get; set; }
+    public string Root { get; set; }
   }
 }

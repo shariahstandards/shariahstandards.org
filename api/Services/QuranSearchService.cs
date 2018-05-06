@@ -29,10 +29,33 @@ namespace Services
     }
 
 
-    private string BuildWord(Word w)
+    private ArabicWordResource BuildWord(Word w)
     {
-      var parts = string.Concat(w.WordParts.Select(p => p.Text));
-      return parts;
+      var resource = new ArabicWordResource();
+      resource.Text = string.Concat(w.WordParts.Select(p => p.Text));
+      resource.Prefixes = new List<string>();
+      resource.Suffixes = new List<string>();
+      foreach(var part in w.WordParts)
+      {
+        if(part.WordPartPositionTypeCode== "PREFIX")
+        {
+          resource.Prefixes.Add(part.Text);
+        }
+        else if (part.WordPartPositionTypeCode == "SUFFIX")
+        {
+          resource.Suffixes.Add(part.Text);
+        }
+        else
+        {
+          resource.Stem = part.Text;
+          if (part.RootUsage != null)
+          {
+            resource.Root = part.RootUsage.RootText;
+          }
+        }
+      }
+
+      return resource;
     }
 
    
@@ -54,19 +77,109 @@ namespace Services
     {
       var words = searchText.Split(' ');
       var s = new StorageService();
-      var roots = s.SetOf<Root>().Where(r => words.Any(w => w == r.Text)).ToList();
       var resource = new QuranSearchResult();
-      var rootResults = roots.SelectMany(r => BuildSearchCategories(r.RootUsages.Select(u => u.WordPart), "Root match")).ToList();
+      resource.ResultCategories = new List<SearchResultCategory>();
+      var rootMatches = GetRootMatches(words, s);
+      if (rootMatches.Results.Any()) {
+        resource.ResultCategories.Add(rootMatches);
+      }
+      resource.ResultCategories.AddRange(GetRootMatchesByForm(words, s));
+
+      //var roots = s.SetOf<Root>().Where(r => words.Any(w => w == r.Text)).ToList();
+      //var rootResults = roots.SelectMany(r => BuildSearchCategories(r.RootUsages.Select(u => u.WordPart), "Root match")).ToList();
       //var exactUnmodifiedFormMatches = s.SetOf<UnmodifiedWordPart>().Where(r => words.Any(w => w == r.Text)).ToList();
       //var exactUnmodifiedResults = exactUnmodifiedFormMatches.SelectMany(e => BuildSearchCategories(e.Usages.Select(u => u.WordPart),"Form match")).ToList();
-      var exactWholeFormMatches = s.SetOf<WordPart>().Where(r => words.Any(w => w == r.Text)).ToList();
-      var exactResults = BuildSearchCategories(exactWholeFormMatches, "Exact match").ToList();
+      //var exactWholeFormMatches = s.SetOf<WordPart>().Where(r => words.Any(w => w == r.Text)).ToList();
+      //var exactResults = BuildSearchCategories(exactWholeFormMatches, "Exact match").ToList();
 
-
-      resource.ResultCategories = exactResults.Union(rootResults).ToList();
+      //resource.ResultCategories = exactResults.Union(rootResults).ToList();
       resource.SearchText = searchText;
       s.Dispose();
       return resource;
+    }
+
+    private static SearchResultCategory GetRootMatches(string[] words, StorageService s)
+    {
+      IEnumerable<string> verses = null;
+      foreach (var word in words)
+      {
+        var root = s.SetOf<Root>().SingleOrDefault(r => r.Text == word);
+        if (root != null)
+        {
+          var matches = root.RootUsages.Select(u => u.SurahNumber.ToString("000") + ":" + u.VerseNumber.ToString("000")).ToList();
+          if (verses == null)
+          {
+            verses = matches;
+          }
+          else
+          {
+            verses = verses.Intersect(matches);
+          }
+        }
+      }
+      verses = verses ?? new List<string>();
+      verses = verses.Distinct();
+      var verseList = verses.ToList();
+      verseList.Sort();
+      var verseReferences = verseList.Select(v => new { surahNumber = int.Parse(v.Substring(0, 3)), verseNumber = int.Parse(v.Substring(4, 3)) }).ToList();
+
+      var rootMatches = new SearchResultCategory
+      {
+        MatchType = "matching all root verbs in verse",
+        Match = $" \"\u200f{string.Join("\u200e\", \"\u200f",words)}\u200e\"",
+        Results = verseReferences.Select(v => new VerseResult { SurahNumber = v.surahNumber, VerseNumber = v.verseNumber }).ToList()
+      };
+      return rootMatches;
+    }
+    private static List<SearchResultCategory> GetRootMatchesByForm(string[] roots, StorageService s)
+    {
+      var categories = new List<SearchResultCategory>();
+      foreach (var rootText in roots)
+      {
+        var root = s.SetOf<Root>().SingleOrDefault(r => r.Text == rootText);
+        if (root != null)
+        {
+          var wordUsages = root.RootUsages.Select(u => new { Usage = u, FullWord = string.Concat(u.Word.WordParts.Select(p => p.Text)) }).ToList();
+          var groups = wordUsages.GroupBy(w => w.FullWord);
+          foreach (var group in groups)
+          {
+            var category = new SearchResultCategory();
+            category.MatchType = rootText;
+            category.Match = $"matching root verb \"\u200f{group.Key}\u200e\"";
+            category.Results = group.Select(x => new VerseResult
+            {
+              SurahNumber = x.Usage.SurahNumber,
+              VerseNumber = x.Usage.VerseNumber,
+              WordNumber = x.Usage.WordNumber,
+              WordPartNumber = x.Usage.WordPartNumber
+            }).OrderBy(x=>x.SurahNumber).ThenBy(x=>x.VerseNumber).ThenBy(x=>x.WordNumber).ToList();
+            categories.Add(category);
+          }
+        }
+        else
+        {
+          var stemText = rootText;
+          var wordParts = s.SetOf<WordPart>().Where(w => w.WordPartPositionTypeCode == "STEM" && w.Text == stemText).ToList();
+          var wordUsages = wordParts.Select(u => new { Usage = u, FullWord = string.Concat(u.Word.WordParts.Select(p => p.Text)) }).ToList();
+          var groups = wordUsages.GroupBy(w => w.FullWord);
+          foreach (var group in groups)
+          {
+            var category = new SearchResultCategory();
+            category.MatchType = stemText;
+            category.Match = $"matching word \"\u200f{group.Key}\u200e\"";
+            category.Results = group.Select(x => new VerseResult
+            {
+              SurahNumber = x.Usage.SurahNumber,
+              VerseNumber = x.Usage.VerseNumber,
+              WordNumber = x.Usage.WordNumber,
+              WordPartNumber = x.Usage.WordPartNumber
+            }).OrderBy(x => x.SurahNumber).ThenBy(x => x.VerseNumber).ThenBy(x => x.WordNumber).ToList();
+            categories.Add(category);
+          }
+        }
+      }
+      categories = categories.OrderBy(c => c.MatchType).ThenBy(x => x.Match).ToList();
+      return categories;
     }
 
     public virtual QuranSearchResult SearchInEnglish(string searchText)

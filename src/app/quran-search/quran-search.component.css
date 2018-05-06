@@ -4,8 +4,8 @@
 .searchTextBox{
 	font-size: 14pt;
 }
-.highlight{
-	color:#0000FF;
+.highlight,.highlight a{
+	color:#00BB00;
 	font-weight: bold;
 }
 .heightLimited{

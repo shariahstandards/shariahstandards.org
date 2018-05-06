@@ -45,8 +45,9 @@ export class QuranSearchComponent implements OnInit {
 	// @Input()
 	searchText:string="";
 	// @Input()
-	wordToHighlight:string;
 	loading:boolean=false;
+	enableNextVerse:boolean=false;
+	enableNextResult:boolean=false;
 	ngOnInit() {
 		var self=this;
 		self.loading=true;
@@ -55,12 +56,8 @@ export class QuranSearchComponent implements OnInit {
 			self.quranService.getSurahInformation().subscribe(surahs=>{
 	  	  		var surahNumber=params['surahNumber'];
 	  	  		var verseNumber=params['verseNumber'];
-				self.wordToHighlight=params["wordToHighlight"];
 				var searchText=params['searchText'];
-				var routeBitForWord="";
-				if(self.wordToHighlight!=null){
-					routeBitForWord="/"+self.wordToHighlight;
-				}
+				
 			
 				self.surahsForSelection = surahs;
 				if(surahNumber!=null && verseNumber!=null){
@@ -82,15 +79,20 @@ export class QuranSearchComponent implements OnInit {
 		  	  			self.search();
 		  	  		}
 					self.loading=false;
+					var nexturl=encodeURI(self.getNextVerseRoute());
+					self.enableNextVerse = (self.router.url!=nexturl);
 	  	  			self.changeDetectorRef.detectChanges(); 
-				})				
+				});
+				
 			});
 	  	});
 	}
 	
 	generatedScript:string="";
+	arabicKeyboard:ArabicKeyboardComponent;
 	toggleKeyboard(arabicKeyboard){
-		arabicKeyboard.toggleShow(this.searchText);
+		this.arabicKeyboard=arabicKeyboard;
+		this.arabicKeyboard.toggleShow(this.searchText);
 	}
 	gotoEnglishSearchResult(result:any){
 		this.router.navigate(['/quran/surah/' + result.surah + '/verse/' + result.verse + '/' + result.searchText]);
@@ -181,19 +183,70 @@ export class QuranSearchComponent implements OnInit {
 	  				self.searchResults.hasArabicResults=!searchInEnglish && hasResults;
 	  				self.searchResults.results=res.resultCategories;
 	  				self.searchResults.hasSearched=true;
-	  				self.wordToHighlight=null;
-	  	  			self.changeDetectorRef.detectChanges(); 
+	  				
 	  				self.selectCurrentResult();
+					var nexturl=encodeURI(self.getNextResultRoute());
+					self.enableNextResult = (nexturl!="no-route");
+	  	  			self.changeDetectorRef.detectChanges(); 	
   				})
 
 			}
 		}
 	}
+	getNextVerseRoute(){
+		var s=this.selectedSurah.number;
+		var v=this.selectedVerseNumber;
+
+		if(this.selectedSurah.verseCount>v){
+			v=v+1;
+		}
+		var route = "/quran/surah/"+s+"/verse/"+v;
+		if(this.searchText!=null){
+			route=route+"/"+ this.searchText
+		}
+		return route;
+	}
+	nextVerse(){
+		this.router.navigate([this.getNextVerseRoute()]);
+
+	}
+	getNextResultRoute(){
+		var s = this.selectedSurah.number;
+		var v = this.selectedVerseNumber;
+		if(this.searchResults==null || this.searchResults.results.length==0){
+			return "no-route"
+		}
+		var nextResults = this.searchResults.results[0].results.filter(r=>{
+			if(r.surahNumber<s){return false;}
+			if(r.surahNumber>s){return true;}
+			if(r.verseNumber<=v){return false;}
+			return true;
+		});
+		if(nextResults.length==0){
+			return "no-route";
+		}
+		var n = nextResults[0];
+		var route = "/quran/surah/"+n.surahNumber+"/verse/"+n.verseNumber+"/"+this.searchText;
+		return route;
+	}
+	nextResult(){
+		this.router.navigate([this.getNextResultRoute()]);
+	}
+	highlightWord(word:any){
+
+		if(word.root!=null && this.searchText.indexOf(word.root)>=0){
+			return true;
+		}
+		if(word.root==null && this.searchText.indexOf(word.stem)>=0){
+			return true;
+		}
+
+
+	}
+	linkOnArabicWords:boolean=true;
 	selectCurrentResult(){
 		this.selectedSearchRouteUrl = '/quran/surah/'+ this.selectedSurah.number + '/verse/' + this.selectedVerseNumber + '/' 
-		 + this.searchText
-		 + (this.wordToHighlight!=null?("/"+this.wordToHighlight):"/0")
-
+		 + this.searchText;
 
 	}
 	gotoSearch(){
@@ -203,6 +256,9 @@ export class QuranSearchComponent implements OnInit {
 		this.searchResults.hasEnglishResults=false;
 		this.searchResults.hasArabicResults=false;
 		this.searchResults.hasSearched=false;
+		if(this.arabicKeyboard!=null){
+			this.arabicKeyboard.value=this.searchText;
+		}
 	}
 	search(){
 		this.selectedSearchResult=null;
