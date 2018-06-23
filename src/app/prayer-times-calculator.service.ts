@@ -279,12 +279,12 @@ export class PrayerTimesCalculatorService {
 		var moonPositionAtIsha= SunCalc.getMoonPosition(times.isha);
 		
 		//1 day old moon at isha is deemed 100% visible
-		var moonVisibilityAtIsha = Math.min(0.5,moonAtIsha.phase*29.5306);
-		var moonVisibilityAtIshaYesterday = Math.min(0.5,moonAtPreviousIsha1DaysAgo.phase*29.5306);
+		var moonVisibilityAtIsha = Math.min(1,moonAtIsha.phase*29.5306);
+		var moonVisibilityAtIshaYesterday = Math.min(1,moonAtPreviousIsha1DaysAgo.phase*29.5306);
 		var isStartOfLunarMonthYesterday=(moonAtPreviousIsha3DaysAgo.phase>moonAtPreviousIsha1DaysAgo.phase 
-			&& moonVisibilityAtIshaYesterday==0.5);
+			&& moonVisibilityAtIshaYesterday==1);
 		var startOfLunarMonthToday=(!isStartOfLunarMonthYesterday &&
-			moonAtPreviousIsha2DaysAgo.phase>moonAtIsha.phase && moonVisibilityAtIsha==0.5);
+			moonAtPreviousIsha2DaysAgo.phase>moonAtIsha.phase && moonVisibilityAtIsha==1);
 				
 	//	var maghribYesterday = moment(times.sunset).subtract(1, 'd').toDate();;
 	//	var moonAtPreviousMaghrib = SunCalc.getMoonIllumination(maghribYesterday);
