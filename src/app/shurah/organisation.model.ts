@@ -5,5 +5,6 @@ export interface organisationModel{
   name:string,
   pendingMembershipApplicationsCount:number,
   member:memberModel,
-  leaderMember:memberModel
+  leaderMember:memberModel,
+  hasPendingApplication:boolean
 }

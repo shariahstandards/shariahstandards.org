@@ -4,7 +4,7 @@
 //   expect,
 //   it,
 //   inject
-} from 'jasmine-core';
+//} from 'jasmine-core';
 // import { ShariahStandardsAppComponent } from '../app/shariah-standards.component';
 
 // beforeEachProviders(() => [ShariahStandardsAppComponent]);

@@ -11,6 +11,7 @@ import { ZakatCalculatorComponent } from './zakat-calculator/zakat-calculator.co
 import { InheritanceCalculatorComponent } from './inheritance-calculator/inheritance-calculator.component';
 import { TermDefinitionsComponent} from './term-definitions/term-definitions.component';
 import { TermComponent } from './term/term.component';
+import { SuggestionDetailsComponent} from './suggestion-details/suggestion-details.component'
 import { StandardsComponent } from './standards/standards.component';
 // import { QuranSearchComponent } from './quran-search/quran-search.component';
 // import {QuranReferenceComponent} from './quran-reference/quran-reference.component';
@@ -36,7 +37,6 @@ import { MembershipApplicationComponent } from './membership-application/members
 import { ShurahNavigationComponent } from './shurah-navigation/shurah-navigation.component';
 import { MemberComponent } from './member/member.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
-import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
 //import { AuthHttp, AuthConfig } from 'angular2-jwt';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -86,6 +86,7 @@ export function tokenGetter() {
     MembershipRuleSectionComponent,
     SuggestionComponent,
     SuggestionDetailComponent,
+    SuggestionDetailsComponent,
     MembershipApplicationComponent,
     ShurahNavigationComponent,
     MemberComponent,
@@ -102,7 +103,6 @@ export function tokenGetter() {
     CommonModule,
     FormsModule,
     // ChartsModule,
-    InfiniteScrollModule,
     NgbModule.forRoot(),
     routing,
     HttpClientModule,
