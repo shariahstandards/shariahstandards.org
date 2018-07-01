@@ -4,5 +4,7 @@
 // The build system defaults to the dev environment.
 
 export const environment = {
-  production: false
+  production: false,
+  shariahStandardsApiUrlBase:"http://localhost:4500/",
+  shariahStandardsUrlBase:"http://localhost:4200/"
 };

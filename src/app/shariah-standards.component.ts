@@ -10,7 +10,7 @@ import { Router, NavigationStart } from '@angular/router';
 
 // import {MODAL_DIRECTVES, BS_VIEW_PROVIDERS} from 'ng2-bootstrap/ng2-bootstrap';
 // import {CORE_DIRECTIVES} from '@angular/common';
-declare var shariahStandardsApiUrlBase:string;
+import {environment} from './environments/environment';
 @Component({
   selector: 'shariah-standards-app',
   templateUrl: './shariah-standards.component.html',
@@ -84,6 +84,7 @@ export class ShariahStandardsAppComponent {
   }
   applyToJoin(){
      this.shurahService.applyToJoinOrganisation(this.applyToJoinOrganisationModel).subscribe(result=>{
+      
       var response = result;
       if(response.hasError){
         this.applyToJoinOrganisationModel.errors=[response.error];

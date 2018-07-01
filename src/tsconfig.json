@@ -1,13 +1,20 @@
 {
   "compilerOptions": {
-    "baseUrl": "",
+    "baseUrl": ".",
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+     "esModuleInterop": true,
     "lib": [
       "es6",
       "dom"
     ],
+    "paths": {
+      "shariahstandards-org-prayer-times": [
+        "../dist/shariahstandards-org-prayer-times"
+      ]
+    },
     "mapRoot": "./",
     "module": "es6",
     "moduleResolution": "node",
@@ -19,7 +26,5 @@
     ]
   },
   "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
   ]
 }

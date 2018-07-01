@@ -4,7 +4,7 @@
 //   describe,
 //   expect,
 //   inject
-} from 'jasmine-core';
+//} from 'jasmine-core';
 // import { PrayerTimesCalculatorService } from './prayer-times-calculator.service';
 
 // describe('PrayerTimesCalculator Service', () => {

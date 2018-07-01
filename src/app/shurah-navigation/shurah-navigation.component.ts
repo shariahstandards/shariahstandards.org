@@ -1,6 +1,8 @@
 import { Component, OnInit,ChangeDetectorRef ,Input,Output,EventEmitter, OnDestroy} from '@angular/core';
 import { ShurahService} from '../shurah.service';
-import { AuthService } from '../auth.service'
+import { AuthService } from '../auth.service';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-shurah-navigation',

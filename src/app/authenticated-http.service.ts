@@ -3,8 +3,7 @@ import {Http, Response,ConnectionBackend,RequestOptions,RequestOptionsArgs} from
 import {Observable} from 'rxjs/Observable';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {AuthService} from './auth.service';
-declare var shariahStandardsApiUrlBase:string;
-
+import {environment} from './environments/environment';
 @Injectable()
 export class AuthenticatedHttpService extends Http{
 
@@ -14,7 +13,7 @@ export class AuthenticatedHttpService extends Http{
 
 	setAuthHeader(url:string){
 		this.defaultOptions.headers.delete("Authorization");
-		if((this.jwtHelperService.isTokenExpired()==false) && url.indexOf(shariahStandardsApiUrlBase)==0){
+		if((this.jwtHelperService.isTokenExpired()==false) && url.indexOf(environment.shariahStandardsApiUrlBase)==0){
 	    	this.defaultOptions.headers.append("Authorization","Bearer "+AuthService.token);
 		}
 	}

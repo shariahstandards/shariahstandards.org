@@ -1,0 +1,30 @@
+    <div class="shariahstandards-prayertimes" *ngIf="prayerTimes">
+    	
+      <div class="shariahstandards-prayertimes__title">
+      	<a href="https://shariahstandards.org" target="_blank">
+      		<img *ngIf="hideLogo!==true" class="shariahstandards-prayertimes__logo" width="40" src="https://shariahstandards.org/assets/content/images/logo.svg"> 
+
+      	</a>
+      	<span class="shariahstandards-prayertimes__location">
+          {{locationName}}   
+        </span> 
+        <span class="shariahstandards-prayertimes__date">
+          {{prayerTimes.weekDay}} {{prayerTimes.simpleDate}}
+        </span> 
+
+        <span class="shariahstandards-prayertimes__time-zone">
+      		 {{prayerTimes.timeZoneName}} ({{prayerTimes.timeZoneAbbreviation}})	
+      	</span> 
+    	</div>
+
+      <div style="display: none">{{latitude}}, {{longitude}}</div>
+      <div class="shariahstandards-prayertimes__times">
+      	<div class="shariahstandards-prayertimes__times__time">Fajr <br> {{prayerTimes.fajr}} - {{prayerTimes.sunrise}}</div>
+      	<div class="shariahstandards-prayertimes__times__time">Zuhr <br> {{prayerTimes.zuhr}}</div>
+      	<div class="shariahstandards-prayertimes__times__time">Asr <br> {{prayerTimes.asr}}</div>
+      	<div class="shariahstandards-prayertimes__times__time">Maghrib <br> {{prayerTimes.maghrib}}</div>
+      	<div class="shariahstandards-prayertimes__times__time">Isha <br> {{prayerTimes.isha}}</div>
+      	<div style="clear:both"></div>
+      </div>
+    </div>
+ 

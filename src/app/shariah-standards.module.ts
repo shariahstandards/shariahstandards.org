@@ -1,6 +1,7 @@
-declare var shariahStandardsApiUrlBase;
+import {environment} from './environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef,Provider } from '@angular/core';
+import {ShariahstandardsOrgPrayerTimesModule} from 'shariahstandards-org-prayer-times';
 import { HttpModule,ConnectionBackend, XHRBackend,RequestOptions,Http }       from '@angular/http'
 // import {  } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -102,8 +103,10 @@ export function tokenGetter() {
     HttpModule,
     CommonModule,
     FormsModule,
+    ShariahstandardsOrgPrayerTimesModule,
     // ChartsModule,
     NgbModule.forRoot(),
+    RouterModule,
     routing,
     HttpClientModule,
     JwtModule.forRoot({
@@ -129,7 +132,7 @@ export function tokenGetter() {
   ],
   entryComponents: [ShariahStandardsAppComponent],
   bootstrap: [ShariahStandardsAppComponent]
-})
+  })
 export class ShariahStandardsModule {
 
 }

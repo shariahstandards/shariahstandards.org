@@ -3,6 +3,8 @@ import {Suggestion} from './suggestion.interface';
 import { ShurahService} from '../shurah.service';
 import { Router, ActivatedRoute }       from '@angular/router';
 import { AuthService } from '../auth.service'
+import {PieChartComponent} from '../pie-chart/pie-chart.component'
+import { RouterModule } from '@angular/router';
 
 import 'moment';
 declare var moment: any;

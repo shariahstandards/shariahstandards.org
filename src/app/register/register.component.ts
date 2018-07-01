@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import {RegistrationModel} from './registration-model.class'
 @Component({

@@ -11,7 +11,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/shariahstandards",
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.json",
@@ -41,8 +41,8 @@
               "buildOptimizer": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.prod.ts"
                 }
               ]
             }
@@ -115,6 +115,46 @@
               "e2e/tsconfig.json"
             ],
             "exclude": []
+          }
+        }
+      }
+    },
+    "shariahstandards-org-prayer-times": {
+      "root": "projects/shariahstandards-org-prayer-times",
+      "sourceRoot": "projects/shariahstandards-org-prayer-times/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/shariahstandards-org-prayer-times/tsconfig.lib.json",
+            "project": "projects/shariahstandards-org-prayer-times/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/shariahstandards-org-prayer-times/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/shariahstandards-org-prayer-times/src/test.ts",
+            "tsConfig": "projects/shariahstandards-org-prayer-times/tsconfig.spec.json",
+            "karmaConfig": "projects/shariahstandards-org-prayer-times/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/shariahstandards-org-prayer-times/tsconfig.lib.json",
+              "projects/shariahstandards-org-prayer-times/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }

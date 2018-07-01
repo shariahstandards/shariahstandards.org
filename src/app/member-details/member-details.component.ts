@@ -3,13 +3,15 @@ import { ShurahService} from '../shurah.service';
 import { AuthService } from '../auth.service'
 import { Router, ActivatedRoute }       from '@angular/router';
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {ShurahNavigationComponent} from '../shurah-navigation/shurah-navigation.component'
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-member-details',
   templateUrl: './member-details.component.html',
   styleUrls: ['./member-details.component.css'],
   providers:[ShurahService]
-})
+  })
 export class MemberDetailsComponent implements OnInit {
 
   constructor(private route:ActivatedRoute,
@@ -24,19 +26,23 @@ export class MemberDetailsComponent implements OnInit {
   member:any
 
   ngOnInit() {
-  		this.getRouteParamsSubscribe=this.route.params.subscribe(params=>{
-        this.organisationId=params['organisationId'];
-        this.memberId=params['memberId'];
-        if(params['page']!=null){
-          this.currentPage=params['page'];
-        }else{
-          this.currentPage=1;
-        }
-      	this.refresh();
-     });   
+  		this.getRouteParamsSubscribe=this.route.params.subscribe(
+        (params)=>this._routeParamsReady(params)
+      );   
   }
-   refresh(){
- 	this.shurahService.memberDetails(this.memberId).subscribe(response=>{
+  _routeParamsReady(params){
+
+    this.organisationId=params['organisationId'];
+    this.memberId=params['memberId'];
+    if(params['page']!=null){
+      this.currentPage=params['page'];
+    }else{
+      this.currentPage=1;
+    }
+    this.refresh();
+  }
+  refresh(){
+ 	  this.shurahService.memberDetails(this.memberId).subscribe(response=>{
  		var model=response;
  		if(model.hasError){
  			alert(model.error);

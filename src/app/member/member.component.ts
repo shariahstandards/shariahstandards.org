@@ -3,6 +3,7 @@ import { ShurahService} from '../shurah.service';
 import { AuthService } from '../auth.service'
 import { Router, ActivatedRoute }       from '@angular/router';
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {ShurahNavigationComponent} from '../shurah-navigation/shurah-navigation.component'
 
 @Component({
   selector: 'app-member',

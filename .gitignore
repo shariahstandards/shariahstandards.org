@@ -79,3 +79,5 @@ api/_NCrunch*/*
 /api/.vs/
 
 *.orig
+
+/projects/shariahstandards-org-prayer-times/node_modules/*

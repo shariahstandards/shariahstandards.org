@@ -1,0 +1,26 @@
+.shariahstandards-prayertimes{
+	text-align: center;
+	width: 100%;
+	&__logo{
+		vertical-align: middle;
+	}
+	&__title{
+		font-size: normal;
+	}
+	&__location{
+		font-weight: bold;
+	}
+	&__time-zone{
+		font-size: small;
+	}
+	__date{
+		font-size: normal
+	}
+	&__times{
+		&__time{
+			float: left;
+			width:20%;
+			text-align: center;
+		}	
+	}
+}

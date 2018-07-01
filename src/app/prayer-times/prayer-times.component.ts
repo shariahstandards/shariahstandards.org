@@ -1,3 +1,4 @@
+import {ShariahstandardsOrgPrayerTimesComponent} from 'shariahstandards-org-prayer-times'
 import {NgModule,Component, AfterViewInit, ViewChild, ViewContainerRef,ChangeDetectorRef,ElementRef} from '@angular/core'
 import {NgZone} from '@angular/core'
 import {PrayerTimesCalculatorService, prayerTime, prayerTimesForDay, timeZoneInfo, hijriDate} from '../prayer-times-calculator.service';
@@ -558,18 +559,25 @@ interface FileReaderEvent extends Event {
 		return self.prayerTimesCalculatorService.getPrayerTimes(date,
 			self.latitude, self.longitude, timeZone, yesterdayHijri,yesterdayWasNewMoon);
 	}
+	@ViewChild(ShariahstandardsOrgPrayerTimesComponent)
+	prayerTimesControl:ShariahstandardsOrgPrayerTimesComponent;
+
 	dateChanged(){
 		console.log("the date is"+this.getFullDate());
 		this.getPrayerTimes();
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
+		this.prayerTimesControl.date=this.getDate();
+		this.prayerTimesControl.reset();
 	}
 	mapClicked($event: any) {
 		// console.log($event);
 		this.locationNotFound = false;
-		this.latitude = $event.latLng.lat();
-		this.longitude = $event.latLng.lng();
+		this.prayerTimesControl.latitude=this.latitude = $event.latLng.lat();
+		this.prayerTimesControl.longitude=this.longitude = $event.latLng.lng();
 		this.placeQiblaOnMap();
 		this.getPrayerTimes();
 		this.getPrayerTimeTableForNextNDays(this.numberOfDaysInCalendar);
+
+		this.prayerTimesControl.reset();
     }
 }

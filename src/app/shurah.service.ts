@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Response} from '@angular/http';
 import {HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
-declare var shariahStandardsApiUrlBase:string;
+import {environment} from './environments/environment';
 import {membershipRuleSectionModel} from './shurah/membership-rule-section.model'
 import {membershipRuleModel} from './shurah/membership-rule.model'
 import {addMembershipRuleSectionModel} from './shurah/add-membership-rule-section.model'
@@ -26,46 +26,46 @@ export class ShurahService {
 		
 	}
 	unfollow(organisationId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.get(shariahStandardsApiUrlBase+"StopFollowingAMember/"+organisationId);
+		return <Observable<StandardApiResponse>>this.http.get(environment.shariahStandardsApiUrlBase+"StopFollowingAMember/"+organisationId);
 	}
 	follow(memberId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.get(shariahStandardsApiUrlBase+"FollowMember/"+memberId);
+		return <Observable<StandardApiResponse>>this.http.get(environment.shariahStandardsApiUrlBase+"FollowMember/"+memberId);
 	}
 	memberDetails(memberId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.get(shariahStandardsApiUrlBase+"MemberDetails/"+memberId);
+		return <Observable<StandardApiResponse>>this.http.get(environment.shariahStandardsApiUrlBase+"MemberDetails/"+memberId);
 	}
 	searchForMembers(organisationId:number,page:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"SearchForMembers",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"SearchForMembers",{
 			organisationId:organisationId,
 			page:page
 		});
 	}
 
 	rejectMembershipApplication(model:RejectMembershipApplicationModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"RejectMembershipApplication",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"RejectMembershipApplication",{
 			id:model.applicationId,
 			reason:model.reason
 		});
 	}
 	acceptMembershipApplication(applicationId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"AcceptMembershipApplication",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"AcceptMembershipApplication",{
 			id:applicationId
 		});
 	}
 	getOrganisationSummary(organisationId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"GetOrganisationSummary",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"GetOrganisationSummary",{
 			organisationId:organisationId
 		});
 	}
 	viewApplications(organisationId:number,page:number):Observable<any>{
-		return <Observable<any>>this.http.post(shariahStandardsApiUrlBase+"ViewApplications",{
+		return <Observable<any>>this.http.post(environment.shariahStandardsApiUrlBase+"ViewApplications",{
 			organisationId:organisationId,
 			page:page
 		});
 	}
 
 	applyToJoinOrganisation(model:applyToJoinOrganisationModel) :Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"ApplyToJoin",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"ApplyToJoin",{
 			organisationId:model.organisationId,
 			emailAddress:model.emailAddress,
 			phoneNumber:model.phoneNumber,
@@ -75,7 +75,7 @@ export class ShurahService {
 		});
 	}
 	searchSuggestions(organisationId:number,page:number,mostRecentFirst:boolean,memberId?:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"SearchSuggestions",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"SearchSuggestions",{
 			organisationId:organisationId,
 			memberId:memberId,
 			page:page,
@@ -83,17 +83,17 @@ export class ShurahService {
 		});
 	}
 	suggestionDetails(suggestionId:number):Observable<any>{
-		return <Observable<any>>this.http.post(shariahStandardsApiUrlBase+"ViewSuggestion",{
+		return <Observable<any>>this.http.post(environment.shariahStandardsApiUrlBase+"ViewSuggestion",{
 			suggestionId:suggestionId
 		});
 	}
 	deleteSuggestion(suggestionId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"DeleteSuggestion",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"DeleteSuggestion",{
 			suggestionId:suggestionId
 		});
 	}
 	addSuggestion(organisationId:number,addSuggestionModel:addSuggestionModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"CreateSuggestion",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"CreateSuggestion",{
 			organisationId:organisationId,
 			subject:addSuggestionModel.subject,
 			suggestion:addSuggestionModel.suggestion
@@ -101,61 +101,61 @@ export class ShurahService {
 
 	}
 	voteOnSuggestion(suggestionId:number, inFavour?:boolean):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"Vote",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"Vote",{
 			suggestionId:suggestionId,
 			votingInSupport:inFavour
 		});
 	}
 	commentOnSuggestion( model:any,suggestionId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"CommentOnSuggestion",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"CommentOnSuggestion",{
 			suggestionId:suggestionId,
 			comment:model.commentText
 		});
 	}
 	removeVoteOnSuggestion(voteId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"RemoveVote",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"RemoveVote",{
 			voteId:voteId
 		});
 	}
 	getPermissionsForOrganisation(organisationId:number):Observable<string[]>{
-		return <Observable<string[]>>this.http.get(shariahStandardsApiUrlBase+"GetPermissionsForOrganisation/"+organisationId);
+		return <Observable<string[]>>this.http.get(environment.shariahStandardsApiUrlBase+"GetPermissionsForOrganisation/"+organisationId);
 	}
 	getTermList(organisationId:number):Observable<any>{
-		return <Observable<any>>this.http.get(shariahStandardsApiUrlBase+"GetTermList/"+organisationId);
+		return <Observable<any>>this.http.get(environment.shariahStandardsApiUrlBase+"GetTermList/"+organisationId);
 	}
 	getTermDefinition(termId:number,organisationId:number):Observable<any>{
-		return <Observable<any>>this.http.get(shariahStandardsApiUrlBase+"getTermDefinition/"+termId+'/'+organisationId);
+		return <Observable<any>>this.http.get(environment.shariahStandardsApiUrlBase+"getTermDefinition/"+termId+'/'+organisationId);
 	}
 	createTermDefinition(model:addTermDefinitionModel,organisationId:number):Observable<any>{
-		return <Observable<any>>this.http.post(shariahStandardsApiUrlBase+"CreateTermDefinition",{
+		return <Observable<any>>this.http.post(environment.shariahStandardsApiUrlBase+"CreateTermDefinition",{
 			organisationId:organisationId,
 			term:model.term,
 			definition:model.definition
 		})
 	}
 	updateTermDefinition(model:updateTermDefinitionModel):Observable<any>{
-		return <Observable<any>>this.http.post(shariahStandardsApiUrlBase+"UpdateTermDefinition",{
+		return <Observable<any>>this.http.post(environment.shariahStandardsApiUrlBase+"UpdateTermDefinition",{
 			termId:model.termId,
 			term:model.term,
 			definition:model.definition
 		})
 	}
 	deleteTermDefinition(termId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"DeleteTermDefinition",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"DeleteTermDefinition",{
 			termId:termId,
 		})
 	}
   	getOrganisation(organisationId:number):Observable<organisationModel>{
-  		return <Observable<organisationModel>>this.http.get(shariahStandardsApiUrlBase+"GetOrganisation/"+organisationId);
+  		return <Observable<organisationModel>>this.http.get(environment.shariahStandardsApiUrlBase+"GetOrganisation/"+organisationId);
   	}
 	
 	leave(organisationId:number):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"Leave",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"Leave",{
 			organisationId:organisationId
 		});
 	}
 	createRuleSection(model:addMembershipRuleSectionModel,organisationId:number,parentSectionId?:number) :Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"CreateRuleSection",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"CreateRuleSection",{
 			organisationId:organisationId,
 			parentSectionId:parentSectionId,
 			title:model.name,
@@ -163,43 +163,43 @@ export class ShurahService {
 		})
 	}
 	dragDropRuleSection(draggedSection:membershipRuleSectionModel,droppedSection:membershipRuleSectionModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"DragDropRuleSection",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"DragDropRuleSection",{
 			draggedMembershipRuleSectionId:draggedSection.id,
 			droppedOnMembershipRuleSectionId:droppedSection.id
 		})
 	}
 	dragDropRule(draggedRule:membershipRuleModel,droppedRule:membershipRuleModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"DragAndDropRule",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"DragAndDropRule",{
 			draggedMembershipRuleId:draggedRule.id,
 			droppedMembershipRuleId:droppedRule.id
 		})
 	}
 	deleteRule(rule:membershipRuleModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"DeleteRule",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"DeleteRule",{
 			membershipRuleId:rule.id,
 		})
 	}
 
 	deleteRuleSection(sectionToDelete:membershipRuleSectionModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"DeleteRuleSection",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"DeleteRuleSection",{
 			membershipRuleSectionId:sectionToDelete.id
 		})
 	}
 	updateMembershipRuleSection(model:updateMembershipRuleSectionModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"UpdateRuleSection",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"UpdateRuleSection",{
 			membershipRuleSectionId:model.membershipRuleSectionModel.id,
 			title:model.membershipRuleSectionModel.title,
 			uniqueUrlSlug:model.urlSlug()
 		})
 	}
 	updateMembershipRule(model:updateMembershipRuleModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"UpdateRule",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"UpdateRule",{
 			membershipRuleId:model.membershipRuleModel.id,
 			rule:model.membershipRuleModel.ruleStatement
 		})
 	}
 	createRule(model:addMembershipRuleModel):Observable<StandardApiResponse>{
-		return <Observable<StandardApiResponse>>this.http.post(shariahStandardsApiUrlBase+"CreateRule",{
+		return <Observable<StandardApiResponse>>this.http.post(environment.shariahStandardsApiUrlBase+"CreateRule",{
 			membershipRuleSectionId:model.section.id,
 			rule:model.ruleStatement,
 		})

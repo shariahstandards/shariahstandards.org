@@ -1,3 +1,5 @@
 export const environment = {
-  production: false
+  production: false,
+  shariahStandardsApiUrlBase:"http://localhost:4500/",
+  shariahStandardsUrlBase:"http://localhost:4200/"
 };

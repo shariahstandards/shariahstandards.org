@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { surahSelection ,quranVerse} from './quran-data.service'
 import {HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
-declare var shariahStandardsApiUrlBase:string;
+import {environment} from './environments/environment';
 
 @Injectable()
 export class QuranService {
@@ -15,11 +15,11 @@ constructor(private http: HttpClient) {
   		if(this.surahInformationSubscription!=null){
   			return this.surahInformationSubscription;
   		}
-  		return this.surahInformationSubscription=<Observable<surahSelection[]>>this.http.get(shariahStandardsApiUrlBase+"Surahs")
+  		return this.surahInformationSubscription=<Observable<surahSelection[]>>this.http.get(environment.shariahStandardsApiUrlBase+"Surahs")
   			.publishReplay(1).refCount();
   	}
 	getVerse(surah:number,verse:number):Observable<quranVerse>{
-		return <Observable<quranVerse>>this.http.get(shariahStandardsApiUrlBase+"QuranVerse/"+surah+"/"+verse);
+		return <Observable<quranVerse>>this.http.get(environment.shariahStandardsApiUrlBase+"QuranVerse/"+surah+"/"+verse);
 	}
 	containsEnglish(text:string){
 		var lowerCaseText=text.toLowerCase();
@@ -41,7 +41,7 @@ constructor(private http: HttpClient) {
 			return self.searchResults[searchText];
 		}
 		return self.searchResults[searchText]=
-			self.http.post(shariahStandardsApiUrlBase+"SearchQuran",{searchText:searchText,searchInEnglish:searchInEnglish})
+			self.http.post(environment.shariahStandardsApiUrlBase+"SearchQuran",{searchText:searchText,searchInEnglish:searchInEnglish})
 			.publishReplay(1).refCount();
 	}
 

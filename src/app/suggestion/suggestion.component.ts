@@ -1,3 +1,4 @@
+import {ShurahNavigationComponent} from '../shurah-navigation/shurah-navigation.component'
 
 import { Component, OnInit ,ChangeDetectorRef} from '@angular/core';
 import { ShurahService} from '../shurah.service';
@@ -5,6 +6,7 @@ import { AuthService } from '../auth.service'
 import { Router, ActivatedRoute }       from '@angular/router';
 import {NgbModal, ModalDismissReasons, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {addSuggestionModel} from './add-suggestion-model'
+
 import 'moment';
 declare var moment: any;
 @Component({

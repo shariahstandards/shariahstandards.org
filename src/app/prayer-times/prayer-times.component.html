@@ -1,7 +1,10 @@
    <h2>Worldwide Muslim Prayer Times and Direction</h2>
-   <p>
+   <shariahstandards-org-prayer-times *ngIf="!calendar || calendar.length==0" [hideLogo]='true' [longitude]='longitude' [latitude]='latitude' [locationName]='locationFound' [date]='getDate()'>
+   </shariahstandards-org-prayer-times>
+
+   <!-- <p> -->
 	<!-- <a [routerLink]="['/standards/prayer-times-rules']">Details of the Standard</a> -->
-	<div class="row"  *ngIf="!calendar || calendar.length==0">
+<!-- 	<div class="row"  *ngIf="!calendar || calendar.length==0">
 	    <div class="col-sm-6">
 	    	<div class="row">
 	    		<div class="col-4">  
@@ -34,12 +37,12 @@
     			</div>
 	    	</div>
 	    </div>
-	</div>
+	</div> -->
 	<!-- <div *ngIf="startOfLunarMonth">
 		<p>There is a new moon visible before isha</p>
 	</div> -->
 
-	<div *ngIf="!calendar || calendar.length==0">
+	<!-- <div *ngIf="!calendar || calendar.length==0">
 		{{timeZone}}
 		<span *ngIf="timeZone == null || timeZone == ''">
 		GMT
@@ -60,7 +63,7 @@
 	    <span *ngIf="!fajrIsAdjusted && !maghribIsAdjusted && !fajrIsAdjustedEarlier && !maghribIsAdjustedLater">
 	    	No adjustments were made for these times.
 	    </span>
-	</div>
+	</div> -->
 	
 	
 	<div>&nbsp;</div>	
