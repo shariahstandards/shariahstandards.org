@@ -40,6 +40,7 @@ describe('ShariahstandardsOrgPrayerTimesService', () => {
   	var date= new Date();
     let zone:timeZoneInfo;
     zone={
+      status:"OK",
       rawOffset:1,
       dstOffset:2,
       timeZoneName:"some zone",
@@ -100,7 +101,7 @@ describe('ShariahstandardsOrgPrayerTimesService', () => {
         prayerTimesService=service;
         middayMoment=moment();
         prayerTimesService._getMiddayMoment=jasmine.createSpy("get midday").and.returnValue(middayMoment);
-        timeZoneInfo={rawOffset:1,dstOffset:2,timeZoneName:"Berlin",timeZoneId:"CET"};
+        timeZoneInfo={status:"OK",rawOffset:1,dstOffset:2,timeZoneName:"Berlin",timeZoneId:"CET"};
         prayerTimesService._getResponseObject=jasmine.createSpy("get response object")
           .and.returnValue(timeZoneInfo);
       })));
@@ -125,5 +126,7 @@ describe('ShariahstandardsOrgPrayerTimesService', () => {
       });
     });
   });
-  
+  describe("testing method _getResponseObject",()=>{
+    
+  })
 });
