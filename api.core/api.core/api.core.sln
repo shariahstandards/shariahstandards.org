@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api.core", "api.core\api.co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModel", "DataModel\DataModel.csproj", "{A73741C0-973B-4F71-B76A-A2FA585441F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{12D5DF41-B9B8-4CEA-AF6F-114B958045D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{12D5DF41-B9B8-4CEA-AF6F-114B958045D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiResources", "WebApiResources\WebApiResources.csproj", "{C454B2C6-D186-4153-923E-FC1156A4E3E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiResources", "WebApiResources\WebApiResources.csproj", "{C454B2C6-D186-4153-923E-FC1156A4E3E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuranLoaded", "QuranLoaded\QuranLoaded.csproj", "{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuranLoaded", "QuranLoaded\QuranLoaded.csproj", "{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reseed", "Reseed\Reseed.csproj", "{0BFA1D75-F683-4653-A099-1CBDEF57D5AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BFA1D75-F683-4653-A099-1CBDEF57D5AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BFA1D75-F683-4653-A099-1CBDEF57D5AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BFA1D75-F683-4653-A099-1CBDEF57D5AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BFA1D75-F683-4653-A099-1CBDEF57D5AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
