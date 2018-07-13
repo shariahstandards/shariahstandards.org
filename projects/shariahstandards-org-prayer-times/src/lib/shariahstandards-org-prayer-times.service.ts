@@ -16,7 +16,6 @@ import { of } from "rxjs/observable/of";
 })
 export class ShariahstandardsOrgPrayerTimesService {
 
-  	// constructor(private http: Http) { }
   	constructor(private http: Http) { }
 
   	_getMiddayMoment(date:Date):any{
@@ -24,7 +23,6 @@ export class ShariahstandardsOrgPrayerTimesService {
 		return moment(date).startOf('d').add(12, 'h');
   	}
   	_getResponseObject<T>(response:Response){
-  		// throw "not implemented";
   		return <T>response.json();
   	}
     getTimeZone(date: Date, latitude: number, longitude: number): Observable<timeZoneInfo> {

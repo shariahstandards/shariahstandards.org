@@ -127,6 +127,21 @@ describe('ShariahstandardsOrgPrayerTimesService', () => {
     });
   });
   describe("testing method _getResponseObject",()=>{
-    
+    beforeEach(()=>{
+      configureService();
+    })
+    var response = new Response(new ResponseOptions());
+    var someObject={some:"object"};
+    describe("when calling method _getResponseObject",()=>{
+      var result;
+      beforeEach((inject([ShariahstandardsOrgPrayerTimesService], (service: ShariahstandardsOrgPrayerTimesService)=>{
+        prayerTimesService=service;
+        response.json=jasmine.createSpy("json").and.returnValue(someObject);
+        result=prayerTimesService._getResponseObject(response);
+      })));
+      it("returns the json result",()=>{
+        expect(result).toEqual(someObject);
+      })
+    })
   })
 });
