@@ -14,8 +14,11 @@ namespace DataModel.Mappings
       _modelBuilder = modelBuilder;
       E.HasKey(x => x.ShurahBasedOrganisationId);
       E.HasOne(x => x.ShurahBasedOrganisation).WithOne(x => x.ParentOrganisationRelationship)
-        .HasForeignKey<OrganisationRelationship>(x => x.ShurahBasedOrganisationId);
-      E.HasOne(x => x.ParentOrganisation).WithMany(x => x.ChildOrganisationRelationships).HasForeignKey(x => x.ParentOrganisationId);
+        .HasForeignKey<OrganisationRelationship>(x => x.ShurahBasedOrganisationId)
+      .OnDelete(DeleteBehavior.Restrict);
+      E.HasOne(x => x.ParentOrganisation).WithMany(x => x.ChildOrganisationRelationships)
+      .HasForeignKey(x => x.ParentOrganisationId)
+        .OnDelete(DeleteBehavior.Restrict); ;
     }
   }
 }

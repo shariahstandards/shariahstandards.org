@@ -13,8 +13,10 @@ namespace DataModel.Mappings
     {
       _modelBuilder = modelBuilder;
       E.HasKey(x => x.MemberId);
-      E.HasOne(x => x.Member).WithOne(x => x.LeaderRecognition).HasForeignKey<LeaderRecognition>(x => x.MemberId);
-      E.HasOne(x => x.RecognisedLeaderMember).WithMany(x => x.Followers).HasForeignKey(x => x.RecognisedLeaderMemberId);
+      E.HasOne(x => x.Member).WithOne(x => x.LeaderRecognition).HasForeignKey<LeaderRecognition>(x => x.MemberId)
+        .OnDelete(DeleteBehavior.Restrict);
+      E.HasOne(x => x.RecognisedLeaderMember).WithMany(x => x.Followers).HasForeignKey(x => x.RecognisedLeaderMemberId)
+        .OnDelete(DeleteBehavior.Restrict);
     }
   }
 }

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiResources", "WebApiResources\WebApiResources.csproj", "{C454B2C6-D186-4153-923E-FC1156A4E3E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuranLoaded", "QuranLoaded\QuranLoaded.csproj", "{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C454B2C6-D186-4153-923E-FC1156A4E3E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C454B2C6-D186-4153-923E-FC1156A4E3E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C454B2C6-D186-4153-923E-FC1156A4E3E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

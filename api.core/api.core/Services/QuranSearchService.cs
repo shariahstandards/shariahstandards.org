@@ -25,10 +25,14 @@ namespace Services
     public VerseResponse GetVerse(int surahNumber, int verseNumber)
     {
       var verseResponse = new VerseResponse();
-      var verse  = _storageService.SetOf<Verse>().Single(v => v.SurahNumber == surahNumber && v.VerseNumber == verseNumber);
+      var verse  = _storageService.SetOf<Verse>().SingleOrDefault(v => v.SurahNumber == surahNumber && v.VerseNumber == verseNumber);
+      if (verse == null)
+      {
+        return null;
+      }
       var words = verse.Words.Select(w => BuildWord(w)).ToList();
       verseResponse.ArabicWords= words;
-      verseResponse.EnglishText = verse.Translation.Text;
+      verseResponse.EnglishText = verse.Translation?.Text??"";
       return verseResponse;
     }
 

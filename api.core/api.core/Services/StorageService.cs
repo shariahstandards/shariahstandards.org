@@ -14,7 +14,9 @@ namespace Services
   public interface IStorageService
   {
     DbSet<TEntity> SetOf<TEntity>() where TEntity : class;
+    void DetachAllEntities();
     int SaveChanges();
+    void NoTracking();
   }
   public class StorageService : IStorageService, IDisposable
   {
@@ -58,10 +60,26 @@ namespace Services
       return _context.SaveChanges();
       
     }
-
+    public void DetachAllEntities()
+    {
+      var changedEntriesCopy = _context.ChangeTracker.Entries()
+          .Where(e => e.State == EntityState.Added ||
+                      e.State == EntityState.Modified ||
+                      e.State == EntityState.Deleted)
+          .ToList();
+      foreach (var entity in changedEntriesCopy)
+      {
+        _context.Entry(entity.Entity).State = EntityState.Detached;
+      }
+    }
     public void Dispose()
     {
       this._context.Dispose();
+    }
+
+    public void NoTracking()
+    {
+      _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
   }
 }

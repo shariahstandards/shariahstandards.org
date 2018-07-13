@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataModel.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20180713070916_initalMigationToDotnetCore")]
-    partial class initalMigationToDotnetCore
+    [Migration("20180713112018_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1102,12 +1102,12 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Member", "Member")
                         .WithOne("LeaderRecognition")
                         .HasForeignKey("DataModel.LeaderRecognition", "MemberId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("DataModel.Member", "RecognisedLeaderMember")
                         .WithMany("Followers")
                         .HasForeignKey("RecognisedLeaderMemberId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("DataModel.Member", b =>
@@ -1241,12 +1241,12 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.MembershipRuleSection", "MembershipRuleSection")
                         .WithOne("ParentMembershipRuleSection")
                         .HasForeignKey("DataModel.MembershipRuleSectionRelationship", "MembershipRuleSectionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("DataModel.MembershipRuleSection", "ParentMembershipRuleSection")
                         .WithMany("ChildMembershipRuleSections")
                         .HasForeignKey("ParentMembershipRuleSectionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("DataModel.MembershipRuleTermDefinition", b =>
@@ -1288,12 +1288,12 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.Member", "Leader")
                         .WithMany()
                         .HasForeignKey("LeaderMemberId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("DataModel.ShurahBasedOrganisation", "Organisation")
                         .WithOne("OrganisationLeader")
                         .HasForeignKey("DataModel.OrganisationLeader", "OrganisationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("DataModel.OrganisationRelationship", b =>
@@ -1301,12 +1301,12 @@ namespace DataModel.Migrations
                     b.HasOne("DataModel.ShurahBasedOrganisation", "ParentOrganisation")
                         .WithMany("ChildOrganisationRelationships")
                         .HasForeignKey("ParentOrganisationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("DataModel.ShurahBasedOrganisation", "ShurahBasedOrganisation")
                         .WithOne("ParentOrganisationRelationship")
                         .HasForeignKey("DataModel.OrganisationRelationship", "ShurahBasedOrganisationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("DataModel.PrefixUsage", b =>

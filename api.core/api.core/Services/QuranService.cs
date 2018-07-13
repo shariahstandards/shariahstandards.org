@@ -10,22 +10,44 @@ namespace Services
 {
   public interface IQuranService
   {
-    void LoadQuranFromFile();
+    WordPart LoadQuranPartsFromFile(int maxPartsToAddInbatch, WordPart startingPoint);
   }
   public class QuranService : IQuranService
   {
-    public void LoadQuranFromFile()
+    public IStorageService StorageService { get; }
+
+    public QuranService(IStorageService storageService)
     {
-      var fileName = @"C:\Users\Lamaan\Downloads\quranic-corpus-morphology-0.4 (1)\quranic-corpus-morphology-0.4.txt";
+      StorageService = storageService;
+    }
+    public WordPart LoadQuranPartsFromFile(int maxWordParts, WordPart startingPoint)
+    {
+      //StorageService.NoTracking();
+      var fileName = @"C:\Users\lamaa\Documents\AAAWork\2015laptopdownloads\quranic-corpus-morphology-0.4 (1)\quranic-corpus-morphology-0.4.txt";
+      //var fileName = @"C:\Users\Lamaan\Downloads\quranic-corpus-morphology-0.4 (1)\quranic-corpus-morphology-0.4.txt";
+      var count = 0;
       var lines = File.ReadAllLines(fileName);
-      lines.ToList().ToList().ForEach(l => ProcessWordPart(l));
+      WordPart lastWordPart = null;
+      foreach (var line in lines) {
+
+        var wordPart = ProcessWordPart(line,startingPoint);
+        if (wordPart != null)
+        {
+          lastWordPart = wordPart;
+          count++;
+          if (count >= maxWordParts)
+          {
+            return wordPart;
+          }
+        }
+      }
+      return lastWordPart;
     }
 
-    private StorageService StorageService;
-    private void ProcessWordPart(string line)
+    private WordPart ProcessWordPart(string line, WordPart startingPoint)
     {
-      if (string.IsNullOrEmpty(line)) { return; }
-      if (line[0] != '(') { return; }
+      if (string.IsNullOrEmpty(line)) { return null; }
+      if (line[0] != '(') { return null; }
       var lineParts = line.Split('\t');
 
       var key = lineParts[0].Trim(')', '(');
@@ -35,6 +57,28 @@ namespace Services
       var verseNumber = int.Parse(keyParts[1]);
       var wordNumber = int.Parse(keyParts[2]);
       var wordPartNumber = int.Parse(keyParts[3]);
+
+      if (startingPoint != null)
+      {
+        if (startingPoint.SurahNumber > surahNumber)
+        {
+          return null;
+        }
+        if (startingPoint.SurahNumber == surahNumber && startingPoint.VerseNumber > verseNumber)
+        {
+          return null;
+        }
+        if (startingPoint.SurahNumber == surahNumber && startingPoint.VerseNumber == verseNumber
+          && startingPoint.WordNumber > wordNumber)
+        {
+          return null;
+        }
+        if (startingPoint.SurahNumber == surahNumber && startingPoint.VerseNumber == verseNumber
+         && startingPoint.WordNumber == wordNumber && startingPoint.WordPartNumber > wordPartNumber)
+        {
+          return null;
+        }
+      }
       var surah = EnsureSurahExists(surahNumber);
       var verse = EnsureVerseExists(verseNumber, surahNumber);
       var word = EnsureWordExists(wordNumber, verseNumber, surahNumber);
@@ -62,7 +106,10 @@ namespace Services
         wordParts.Add(wordPart);
         StorageService.SaveChanges();
         AddFeatures(wordPart, features);
+        StorageService.DetachAllEntities();
+        return wordPart;
       }
+      return null;
 
     }
 
@@ -118,6 +165,7 @@ namespace Services
       if (surah == null)
       {
         surah = new Surah();
+        surah.SurahNumber = surahNumber;
         surah.EnglishName = surahNumber.ToString();//TODO add from other data source
         surah.ArabicName = surahNumber.ToString();//TODO add from other data source
         surahs.Add(surah);
