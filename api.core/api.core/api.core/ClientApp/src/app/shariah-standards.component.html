@@ -1,0 +1,160 @@
+<div class="container">
+  <div class="logobar"> 
+    <img class="logobar__logo" title="logo" src="/assets/content/images/logo.svg" title="ShariahStandards.org - Developing a global open standard interpretation of Islamic law in English" (click)="showTitleToggle()">
+   
+   
+    <div class="burger-button pull-right"  (click)="showNavigationToggle()">
+      <i class="fa fa-bars"></i>
+    </div>
+    <div class="logobar__user pull-right">
+      <a class="btn btn-primary text-white log-in" *ngIf="!auth.isAuthenticated()" (click)="auth.login()">
+        <i class="fa fa-user"></i>
+        <span class="logobar__anon-title">Log In / sign up</span>
+      </a>
+      <div  *ngIf="auth.userProfile && auth.isAuthenticated()">
+        <div ngbDropdown>
+          <button class="btn btn-outline-primary" id="userMenuLink"  ngbDropdownToggle>
+            <img *ngIf="auth.userProfile.picture!=null" [src]="auth.userProfile.picture" width="50" alt="" class="profile-img"
+            [title]="auth.userProfile.name"
+            />
+            <img *ngIf="auth.userProfile.pictureUrl!=null" [src]="auth.userProfile.pictureUrl" width="50" alt="" class="profile-img"
+            [title]="auth.userProfile.name"
+            />
+            <span class="logobar__user-caption">
+              {{auth.userProfile.name}}          
+              <span class="logobar__user-caption-note" 
+                *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && organisation.hasPendingApplication"  >
+                <br/>  (awaiting acceptance)
+              </span>
+            </span>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="userMenuLink">
+            <button class="dropdown-item"  (click)="auth.logout()">Log Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [ngClass]="{'mobile-expanded':showTitleInMobile,'mobile-collapsed':!showTitleInMobile}"
+      class="logobar__title">
+      <div class="logobar__title-main">
+        ShariahStandards.org
+      </div>
+      <div class="logobar__subtitle">
+        Developing a global open standard interpretation of Islamic law in English
+      </div>
+    </div>
+    
+  </div>
+   
+  <div class="clearfix"></div>
+   <div [ngClass]="{'mobile-expanded':showMobileNavigation,'mobile-collapsed':!showMobileNavigation}">
+    <nav class="navbar navbar-expand-md bg-light">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a  class="nav-link" routerLinkActive="active-route" 
+            [routerLinkActiveOptions]="{exact: true}" [routerLink]="''">Prayer Times and Direction</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-route" [routerLink]="'/zakat'">Zakat Calculator</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-route" [routerLink]="'/inheritance'">Inheritance Calculator</a>         
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-route" [routerLink]="'/quran'">Qur'an</a>
+        </li>
+        <li class="nav-item" *ngIf="auth.isAuthenticated() && organisation && organisation.member==null && !organisation.hasPendingApplication" >
+          <a class="nav-link" (click)="openModalToJoinOrganisation(applyToJoinOrganisationModal)">
+            Apply to Join
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null">
+          <a class="nav-link" routerLinkActive="active-route"  [routerLink]="'/members/'+organisationId">
+            Members
+          </a>
+          
+        </li>
+        <li class="nav-item" *ngIf="auth.isAuthenticated() && organisation && organisation.member!=null">
+          <a class="nav-link" routerLinkActive="active-route"  [routerLink]="'/suggestions/'+organisationId">
+            Suggestions
+          </a>
+          
+        </li>
+        <li class="nav-item" *ngIf="hasPermission('AcceptMembershipApplication')">
+          <a class="nav-link" routerLinkActive="active-route"  
+            [routerLink]="'/membership-applications/organisation/'+organisationId">
+            Membership Applications
+          </a>          
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-route" [routerLink]="'/about-us'">About Us</a>          
+        </li>
+      </ul>
+    </nav>
+</div>
+
+  <router-outlet></router-outlet>
+</div>
+<!-- <div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <ul class="nav">
+          <li class="nav-item"> <a class="nav-link disabled" href > &copy; 2018 Lamaan Ball </a></li>
+          <li class="nav-item"> <a class="nav-link" [routerLink]="'/ts-and-cs'">terms and conditions</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div> -->
+<ng-template ngbModalContainer></ng-template>
+
+
+<ng-template #applyToJoinOrganisationModal let-c="close" let-d="dismiss">
+   <form #applyToJoinOrganisationModalForm="ngForm" (ngSubmit)="applyToJoin()">
+      <div class="modal-header">
+        <div class="modal-title">Apply to join the effort, make suggestions, vote, comment and help choose the leader:</div>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Please give us your full name, contact details and a short message to the person who will review your application.</p>
+        <div class="form-group">
+            <label for="publicName">Full Name (visible to public)</label>
+            <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.publicName" required maxlength="100" id="publicName" name="publicName">
+        </div>
+        <div class="form-group">
+            <label for="email">Email (not visible to public)</label>
+            <input class="form-control" type="email" [(ngModel)]="applyToJoinOrganisationModel.emailAddress" required maxlength="100" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Phone (not visible to public)</label>
+            <input class="form-control" type="text" [(ngModel)]="applyToJoinOrganisationModel.phoneNumber" required maxlength="20" id="phoneNumber" name="phoneNumber">
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input"  type="checkbox" [(ngModel)]="applyToJoinOrganisationModel.agreesToTermsAndConditions" name="agreesToTermsAndConditions" required>
+              I am a Muslim and I agree to hold to the terms and conditions (see "about us")
+            </label>
+        </div>
+        <div class="form-group">
+          <label for="publicProfileStatement"> Other info </label>
+          <textarea rows="2" class="form-control" required maxlength="1000"  id="publicProfileStatement" name="publicProfileStatement"
+           col="100" [(ngModel)]="applyToJoinOrganisationModel.publicProfileStatement">
+          </textarea>
+        </div>
+        <ul>
+          <li class="error" *ngFor="let error of applyToJoinOrganisationModel.errors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Apply</button>
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+
+</ng-template>

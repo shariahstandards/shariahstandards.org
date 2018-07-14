@@ -1,0 +1,45 @@
+.debts{
+border:2px;
+	border-color: #880000;
+	border-style: solid;
+	border-radius: 5px;
+	margin:10px;
+	padding:10px;
+}
+.assets{
+	border:2px;
+	border-color: #008800;
+	border-style: solid;
+	border-radius: 5px;
+	margin:10px;
+	padding:10px;
+}
+.dependents{
+	border:2px;
+	border-color: #000088;
+	border-style: solid;
+	border-radius: 5px;
+	margin:10px;
+	padding:10px;
+}
+.zakat-due{
+	border:2px;
+	border-color: #000000;
+	border-style: solid;
+	border-radius: 5px;
+	margin:10px;
+	padding:10px;	
+}
+h4.grand-total{
+	width: 100%;
+	text-align:center;
+}
+td.money, th.money{
+	text-align: right;
+}
+table.tally td{
+	width:33%;
+}
+table.tally td.actions{
+	text-align: center;
+}

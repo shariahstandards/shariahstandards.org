@@ -1,0 +1,17 @@
+.clickable{
+	cursor: pointer;
+}
+.rule{
+	font-size: 14px;
+}
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+div.section{
+	padding-left: 20px;
+}
+textarea{width: 100%}

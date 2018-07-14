@@ -1,14 +1,14 @@
-import { AppPage } from './app.po';
+import { ShariahstandardsPage } from './app.po';
 
-describe('App', () => {
-  let page: AppPage;
+describe('shariahstandards App', function() {
+  let page: ShariahstandardsPage;
 
   beforeEach(() => {
-    page = new AppPage();
+    page = new ShariahstandardsPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display message saying app works', () => {
     page.navigateTo();
-    expect(page.getMainHeading()).toEqual('Hello, world!');
+    expect(page.getParagraphText()).toEqual('app works!');
   });
 });

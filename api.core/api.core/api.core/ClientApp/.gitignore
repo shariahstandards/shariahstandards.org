@@ -2,21 +2,19 @@
 
 # compiled output
 /dist
-/dist-server
 /tmp
-/out-tsc
 
 # dependencies
 /node_modules
 
 # IDEs and editors
 /.idea
+/.vscode
 .project
 .classpath
 .c9/
 *.launch
 .settings/
-*.sublime-workspace
 
 # IDE - VSCode
 .vscode/*
@@ -28,7 +26,7 @@
 # misc
 /.sass-cache
 /connect.lock
-/coverage
+/coverage/*
 /libpeerconnection.log
 npm-debug.log
 testem.log
@@ -38,6 +36,48 @@ testem.log
 /e2e/*.js
 /e2e/*.map
 
-# System Files
+#System Files
 .DS_Store
 Thumbs.db
+
+api/packages/*
+api/*/bin/*
+api/*/obj/*
+src/deployment/FtpDeployment/obj/*
+src/deployment/FtpDeployment/bin/*
+*NCrunch*
+*/.vs/*
+*.user
+/cordova sample
+/distunoptimised
+*.orig
+*/.vs/*
+**/bin/*.dll
+**/bin/*.xml
+**/.vs/*
+**/obj/*
+api/WebApi/bin/*
+api/WebApi/obj/*
+**/obj/*
+**/bin/*
+**/*.ncrunchsolution
+**/*.ncrunchproject
+
+api/*/bin/*
+api/*/obj/*
+src/deployment/FtpDeployment/obj/*
+src/deployment/FtpDeployment/bin/*
+*NCrunch*
+*/.vs/*
+*.user
+**NCrunch*
+api/_NCrunch*/*
+**/.suo
+**/*.user
+/cordova sample/
+/distunoptimised/
+/api/.vs/
+
+*.orig
+
+/projects/shariahstandards-org-prayer-times/node_modules/*

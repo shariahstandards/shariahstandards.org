@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace api.core
 {
@@ -43,15 +45,31 @@ namespace api.core
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
+        app.UseStaticFiles(
+          new StaticFileOptions
+          {
+            FileProvider = new PhysicalFileProvider(
+              Path.Combine(Directory.GetCurrentDirectory(), "ClientApp/src/assets")),
+            RequestPath = "/assets"
+          }
+        );
       }
       else
       {
         app.UseExceptionHandler("/Error");
         app.UseHsts();
+        app.UseStaticFiles(
+          new StaticFileOptions
+          {
+            FileProvider = new PhysicalFileProvider(
+              Path.Combine(Directory.GetCurrentDirectory(), "ClientApp/dist/assets")),
+            RequestPath = "/assets"
+          }
+        );
       }
 
       app.UseHttpsRedirection();
-      app.UseStaticFiles();
+     
       app.UseSpaStaticFiles();
 
       app.UseMvc(routes =>

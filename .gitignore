@@ -81,3 +81,4 @@ api/_NCrunch*/*
 *.orig
 
 /projects/shariahstandards-org-prayer-times/node_modules/*
+/deployment/webRootApp/packages
