@@ -13,7 +13,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiResources", "WebApiRe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuranLoaded", "QuranLoaded\QuranLoaded.csproj", "{FA9F1E96-DDEB-4C44-AA1C-9376E8DB029D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reseed", "Reseed\Reseed.csproj", "{0BFA1D75-F683-4653-A099-1CBDEF57D5AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reseed", "Reseed\Reseed.csproj", "{0BFA1D75-F683-4653-A099-1CBDEF57D5AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "planning", "planning", "{B8A52F73-AD9C-4DDB-9803-594AB6A76BEE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backlog", "backlog", "{72D6C8BB-924F-49F4-8CD8-2C5DE2DE32BE}"
+	ProjectSection(SolutionItems) = preProject
+		backlog.txt = backlog.txt
+		NextRelease.txt = NextRelease.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "features", "features", "{93F29888-FFC8-4827-B6DE-0B5AB690C7EC}"
+	ProjectSection(SolutionItems) = preProject
+		features.txt = features.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tasks", "tasks", "{E4E8BC30-F1BE-4A6D-907D-6DB5966624ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "development", "development", "{56A10EB0-BD04-45B6-B91B-33E6A49D7A9D}"
+	ProjectSection(SolutionItems) = preProject
+		1001.txt = 1001.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +68,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{72D6C8BB-924F-49F4-8CD8-2C5DE2DE32BE} = {B8A52F73-AD9C-4DDB-9803-594AB6A76BEE}
+		{93F29888-FFC8-4827-B6DE-0B5AB690C7EC} = {72D6C8BB-924F-49F4-8CD8-2C5DE2DE32BE}
+		{E4E8BC30-F1BE-4A6D-907D-6DB5966624ED} = {72D6C8BB-924F-49F4-8CD8-2C5DE2DE32BE}
+		{56A10EB0-BD04-45B6-B91B-33E6A49D7A9D} = {B8A52F73-AD9C-4DDB-9803-594AB6A76BEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {344D2601-E327-4DB9-8635-3DDC71EF3A74}

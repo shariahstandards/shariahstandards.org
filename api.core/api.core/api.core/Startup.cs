@@ -35,7 +35,7 @@ namespace api.core
       // In production, the Angular files will be served from this directory
       services.AddSpaStaticFiles(configuration =>
             {
-              configuration.RootPath = "ClientApp/dist";
+              configuration.RootPath = "ClientApp/dist/shariahstandards";
             });
     }
 
@@ -50,7 +50,7 @@ namespace api.core
           {
             FileProvider = new PhysicalFileProvider(
               Path.Combine(Directory.GetCurrentDirectory(), "ClientApp/src/assets")),
-            RequestPath = "/assets"
+              RequestPath = "/assets"
           }
         );
       }
@@ -62,7 +62,7 @@ namespace api.core
           new StaticFileOptions
           {
             FileProvider = new PhysicalFileProvider(
-              Path.Combine(Directory.GetCurrentDirectory(), "ClientApp/dist/assets")),
+              Path.Combine(Directory.GetCurrentDirectory(), "ClientApp/dist/shariahstandards/assets")),
             RequestPath = "/assets"
           }
         );
@@ -88,7 +88,7 @@ namespace api.core
 
         if (env.IsDevelopment())
         {
-          spa.UseAngularCliServer(npmScript: "start");
+              spa.UseAngularCliServer(npmScript: "start");
         }
       });
     }

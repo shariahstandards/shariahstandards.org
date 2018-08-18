@@ -1,9 +1,0 @@
-Move membership rules back into global standards.
-Enable standards publication in different versions which takes a copy at a point in time of all rules and terminology 
-	and turns them into hard coded data and implements them in software as necessary.
-Allow organisation creation based on a version of the standards.
-Allow organisations to change the published standard adopted by a special vote. 
-
-
-
-

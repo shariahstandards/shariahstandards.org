@@ -1,0 +1,54 @@
+﻿
+Commenting
+    Comments can be submitted and reviewed. 
+    References to Qur'anic verses are indexed to provide a commentary resource
+    keywords (hashtags?) are indexed to provide a topic index of the quran
+    Comments are given an Id which can be referred to by other comments
+    Indexes can be built to find what comments refer to what comments
+
+
+    
+
+
+
+  
+
+Improving the Political Leadership of Muslims
+	Defending the world from false flag Islam
+	Saving the freedom, lives, property of all people from the robbers and criminals and their plots to stir up chaos
+	Conveying the true message of Islam based on the Qur'an and the proven acceptance of what it means by a large majority of Muslims.
+	Certification of Agreement to Shariah Standards
+*	Qur'an commentary with agreements
+
+	
+
+	
+
+	
+
+
+
+
+
+
+
+	
+Prayer time table builder
+	subscription to pdfs by email just sends a link, user preferences can set a strong url, 
+	register location for congregational prayers
+	congregational prayer times can be fixed per week month or half month (1st and 15th) 
+	have fixed times for Jumuah prayers and noon prayers that change only in each time zone (dst/normal) 
+	set isha to later times for long nights
+	Smartphone app can give alarms based on distance to the mosque and matched to prayer times
+
+Local islamic community service management
+	register place for friday prayers - extends prayer time table builder
+	register self and others by location and nearest place for friday prayers
+	volunteer to help and fund community efforts
+	pay zakat
+	suggest useful work to organise
+	
+
+Decision Support System
+		
+
