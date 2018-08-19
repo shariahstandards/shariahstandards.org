@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -35,7 +36,7 @@ namespace WebApi.Controllers
     }
     [Route("api/SearchQuran")]
     [HttpPost]
-    public QuranSearchResult Search(QuranSearchRequest request)
+    public QuranSearchResult Search([FromBody]QuranSearchRequest request)
     {
       return _service.Search(request);
     }

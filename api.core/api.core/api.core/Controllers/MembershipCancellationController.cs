@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         }
         [HttpPost]
         [Route("api/Leave")]
-        public MembershipCancellationResponseResource Post(LeaveOrganisationRequest request)
+        public MembershipCancellationResponseResource Post([FromBody]LeaveOrganisationRequest request)
         {
             return _service.SubmitCancellation(request,User);
         }

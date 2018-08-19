@@ -19,7 +19,7 @@ namespace WebApi.Controllers
     }
     [Route("api/RegisterAHumanBeing")]
     [HttpPost]
-    public ResponseResource RegisterAHumanBeing(RegisterAHumanBeingRequest request)
+    public ResponseResource RegisterAHumanBeing([FromBody]RegisterAHumanBeingRequest request)
     {
       return _service.RegisterAHumanBeing(User, request);
     }

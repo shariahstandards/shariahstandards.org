@@ -26,7 +26,7 @@ namespace WebApi.Controllers
         }
         [HttpPost]
         [Route("api/GetOrganisationSummary")]
-        public OrganisationSummaryResource GetOrganisationSummary(GetOrganisationSummaryRequest request) 
+        public OrganisationSummaryResource GetOrganisationSummary([FromBody]GetOrganisationSummaryRequest request) 
         {
             return _service.GetOrganisationSummary(User,request);
         }
@@ -43,13 +43,13 @@ namespace WebApi.Controllers
         }
         [HttpPost]
         [Route("api/DelegatePermission")]
-        public ResponseResource PostDelegatePermission(AddDelegatedPermissionRequest request) 
+        public ResponseResource PostDelegatePermission([FromBody]AddDelegatedPermissionRequest request) 
         {
             return _service.DelegatePermission(User, request);
         }
         [HttpPost]
         [Route("api/DelegatePermission")]
-        public ResponseResource PostRemoveDelegatedPermission(RemoveDelegatedPermissionRequest request)
+        public ResponseResource PostRemoveDelegatedPermission([FromBody]RemoveDelegatedPermissionRequest request)
         {
             return _service.RemoveDelegatedPermission(User, request);
         }

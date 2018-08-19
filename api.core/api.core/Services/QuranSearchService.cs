@@ -1,4 +1,5 @@
 using DataModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,8 @@ namespace Services
 
     public QuranSearchResult Search(QuranSearchRequest request)
     {
+      _storageService.suspendTracking();
+
       if (request.SearchInEnglish)
       {
         return SearchInEnglish(request.SearchText);
@@ -142,10 +145,19 @@ namespace Services
       var categories = new List<SearchResultCategory>();
       foreach (var rootText in roots)
       {
-        var root = _storageService.SetOf<Root>().SingleOrDefault(r => r.Text == rootText);
+        var root = _storageService.SetOf<Root>().Include(r=>r.RootUsages)
+                    .ThenInclude(u=>u.Word.WordParts)
+                    .ThenInclude(w=>w.WordPartType)
+                    .SingleOrDefault(r => r.Text == rootText);
         if (root != null)
         {
-          var wordUsages = root.RootUsages.Select(u => new { Usage = u, FullWord = string.Concat(u.Word.WordParts.Select(p => p.Text)) }).ToList();
+          var rootUsages = root.RootUsages.ToList();
+          var wordUsages = rootUsages
+                        .Select(u => new {
+                            Usage = u,
+                            FullWord = string.Concat(u.Word.WordParts.Select(p => p.Text))
+                        })
+                        .ToList();
           var groups = wordUsages.GroupBy(w => w.FullWord);
           foreach (var group in groups)
           {

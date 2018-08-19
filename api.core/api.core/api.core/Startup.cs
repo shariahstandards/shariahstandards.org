@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using Newtonsoft.Json.Serialization;
 
 namespace api.core
 {
@@ -23,7 +24,10 @@ namespace api.core
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        //.AddJsonOptions(options => {
+        //    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+        //});
 
       Services.ServiceRegistrationConfig.RegisterAllUniqueServices(services);
       services.AddDbContext<DataModel.ApplicationContext>(options =>

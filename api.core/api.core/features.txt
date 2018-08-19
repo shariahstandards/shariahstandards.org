@@ -1,13 +1,27 @@
 ﻿
 Commenting
-    Comments can be submitted and reviewed. 
-    References to Qur'anic verses are indexed to provide a commentary resource
+	Comments can be submitted and reviewed about individual verses in the Quran, 
+		individual words in the context of a verse and sets of verses. 
+    References to Qur'anic verses in comments (and membership rules?) are indexed to provide a commentary resource
     keywords (hashtags?) are indexed to provide a topic index of the quran
     Comments are given an Id which can be referred to by other comments
     Indexes can be built to find what comments refer to what comments
+	Comments can be voted up or down like suggestions and viewed based on net support
+	Comments can refer to membership rules and linked back and forth using indexing
 
+Add Standards back in as set of generated documents with versioning but coming from the db
+	linked from parts of the site and generated from the editable membership rules
 
-    
+Actions
+	the organisation leader can take a decision and record it as an action 
+	actions can be updated which assigns the action to a member and sets its status
+	actions are visible to the members of the organisation
+
+Teams
+	Change "Apply to join" to a "join a team"
+	Teams are created by the person responsible for an action as working on that action.
+	Teams are shurah based organisations.
+	
 
 
 

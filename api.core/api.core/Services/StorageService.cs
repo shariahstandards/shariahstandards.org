@@ -17,6 +17,8 @@ namespace Services
     void DetachAllEntities();
     int SaveChanges();
     void NoTracking();
+    void suspendTracking();
+    void resumeTracking();
   }
   public class StorageService : IStorageService, IDisposable
   {
@@ -81,5 +83,15 @@ namespace Services
     {
       _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
-  }
+
+        public void suspendTracking()
+        {
+            _context.ChangeTracker.AutoDetectChangesEnabled = false;
+        }
+
+        public void resumeTracking()
+        {
+            _context.ChangeTracker.AutoDetectChangesEnabled = true;
+        }
+    }
 }

@@ -22,27 +22,27 @@ namespace WebApi.Controllers
         }
         [HttpPost]
         [Route("api/ApplyToJoin")]
-        public ResponseResource Post(MembershipApplicationrequest request)
+        public ResponseResource Post([FromBody]MembershipApplicationrequest request)
         {
             return _service.ApplyToJoin(User,request);
         }
 
         [HttpPost]
         [Route("api/ViewApplications")]
-        public MembershipApplicationSearchResultsResource Post(MembershipApplicationSearchRequest request)
+        public MembershipApplicationSearchResultsResource Post([FromBody]MembershipApplicationSearchRequest request)
         {
             return _service.SearchMembershipApplications(User, request);
         }
 
         [HttpPost]
         [Route("api/AcceptMembershipApplication")]
-        public ResponseResource Post(MembershipApplicationAcceptanceRequest request)
+        public ResponseResource Post([FromBody]MembershipApplicationAcceptanceRequest request)
         {
             return _service.AcceptMembershipApplication(User, request);
         }
         [HttpPost]
         [Route("api/RejectMembershipApplication")]
-        public ResponseResource Post(MembershipApplicationRejectionRequest request)
+        public ResponseResource Post([FromBody]MembershipApplicationRejectionRequest request)
         {
             return _service.RejectMembershipApplication(User, request);
         }

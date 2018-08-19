@@ -21,7 +21,7 @@ namespace WebApi.Controllers
 
         [Route("api/SearchForMembers")]
         [HttpPost]
-        public SearchMemberResponse SearchForMembers(SearchMemberRequest request)
+        public SearchMemberResponse SearchForMembers([FromBody]SearchMemberRequest request)
         {
           return _service.SearchForMembers(User, request);
         }
